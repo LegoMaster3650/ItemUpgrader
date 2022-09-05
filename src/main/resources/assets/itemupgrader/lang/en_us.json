@@ -1,0 +1,49 @@
+{
+	"itemupgrader.mod_name": "Item Upgrader",
+	"key.categories.itemupgrader": "Item Upgrader",
+	"key.itemupgrader.show_tooltip": "Show Tooltip",
+	
+	"equipmentSlot.mainhand": "Main Hand",
+	"equipmentSlot.offhand": "Off Hand",
+	"equipmentSlot.head": "Head",
+	"equipmentSlot.chest": "Chest",
+	"equipmentSlot.legs": "Legs",
+	"equipmentSlot.feet": "Feet",
+	
+	"fluid.minecraft.water": "Water",
+	"fluid.minecraft.lava": "Lava",
+	
+	"tooltip.itemupgrader.upgrade": "Upgrade: §7[%s§7]",
+	"tooltip.itemupgrader.expand": "Press %s",
+	"tooltip.itemupgrader.prefix": "| ",
+	"tooltip.itemupgrader.no_description": "No description available.",
+	"tooltip.itemupgrader.advanced_id": "Upgrade ID: %s",
+	"tooltip.itemupgrader.error": "§cERROR",
+	
+	"tooltip.itemupgrader.slots": "When %s:",
+	"tooltip.itemupgrader.slots.on": "on %s",
+	"tooltip.itemupgrader.slots.in": "in %s",
+	
+	"itemupgrader.text.and": " and ",
+	"itemupgrader.text.and.list": ", and ",
+	"itemupgrader.text.or": " or ",
+	"itemupgrader.text.or.list": ", or ",
+	"itemupgrader.text.list": ", ",
+	
+	"upgradeAction.itemupgrader.attribute": "%s",
+	"upgradeAction.itemupgrader.living_tick": "%s",
+	"upgradeAction.itemupgrader.living_tick.condition": "If %s, %s",
+	"upgradeAction.itemupgrader.player_tick_pre": "%s",
+	"upgradeAction.itemupgrader.player_tick_pre.condition": "If %s, %s",
+	"upgradeAction.itemupgrader.player_tick_post": "%s",
+	"upgradeAction.itemupgrader.player_tick_post.condition": "If %s, %s",
+	
+	"upgradeCondition.itemupgrader.predicate": "%s",
+	"upgradeCondition.itemupgrader.eyes_in_fluid": "eyes are under %s",
+	"upgradeCondition.itemupgrader.eyes_in_fluid.inverse": "eyes aren't under %s",
+	"upgradeCondition.itemupgrader.has_upgrade": "upgrade %s is %s",
+	"upgradeCondition.itemupgrader.has_upgrade.inverse": "upgrade %s is not %s",
+	
+	"upgradeResult.itemupgrader.cancel": "Cancel",
+	"upgradeResult.itemupgrader.effect": "Gain %s"
+}
