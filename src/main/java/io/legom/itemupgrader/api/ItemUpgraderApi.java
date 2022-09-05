@@ -25,9 +25,7 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class ItemUpgraderApi {
 	
-	/*
-	 * ItemUpgrader event system
-	 */
+	/* ItemUpgrader event system */
 	
 	/**
 	 * Runs an action, automatically getting the <b>REQUIRED</b> ItemStack from the event data passed in
@@ -65,9 +63,7 @@ public class ItemUpgraderApi {
 		});
 	}
 	
-	/*
-	 * ItemStack upgrade utils
-	 */
+	/* ItemStack upgrade utils */
 	
 	/**
 	 * Checks if an ItemStack has an upgrade.<br>
