@@ -20,6 +20,10 @@ public abstract class IUpgradeType {
 	
 	private final IUpgradeInternals internals;
 	
+	/**
+	 * Constructs an {@linkplain IUpgradeType} using the given internals
+	 * @param internals {@linkplain IUpgradeInternals} containing information for this type
+	 */
 	public IUpgradeType(IUpgradeInternals internals) {
 		this.internals = internals;
 	}

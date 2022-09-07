@@ -1,4 +1,4 @@
-package io._3650.itemupgrader.api.util;
+package io._3650.itemupgrader.api.type;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,8 +14,7 @@ import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
-import io._3650.itemupgrader.api.type.UpgradeAction;
-import io._3650.itemupgrader.api.type.UpgradeCondition;
+import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.upgrades.ItemUpgradeManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;

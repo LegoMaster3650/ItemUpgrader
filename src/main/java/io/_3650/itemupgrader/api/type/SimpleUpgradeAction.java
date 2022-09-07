@@ -1,4 +1,4 @@
-package io._3650.itemupgrader.api.util;
+package io._3650.itemupgrader.api.type;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,8 +14,7 @@ import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
-import io._3650.itemupgrader.api.type.UpgradeCondition;
-import io._3650.itemupgrader.api.type.UpgradeResult;
+import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.upgrades.ItemUpgradeManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
@@ -24,6 +23,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * A simple implementation of a conditional upgrade action with results.<br>
+ * Unless you need special event logic, you should use this for most custom upgrade actions.
+ * @author LegoMaster3650
+ */
 public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 	
 	private final ImmutableList<UpgradeResult> results;
@@ -36,19 +40,19 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData event) {
-		for (UpgradeResult result : this.results) {
-			result.execute(event);
-		}
-	}
-	
-	@Override
 	public MutableComponent getResultTooltip(ItemStack stack) {
 		List<MutableComponent> resultComponents = new ArrayList<>(this.results.size());
 		for (UpgradeResult result : this.results) {
 			if (result.isVisible()) resultComponents.add(new TranslatableComponent("upgradeResult." + ComponentHelper.keyFormat(result.getId()), (Object[]) result.getTooltipWithOverride(stack)));
 		}
 		return ComponentHelper.andList(resultComponents);
+	}
+	
+	@Override
+	public void execute(UpgradeEventData event) {
+		for (UpgradeResult result : this.results) {
+			result.execute(event);
+		}
 	}
 	
 	@Override
@@ -61,10 +65,19 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 		this.getSerializer().toNetwork(this, buf);
 	}
 	
+	/**
+	 * Serializer for {@linkplain SimpleUpgradeAction}
+	 * @author LegoMaster3650
+	 *
+	 */
 	public static class Serializer extends ConditionalUpgradeActionSerializer<SimpleUpgradeAction> {
 		
 		private final UpgradeEntrySet provided;
 		
+		/**
+		 * Constructs a new serializer for a {@linkplain SimpleUpgradeAction}
+		 * @param provided
+		 */
 		public Serializer(UpgradeEntrySet provided) {
 			this.provided = provided;
 		}
