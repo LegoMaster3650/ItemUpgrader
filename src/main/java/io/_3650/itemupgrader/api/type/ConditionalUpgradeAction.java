@@ -22,29 +22,21 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class ConditionalUpgradeAction extends UpgradeAction {
 	
 	private final ImmutableList<UpgradeCondition> conditions;
 	
-	public ConditionalUpgradeAction(IUpgradeInternals internals, List<UpgradeCondition> conditions) {
-		super(internals);
+	public ConditionalUpgradeAction(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, List<UpgradeCondition> conditions) {
+		super(internals, validSlots);
 		this.conditions = ImmutableList.copyOf(conditions);
 	}
 	
 	@Override
 	public boolean customTooltipBase() {
 		return true;
-	}
-	
-	@Override
-	public final void run(UpgradeEventData event) {
-		boolean pass = true;
-		for (UpgradeCondition condition : this.conditions) {
-			pass = pass && (condition.test(event) ^ condition.isInverted()); //I love XOR so much its like a funky conditional NOT
-		}
-		if (pass) this.execute(event);
 	}
 	
 	@Override
@@ -65,9 +57,18 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 		}
 	}
 	
-	public abstract void execute(UpgradeEventData event);
+	@Override
+	public final void run(UpgradeEventData event) {
+		boolean pass = true;
+		for (UpgradeCondition condition : this.conditions) {
+			pass = pass && (condition.test(event) ^ condition.isInverted()); //I love XOR so much its like a funky conditional NOT
+		}
+		if (pass) this.execute(event);
+	}
 	
 	public abstract MutableComponent getResultTooltip(ItemStack stack);
+	
+	public abstract void execute(UpgradeEventData event);
 	
 	public static abstract class ConditionalUpgradeActionSerializer<T extends ConditionalUpgradeAction> extends UpgradeActionSerializer<T> {
 		

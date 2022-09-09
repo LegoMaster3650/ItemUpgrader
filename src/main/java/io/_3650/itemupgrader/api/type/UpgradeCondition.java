@@ -1,5 +1,7 @@
 package io._3650.itemupgrader.api.type;
 
+import javax.annotation.Nonnull;
+
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
@@ -17,7 +19,7 @@ public abstract class UpgradeCondition extends IUpgradeType {
 	 * @param internals {@linkplain UpgradeCondition} containing information for this type
 	 * @param inverted Whether or not the condition is inverted
 	 */
-	public UpgradeCondition(IUpgradeInternals internals, boolean inverted) {
+	public UpgradeCondition(@Nonnull IUpgradeInternals internals, @Nonnull boolean inverted) {
 		super(internals);
 		this.inverted = inverted;
 	}

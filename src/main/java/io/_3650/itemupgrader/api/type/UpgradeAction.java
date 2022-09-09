@@ -1,9 +1,16 @@
 package io._3650.itemupgrader.api.type;
 
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+
+import com.google.common.collect.ImmutableSet;
+
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -12,12 +19,34 @@ import net.minecraft.world.item.ItemStack;
  */
 public abstract class UpgradeAction extends IUpgradeType {
 	
+	private final Set<EquipmentSlot> validSlots;
+	
 	/**
 	 * Constructs an {@linkplain UpgradeAction} using the given internals
 	 * @param internals {@linkplain IUpgradeInternals} containing information for this type
+	 * @param validSlots A {@linkplain Set} of the {@linkplain EquipmentSlot}s the upgrade is valid for
 	 */
-	public UpgradeAction(IUpgradeInternals internals) {
+	public UpgradeAction(@Nonnull IUpgradeInternals internals, @Nonnull Set<EquipmentSlot> validSlots) {
 		super(internals);
+		this.validSlots = ImmutableSet.copyOf(validSlots);
+	}
+	
+	/**
+	 * Checks if the given slot is valid for this action
+	 * @param slot The {@linkplain EquipmentSlot} to check
+	 * @return Whether the slot is valid for this action or not
+	 */
+	public boolean isValidSlot(EquipmentSlot slot) {
+		return slot == null || validSlots.isEmpty() || validSlots.contains(slot);
+	}
+	
+	/**
+	 * Gets the set of the valid slots for this upgrade
+	 * @return The {@linkplain Set} of {@linkplain EquipmentSlot}s that are valid for this action
+	 * @return
+	 */
+	public Set<EquipmentSlot> getValidSlots() {
+		return this.validSlots;
 	}
 	
 	/**
@@ -42,6 +71,7 @@ public abstract class UpgradeAction extends IUpgradeType {
 	 * Gets the tooltip component for the object applied to the tooltip defined in the language file
 	 * @param stack The {@linkplain ItemStack} to get tooltip context from
 	 * @return A {@linkplain MutableComponent} to apply to the tooltip specified in the language file
+	 * @see IUpgradeType#getTooltip(ItemStack)
 	 */
 	public abstract MutableComponent getActionTooltip(ItemStack stack);
 	

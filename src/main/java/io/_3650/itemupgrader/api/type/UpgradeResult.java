@@ -1,5 +1,7 @@
 package io._3650.itemupgrader.api.type;
 
+import javax.annotation.Nonnull;
+
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
@@ -14,7 +16,7 @@ public abstract class UpgradeResult extends IUpgradeType {
 	 * Constructs an {@linkplain IUpgradeType} using the given internals
 	 * @param internals {@linkplain UpgradeResult} containing information for this type
 	 */
-	public UpgradeResult(IUpgradeInternals internals) {
+	public UpgradeResult(@Nonnull IUpgradeInternals internals) {
 		super(internals);
 	}
 	

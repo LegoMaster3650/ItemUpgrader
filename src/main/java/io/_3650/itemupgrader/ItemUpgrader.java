@@ -40,8 +40,9 @@ import org.slf4j.Logger;
 @Mod(ItemUpgrader.MOD_ID)
 public class ItemUpgrader {
 	
+	private static final Logger LOGGER = LogUtils.getLogger();
+	
 	public static final String MOD_ID = "itemupgrader";
-	public static final Logger LOGGER = LogUtils.getLogger();
 	
 	public static final Supplier<IForgeRegistry<UpgradeActionSerializer<UpgradeAction>>> ACTION_REGISTRY = ModUpgradeActions.ACTIONS.makeRegistry(RegistryHelper.fixStupidClass(UpgradeActionSerializer.class), () ->
 			new RegistryBuilder<UpgradeActionSerializer<UpgradeAction>>().disableSaving());

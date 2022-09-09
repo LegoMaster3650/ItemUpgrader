@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.apache.commons.compress.utils.Lists;
 
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.MultimapBuilder;
+
 import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.ItemUpgrade;
 import io._3650.itemupgrader.api.ItemUpgraderApi;
@@ -61,15 +64,34 @@ public class ClientEvents {
 				boolean doSlotsDisplay = false;
 				int slotsDisplayIndex = tooltip.size();
 				
-				//Contents
+				//Action Contents
+				ListMultimap<EquipmentSlot, UpgradeAction> slotActions = MultimapBuilder.linkedHashKeys().arrayListValues().build();
+				
 				for (ResourceLocation actionId : upgrade.getValidActions()) {
 					String actionKey = "upgradeAction." + ComponentHelper.keyFormat(actionId);
 					for (UpgradeAction action : upgrade.getActions(actionId)) {
 						if (action.isVisible()) {
-							if (action.customTooltipBase()) tooltip.add(upgradeLine(action.getActionTooltipWithOverride(stack).withStyle(ChatFormatting.BLUE)));
-							else tooltip.add(upgradeLine(new TranslatableComponent(actionKey, action.getActionTooltipWithOverride(stack)).withStyle(ChatFormatting.BLUE)));
-							doSlotsDisplay = true;
+							if (action.getValidSlots().isEmpty()) {
+								if (action.customTooltipBase()) tooltip.add(upgradeLine(action.getActionTooltipWithOverride(stack).withStyle(ChatFormatting.BLUE)));
+								else tooltip.add(upgradeLine(new TranslatableComponent(actionKey, action.getActionTooltipWithOverride(stack)).withStyle(ChatFormatting.BLUE)));
+								doSlotsDisplay = true;
+							} else {
+								for (var slot : action.getValidSlots()) {
+									slotActions.put(slot, action);
+								}
+							}
 						}
+					}
+				}
+				
+				boolean actionEmptyLine = doSlotsDisplay;
+				for (var slot : slotActions.keySet()) {
+					if (actionEmptyLine || hasDescription) tooltip.add(upgradeLine(new TextComponent("")));
+					tooltip.add(upgradeLine(new TranslatableComponent("tooltip.itemupgrader.slots", ComponentHelper.slotInOn(slot)).withStyle(ChatFormatting.GRAY)));
+					for (var action : slotActions.get(slot)) {
+						if (action.customTooltipBase()) tooltip.add(upgradeLine(action.getActionTooltipWithOverride(stack).withStyle(ChatFormatting.BLUE)));
+						else tooltip.add(upgradeLine(new TranslatableComponent("upgradeAction." + ComponentHelper.keyFormat(action.getId()), action.getActionTooltipWithOverride(stack)).withStyle(ChatFormatting.BLUE)));
+						actionEmptyLine = true;
 					}
 				}
 				

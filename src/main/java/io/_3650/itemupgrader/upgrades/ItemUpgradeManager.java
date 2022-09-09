@@ -6,12 +6,16 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.logging.LogUtils;
 
 import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.ItemUpgrade;
@@ -33,6 +37,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 	
+	private static final Logger LOGGER = LogUtils.getLogger();
+	
 	public static final ItemUpgradeManager INSTANCE = new ItemUpgradeManager();
 	
 	private Map<ResourceLocation, ItemUpgrade> upgrades = ImmutableMap.of();
@@ -52,10 +58,11 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 				//base
 				Ingredient base = Ingredient.fromJson(json.get("base"));
 				//slots
-				Set<EquipmentSlot> validSlots = new LinkedHashSet<EquipmentSlot>();
-				GsonHelper.getAsJsonArray(json, "slots").forEach((element) -> {
+				JsonArray validSlotsJson = GsonHelper.getAsJsonArray(json, "slots");
+				Set<EquipmentSlot> validSlots = new LinkedHashSet<EquipmentSlot>(validSlotsJson.size());
+				for (var element : validSlotsJson) {
 					if (GsonHelper.isStringValue(element)) validSlots.add(EquipmentSlot.byName(element.getAsString()));
-				});
+				}
 				//is visible
 				boolean visible = GsonHelper.getAsBoolean(json, "visible", true);
 				//description lines
@@ -80,7 +87,7 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 				
 				builder.put(upgradeId, new ItemUpgrade(upgradeId, base, validSlots, actions, visible, descriptionLines, color));
 			} catch (Exception err) {
-				ItemUpgrader.LOGGER.error("Couldn't parse upgrade " + upgradeId.toString(), err);
+				LOGGER.error("Couldn't parse upgrade " + upgradeId.toString(), err);
 			}
 		});
 		
@@ -91,8 +98,19 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 	public static UpgradeAction actionFromJson(JsonObject json) {
 		ResourceLocation actionId = new ResourceLocation(GsonHelper.getAsString(json, "action"));
 		IUpgradeInternals internals = IUpgradeInternals.of(actionId, json);
+		Set<EquipmentSlot> validSlots = new LinkedHashSet<>();
+		if (GsonHelper.isStringValue(json, "slot")) {
+			validSlots = new LinkedHashSet<>(1);
+			validSlots.add(EquipmentSlot.byName(GsonHelper.getAsString(json, "slot")));
+		} else if (GsonHelper.isArrayNode(json, "slots")) {
+			JsonArray validSlotsJson = GsonHelper.getAsJsonArray(json, "slots");
+			validSlots = new LinkedHashSet<>(validSlotsJson.size());
+			for (var element : validSlotsJson) {
+				if (GsonHelper.isStringValue(element)) validSlots.add(EquipmentSlot.byName(element.getAsString()));
+			}
+		}
 		UpgradeActionSerializer<?> actionType = ItemUpgrader.ACTION_REGISTRY.get().getValue(actionId);
-		return actionType.fromJson(internals, json);
+		return actionType.fromJson(internals, validSlots, json);
 	}
 	
 	public static UpgradeCondition conditionFromJson(JsonObject json) {

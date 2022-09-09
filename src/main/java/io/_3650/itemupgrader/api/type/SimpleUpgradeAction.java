@@ -21,6 +21,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -33,8 +34,8 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 	private final ImmutableList<UpgradeResult> results;
 	private final Serializer serializer;
 	
-	public SimpleUpgradeAction(IUpgradeInternals internals, List<UpgradeCondition> conditions, List<UpgradeResult> results, Serializer serializer) {
-		super(internals, conditions);
+	public SimpleUpgradeAction(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, List<UpgradeCondition> conditions, List<UpgradeResult> results, Serializer serializer) {
+		super(internals, validSlots, conditions);
 		this.results = ImmutableList.copyOf(results);
 		this.serializer = serializer;
 	}
@@ -88,7 +89,7 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 		}
 		
 		@Override
-		public SimpleUpgradeAction fromJson(IUpgradeInternals internals, JsonObject json) {
+		public SimpleUpgradeAction fromJson(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, JsonObject json) {
 			List<UpgradeCondition> conditions = this.conditionsFromJson(json);
 			List<UpgradeResult> results = new ArrayList<>();
 			if (json.has("result")) {
@@ -104,7 +105,7 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 					this.safeAddResult(results, result);
 				}
 			}
-			return new SimpleUpgradeAction(internals, conditions, results, this);
+			return new SimpleUpgradeAction(internals, validSlots, conditions, results, this);
 		}
 		
 		private void safeAddResult(List<UpgradeResult> results, UpgradeResult result) {
@@ -132,7 +133,7 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 			}
 		}
 		
-		public SimpleUpgradeAction fromNetwork(IUpgradeInternals internals, FriendlyByteBuf buf) {
+		public SimpleUpgradeAction fromNetwork(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, FriendlyByteBuf buf) {
 			//conditions
 			List<UpgradeCondition> netConditions = this.conditionsFromNetwork(buf);
 			//results
@@ -144,7 +145,7 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 				UpgradeResultSerializer<?> serializer = ItemUpgrader.RESULT_REGISTRY.get().getValue(resultId);
 				netResults.add(serializer.fromNetwork(resultInternals, buf));
 			}
-			return new SimpleUpgradeAction(internals, netConditions, netResults, this);
+			return new SimpleUpgradeAction(internals, validSlots, netConditions, netResults, this);
 		}
 		
 	}

@@ -41,14 +41,30 @@ public class AttributeUpgradeAction extends UpgradeAction {
 	private final String name;
 	private final Map<EquipmentSlot, UUID> uuids;
 	
-	public AttributeUpgradeAction(IUpgradeInternals internals, ResourceLocation attributeId, Operation operation, double amount, @Nullable String name, Map<EquipmentSlot, UUID> uuids) {
-		super(internals);
+	public AttributeUpgradeAction(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, ResourceLocation attributeId, Operation operation, double amount, @Nullable String name, Map<EquipmentSlot, UUID> uuids) {
+		super(internals, validSlots);
 		this.attributeId = attributeId;
 		this.attribute = Objects.requireNonNull(ForgeRegistries.ATTRIBUTES.getValue(attributeId));
 		this.operation = operation;
 		this.amount = amount;
 		this.name = name;
 		this.uuids = uuids;
+	}
+	
+	@Override
+	public MutableComponent getActionTooltip(ItemStack stack) {
+		//Set amount
+		double displayAmount = this.amount;
+		if (this.operation == AttributeModifier.Operation.MULTIPLY_BASE || this.operation == AttributeModifier.Operation.MULTIPLY_TOTAL) displayAmount = this.amount * 100.0D;
+		else if (this.attribute == Attributes.KNOCKBACK_RESISTANCE) displayAmount = this.amount * 10.0D;
+		
+		//Make component
+		if (this.amount >= 0.0D) {
+			return new TranslatableComponent("attribute.modifier.plus."+ this.operation.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), new TranslatableComponent(this.attribute.getDescriptionId())).withStyle(ChatFormatting.BLUE);
+		} else {
+			displayAmount *= -1.0D;
+			return new TranslatableComponent("attribute.modifier.take."+ this.operation.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), new TranslatableComponent(this.attribute.getDescriptionId())).withStyle(ChatFormatting.RED);
+		}
 	}
 	
 	@Override
@@ -78,22 +94,6 @@ public class AttributeUpgradeAction extends UpgradeAction {
 	}
 	
 	@Override
-	public MutableComponent getActionTooltip(ItemStack stack) {
-		//Set amount
-		double displayAmount = this.amount;
-		if (this.operation == AttributeModifier.Operation.MULTIPLY_BASE || this.operation == AttributeModifier.Operation.MULTIPLY_TOTAL) displayAmount = this.amount * 100.0D;
-		else if (this.attribute == Attributes.KNOCKBACK_RESISTANCE) displayAmount = this.amount * 10.0D;
-		
-		//Make component
-		if (this.amount >= 0.0D) {
-			return new TranslatableComponent("attribute.modifier.plus."+ this.operation.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), new TranslatableComponent(this.attribute.getDescriptionId())).withStyle(ChatFormatting.BLUE);
-		} else {
-			displayAmount *= -1.0D;
-			return new TranslatableComponent("attribute.modifier.take."+ this.operation.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), new TranslatableComponent(this.attribute.getDescriptionId())).withStyle(ChatFormatting.RED);
-		}
-	}
-	
-	@Override
 	public Serializer getSerializer() {
 		return new Serializer();
 	}
@@ -111,7 +111,7 @@ public class AttributeUpgradeAction extends UpgradeAction {
 		}
 		
 		@Override
-		public AttributeUpgradeAction fromJson(IUpgradeInternals internals, JsonObject json) {
+		public AttributeUpgradeAction fromJson(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, JsonObject json) {
 			ResourceLocation attributeId = new ResourceLocation(GsonHelper.getAsString(json, "attribute"));
 			Operation operation = getAttributeOperationByName(GsonHelper.getAsString(json, "operation", "add"));
 			double amount = GsonHelper.getAsDouble(json, "amount");
@@ -136,7 +136,7 @@ public class AttributeUpgradeAction extends UpgradeAction {
 					uuids.put(slot, UUID.randomUUID());
 				}
 			}
-			return new AttributeUpgradeAction(internals, attributeId, operation, amount, name, uuids);
+			return new AttributeUpgradeAction(internals, validSlots, attributeId, operation, amount, name, uuids);
 		}
 
 		@Override
@@ -151,14 +151,14 @@ public class AttributeUpgradeAction extends UpgradeAction {
 		}
 
 		@Override
-		public AttributeUpgradeAction fromNetwork(IUpgradeInternals internals, FriendlyByteBuf buf) {
+		public AttributeUpgradeAction fromNetwork(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, FriendlyByteBuf buf) {
 			ResourceLocation netAttributeId = buf.readResourceLocation();
 			Operation netOperation = buf.readEnum(Operation.class);
 			double netAmount = buf.readDouble();
 			String netName = null;
 			if (buf.readBoolean()) netName = buf.readUtf();
 			Map<EquipmentSlot, UUID> netUUIDs = buf.readMap(buffer -> buffer.readEnum(EquipmentSlot.class), buffer -> buffer.readUUID());
-			return new AttributeUpgradeAction(internals, netAttributeId, netOperation, netAmount, netName, netUUIDs);
+			return new AttributeUpgradeAction(internals, validSlots, netAttributeId, netOperation, netAmount, netName, netUUIDs);
 		}
 		
 	}

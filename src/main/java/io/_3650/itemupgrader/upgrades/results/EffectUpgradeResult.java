@@ -81,7 +81,7 @@ public class EffectUpgradeResult extends UpgradeResult {
 			ResourceLocation effectId = new ResourceLocation(GsonHelper.getAsString(json, "effect"));
 			if (!ForgeRegistries.MOB_EFFECTS.containsKey(effectId)) throw new IllegalArgumentException("Effect does not exist: " + effectId);
 			int duration = GsonHelper.getAsInt(json, "duration");
-			if (duration == 200 && GsonHelper.getAsBoolean(json, "anti_flicker", true)) duration += 2;
+			if (duration % 20 == 0 && GsonHelper.getAsBoolean(json, "anti_flicker", true)) duration += 2; //Helps stop the flickering of per-tick effects
 			int amplifier = GsonHelper.getAsInt(json, "amplifier", 0);
 			boolean ambient = GsonHelper.getAsBoolean(json, "ambient", false);
 			boolean showParticles = GsonHelper.getAsBoolean(json, "show_particles", true);

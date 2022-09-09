@@ -22,6 +22,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
 
+/**
+ * Class representing a singular upgrade instance loaded from a datapack.
+ * @author LegoMaster3650
+ */
 public class ItemUpgrade {
 	
 	private final ResourceLocation id;
@@ -190,6 +194,15 @@ public class ItemUpgrade {
 			buf.writeInt(actionsList.size());
 			for (UpgradeAction action : actionsList) {
 				action.getInternals().to(buf);
+				Set<EquipmentSlot> actionValidSlots = action.getValidSlots();
+				boolean hasActionValidSlots = actionValidSlots != null;
+				buf.writeBoolean(hasActionValidSlots);
+				if (hasActionValidSlots) {
+					buf.writeInt(actionValidSlots.size());
+					for (var slot : actionValidSlots) {
+						buf.writeEnum(slot);
+					}
+				}
 				action.hackyToNetworkReadJavadoc(buf);
 			}
 		}
@@ -227,7 +240,15 @@ public class ItemUpgrade {
 			int netActionsCount = buf.readInt();
 			for (var j = 0; j < netActionsCount; j++) {
 				IUpgradeInternals internals = IUpgradeInternals.of(netActionId, buf);
-				UpgradeAction netAction = serializer.fromNetwork(internals, buf);
+				Set<EquipmentSlot> netActionValidSlots = ImmutableSet.of();
+				if (buf.readBoolean()) {
+					int actionValidSlotsSize = buf.readInt();
+					netActionValidSlots = new LinkedHashSet<>(actionValidSlotsSize);
+					for (int k = 0; k < actionValidSlotsSize; k++) {
+						netActionValidSlots.add(buf.readEnum(EquipmentSlot.class));
+					}
+				}
+				UpgradeAction netAction = serializer.fromNetwork(internals, netActionValidSlots, buf);
 				netActions.put(netActionId, netAction);
 			}
 		}

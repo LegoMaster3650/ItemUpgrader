@@ -43,17 +43,17 @@ public class HasUpgradeCondition extends UpgradeCondition {
 	}
 
 	@Override
-	public Serializer getSerializer() {
-		return new Serializer();
-	}
-
-	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
 		ItemUpgrade upgrade = ItemUpgradeManager.INSTANCE.getUpgrade(this.upgradeId);
 		MutableComponent upgradeComponent = new TranslatableComponent("upgrade." + ComponentHelper.keyFormat(this.upgradeId));
 		if (upgrade != null) upgradeComponent = ComponentHelper.applyColor(upgrade.getColor(), upgradeComponent);
 		MutableComponent slotComponent = ComponentHelper.slotInOn(this.slot);
 		return new MutableComponent[] {upgradeComponent, slotComponent};
+	}
+
+	@Override
+	public Serializer getSerializer() {
+		return new Serializer();
 	}
 
 	@Override

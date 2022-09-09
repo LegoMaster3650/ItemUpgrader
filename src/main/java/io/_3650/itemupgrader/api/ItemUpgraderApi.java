@@ -5,7 +5,10 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import io._3650.itemupgrader.ItemUpgrader;
+import org.slf4j.Logger;
+
+import com.mojang.logging.LogUtils;
+
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.event.UpgradeEvent;
@@ -23,6 +26,8 @@ import net.minecraftforge.common.MinecraftForge;
  * @author LegoMaster3650
  */
 public class ItemUpgraderApi {
+	
+	private static final Logger LOGGER = LogUtils.getLogger();
 	
 	/* ItemUpgrader event system */
 	
@@ -57,8 +62,11 @@ public class ItemUpgraderApi {
 		if (!upgrade.hasAction(actionId)) return;
 		
 		upgrade.getActions(actionId).forEach(action -> {
-			if (action.getSerializer().providedData().verify(data.getEntrySet())) action.run(data);
-			else ItemUpgrader.LOGGER.error("Upgrade data failed entry set verification: " + actionId);
+			if (action.isValidSlot(slot)) {
+				if (action.getSerializer().providedData().verify(data.getEntrySet())) {
+					action.run(data);
+				} else LOGGER.error("Upgrade data failed entry set verification: " + actionId);
+			}
 		});
 	}
 	
@@ -236,6 +244,27 @@ public class ItemUpgraderApi {
 		UpgradeEvent.Replace replace = new UpgradeEvent.Replace(stack, upgradeId, previousUpgradeId);
 		MinecraftForge.EVENT_BUS.post(replace);
 		return replace.isCanceled();
+	}
+	
+	/* A few stupid upgrade manager interactions */
+	
+	/**
+	 * Checks if the given upgrade id has an associated upgrade
+	 * @param id The {@linkplain ResourceLocation} of the upgrade to check for
+	 * @return If an associated {@linkplain ItemUpgrade} is present
+	 */
+	public static boolean managerHasUpgrade(ResourceLocation id) {
+		return ItemUpgradeManager.INSTANCE.getUpgrade(id) == null;
+	}
+	
+	/**
+	 * Gets a datapack-initialized upgrade by id if it exists
+	 * @param id The {@linkplain ResourceLocation} of the upgrade to get
+	 * @return The {@linkplain ItemUpgrade} with that id (or {@code null} if it doesn't exist)
+	 */
+	@Nullable
+	public static ItemUpgrade managerGetUpgrade(ResourceLocation id) {
+		return ItemUpgradeManager.INSTANCE.getUpgrade(id);
 	}
 	
 }
