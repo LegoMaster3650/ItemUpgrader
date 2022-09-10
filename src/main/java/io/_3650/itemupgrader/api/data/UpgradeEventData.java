@@ -16,6 +16,7 @@ import com.ibm.icu.impl.locale.XCldrStub.ImmutableMap;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSide;
@@ -219,6 +220,33 @@ public class UpgradeEventData {
 		}
 		
 		/**
+		 * <b>Complaint with {@linkplain UpgradeEntrySet#PLAYER_SLOT_ITEM}</b><br>
+		 * Constructs a builder with following properties automatically determined:<br>
+		 * {@linkplain UpgradeEntry#ITEM}<br>
+		 * {@linkplain UpgradeEntry#SLOT}<br>
+		 * {@linkplain UpgradeEntry#PLAYER}<br>
+		 * {@linkplain UpgradeEntry#LIVING}<br>
+		 * {@linkplain UpgradeEntry#ENTITY}<br>
+		 * {@linkplain UpgradeEntry#ORIGIN}<br>
+		 * {@linkplain UpgradeEntry#LEVEL}<br>
+		 * {@linkplain UpgradeEntry#SIDE}
+		 * @param living A {@linkplain LivingEntity} to use for context
+		 * @param slot An {@linkplain EquipmentSlot} to use for context
+		 */
+		public Builder(Player player, EquipmentSlot slot) {
+			Level level = player.getLevel();
+			this.entry(UpgradeEntry.ITEM, player.hasItemInSlot(slot) ? player.getItemBySlot(slot) : ItemStack.EMPTY)
+				.entry(UpgradeEntry.SLOT, slot)
+				.entry(UpgradeEntry.PLAYER, player)
+				.entry(UpgradeEntry.LIVING, player)
+				.entry(UpgradeEntry.ENTITY, player)
+				.entry(UpgradeEntry.ORIGIN, player.position())
+				.entry(UpgradeEntry.LEVEL, level)
+				.entry(UpgradeEntry.SIDE, level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+		}
+		
+		/**
+		 * <b>Complaint with {@linkplain UpgradeEntrySet#LIVING_SLOT_ITEM}</b><br>
 		 * Constructs a builder with following properties automatically determined:<br>
 		 * {@linkplain UpgradeEntry#ITEM}<br>
 		 * {@linkplain UpgradeEntry#SLOT}<br>
@@ -242,6 +270,7 @@ public class UpgradeEventData {
 		}
 		
 		/**
+		 * <b>Complaint with {@linkplain UpgradeEntrySet#LIVING}</b><br>
 		 * Constructs a builder with following properties automatically determined:<br>
 		 * {@linkplain UpgradeEntry#LIVING}<br>
 		 * {@linkplain UpgradeEntry#ENTITY}<br>
@@ -260,6 +289,7 @@ public class UpgradeEventData {
 		}
 		
 		/**
+		 * <b>Complaint with {@linkplain UpgradeEntrySet#ENTITY}</b><br>
 		 * Constructs a builder with following properties automatically determined:<br>
 		 * {@linkplain UpgradeEntry#ENTITY}<br>
 		 * {@linkplain UpgradeEntry#ORIGIN}<br>
@@ -276,6 +306,7 @@ public class UpgradeEventData {
 		}
 		
 		/**
+		 * <b>Complaint with {@linkplain UpgradeEntrySet#LEVEL}</b><br>
 		 * Constructs a builder with following properties automatically determined:<br>
 		 * {@linkplain UpgradeEntry#LEVEL}<br>
 		 * {@linkplain UpgradeEntry#SIDE}

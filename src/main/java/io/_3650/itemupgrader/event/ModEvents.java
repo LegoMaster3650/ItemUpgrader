@@ -12,17 +12,22 @@ import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.event.UpgradeEvent;
+import io._3650.itemupgrader.network.NetworkHandler;
+import io._3650.itemupgrader.network.PlayerLeftClickEmptyPacket;
 import io._3650.itemupgrader.registry.ModUpgradeActions;
 import io._3650.itemupgrader.upgrades.actions.AttributeUpgradeAction.AttributeReplacement;
 import io._3650.itemupgrader.upgrades.data.ModUpgradeEntry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -67,8 +72,7 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void playerTick(PlayerTickEvent event) {
 		for (EquipmentSlot slot : EquipmentSlot.values()) {
-			UpgradeEventData data = new UpgradeEventData.Builder((LivingEntity) event.player, slot)
-					.entry(UpgradeEntry.PLAYER, event.player)
+			UpgradeEventData data = new UpgradeEventData.Builder(event.player, slot)
 					.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
 			ItemUpgraderApi.runAction(event.phase == TickEvent.Phase.END ? ModUpgradeActions.PLAYER_TICK_POST.getId() : ModUpgradeActions.PLAYER_TICK_PRE.getId(), data);
 		}
@@ -106,6 +110,58 @@ public class ModEvents {
 				event.addModifier(attribute, modifier);
 			});
 		}
+	}
+	
+	@SubscribeEvent
+	public static void playerUseItem(PlayerInteractEvent.RightClickItem event) {
+		EquipmentSlot slot = slotFromHand(event.getHand());
+		UpgradeEventData data = new UpgradeEventData.Builder(event.getPlayer(), slot)
+				.cancellable()
+				.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
+		ItemUpgraderApi.runAction(ModUpgradeActions.PLAYER_USE.getId(), data);
+		if (data.isCancelled()) event.setCanceled(true);
+	}
+	
+	@SubscribeEvent
+	public static void playerClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+		EquipmentSlot slot = slotFromHand(event.getHand());
+		BlockPos pos = event.getPos();
+		BlockState state = event.getWorld().getBlockState(pos);
+		UpgradeEventData data = new UpgradeEventData.Builder(event.getPlayer(), slot)
+				.entry(UpgradeEntry.BLOCK_POS, pos)
+				.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
+				.entry(UpgradeEntry.BLOCK_STATE, state)
+				.cancellable()
+				.build(UpgradeEntrySet.PLAYER_BLOCK_INTERACTION);
+		ItemUpgraderApi.runAction(ModUpgradeActions.LEFT_CLICK_BLOCK.getId(), data);
+		if (!data.isCancelled()) {
+			UpgradeEventData data1 = new UpgradeEventData.Builder(event.getPlayer(), slot)
+					.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
+			ItemUpgraderApi.runAction(ModUpgradeActions.LEFT_CLICK.getId(), data1);
+		}
+	}
+	
+	@SubscribeEvent
+	public static void playerClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
+		EquipmentSlot slot = slotFromHand(event.getHand());
+		boolean emptyStack = event.getItemStack().isEmpty();
+		NetworkHandler.sendToServer(new PlayerLeftClickEmptyPacket(slot, emptyStack));
+		if (emptyStack) {
+			for (var slot1 : EquipmentSlot.values()) {
+				if (slot1 == slot) continue;
+				UpgradeEventData data = new UpgradeEventData.Builder(event.getPlayer(), slot1)
+						.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
+				ItemUpgraderApi.runAction(ModUpgradeActions.LEFT_CLICK_EMPTY.getId(), data);
+			}
+		} else {
+			UpgradeEventData data = new UpgradeEventData.Builder(event.getPlayer(), slot)
+					.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
+			ItemUpgraderApi.runAction(ModUpgradeActions.LEFT_CLICK.getId(), data);
+		}
+	}
+	
+	private static EquipmentSlot slotFromHand(InteractionHand hand) {
+		return hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
 	}
 	
 }

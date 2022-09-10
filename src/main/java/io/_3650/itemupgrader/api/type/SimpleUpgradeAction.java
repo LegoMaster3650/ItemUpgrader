@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
@@ -38,6 +39,10 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 		super(internals, validSlots, conditions);
 		this.results = ImmutableList.copyOf(results);
 		this.serializer = serializer;
+	}
+	
+	public static Supplier<Serializer> of(UpgradeEntrySet provided) {
+		return () -> new Serializer(provided);
 	}
 	
 	@Override

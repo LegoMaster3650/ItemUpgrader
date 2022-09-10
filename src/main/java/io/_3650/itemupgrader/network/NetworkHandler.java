@@ -19,10 +19,15 @@ public class NetworkHandler {
 	
 	public static void init() {
 		INSTANCE.registerMessage(id++, UpdateItemUpgradesPacket.class, UpdateItemUpgradesPacket::encode, UpdateItemUpgradesPacket::decode, UpdateItemUpgradesPacket::handle);
+		INSTANCE.registerMessage(id++, PlayerLeftClickEmptyPacket.class, PlayerLeftClickEmptyPacket::encode, PlayerLeftClickEmptyPacket::decode, PlayerLeftClickEmptyPacket::handle);
 	}
 	
 	public static <MSG> void sendToPlayer(ServerPlayer player, MSG msg) {
 		INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
+	}
+	
+	public static <MSG> void sendToServer(MSG msg) {
+		INSTANCE.sendToServer(msg);
 	}
 	
 }

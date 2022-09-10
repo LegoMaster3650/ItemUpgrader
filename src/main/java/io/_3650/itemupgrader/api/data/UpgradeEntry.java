@@ -1,6 +1,8 @@
 package io._3650.itemupgrader.api.data;
 
 import io._3650.itemupgrader.api.registry.ItemUpgraderRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -61,6 +63,8 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<DamageSource> DAMAGE_SOURCE = create("damager");
 	public static final UpgradeEntry<BlockState> BLOCK_STATE = create("block_state");
 	public static final UpgradeEntry<BlockEntity> BLOCK_ENTITY = create("block_entity");
+	public static final UpgradeEntry<BlockPos> BLOCK_POS = create("block_position");
+	public static final UpgradeEntry<Direction> BLOCK_FACE = create("block_face");
 	public static final UpgradeEntry<Float> EXPLOSION_RADIUS = create("explosion_radius"); //for the sake of predicates and stuff
 	public static final UpgradeEntry<LivingEntity> LIVING = create("living_entity");
 	public static final UpgradeEntry<Player> PLAYER = create("player");
