@@ -1,5 +1,7 @@
 package io._3650.itemupgrader.api.ingredient;
 
+import java.util.function.Predicate;
+
 import javax.annotation.Nullable;
 
 import com.google.gson.JsonElement;
@@ -9,6 +11,7 @@ import io._3650.itemupgrader.ItemUpgrader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.AbstractIngredient;

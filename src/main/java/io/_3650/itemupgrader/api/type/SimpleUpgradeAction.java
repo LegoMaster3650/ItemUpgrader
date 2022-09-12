@@ -89,7 +89,7 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 		}
 		
 		@Override
-		public UpgradeEntrySet providedData() {
+		public UpgradeEntrySet getProvidedData() {
 			return provided;
 		}
 		
@@ -114,7 +114,7 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 		}
 		
 		private void safeAddResult(List<UpgradeResult> results, UpgradeResult result) {
-			Set<UpgradeEntry<?>> test = Sets.difference(result.requiredData().getRequired(), this.providedData().getRequired());
+			Set<UpgradeEntry<?>> test = Sets.difference(result.getRequiredData().getRequired(), this.getProvidedData().getRequired());
 			if (test.isEmpty()) {
 				results.add(result);
 			} else {

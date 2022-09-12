@@ -51,6 +51,10 @@ public class AttributeUpgradeAction extends UpgradeAction {
 		this.uuids = uuids;
 	}
 	
+	public boolean customTooltipBase() {
+		return true;
+	}
+	
 	@Override
 	public MutableComponent getActionTooltip(ItemStack stack) {
 		//Set amount
@@ -106,7 +110,7 @@ public class AttributeUpgradeAction extends UpgradeAction {
 	public static class Serializer extends UpgradeActionSerializer<AttributeUpgradeAction> {
 		
 		@Override
-		public UpgradeEntrySet providedData() {
+		public UpgradeEntrySet getProvidedData() {
 			return UpgradeEntrySet.SLOT_ITEM;
 		}
 		

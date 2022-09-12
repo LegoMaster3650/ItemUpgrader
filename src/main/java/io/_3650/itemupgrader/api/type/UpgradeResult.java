@@ -24,7 +24,7 @@ public abstract class UpgradeResult extends IUpgradeType {
 	 * Gets the entry data required by this result to function properly
 	 * @return An {@linkplain UpgradeEntrySet} of every {@linkplain UpgradeEntry} required by this result
 	 */
-	public abstract UpgradeEntrySet requiredData();
+	public abstract UpgradeEntrySet getRequiredData();
 	
 	/**
 	 * Runs this condition with the provided data which is verified against the required entry set

@@ -9,6 +9,16 @@ public class Config {
 	
 	public static class Server {
 		
+		public final BooleanValue basePackEnabled;
+		
+		Server(ForgeConfigSpec.Builder builder) {
+			builder.push("basepack");
+			
+			basePackEnabled = builder.comment("Is the mod's default upgrade datapack enabled?","Disable this if you only want to use custom upgrade datapacks.","[Default: true]").define("basePackEnabled", true);
+			
+			builder.pop();
+		}
+		
 	}
 	
 	public static class Common {
@@ -31,10 +41,17 @@ public class Config {
 		
 	}
 	
+	public static final ForgeConfigSpec SERVER_SPEC;
+	public static final Server SERVER;
+	
 	public static final ForgeConfigSpec CLIENT_SPEC;
 	public static final Client CLIENT;
 	
 	static {
+		final Pair<Server, ForgeConfigSpec> serverSpecPair = new ForgeConfigSpec.Builder().configure(Server::new);
+		SERVER_SPEC = serverSpecPair.getRight();
+		SERVER = serverSpecPair.getLeft();
+		
 		final Pair<Client, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(Client::new);
 		CLIENT_SPEC = clientSpecPair.getRight();
 		CLIENT = clientSpecPair.getLeft();

@@ -14,6 +14,7 @@ import io._3650.itemupgrader.api.type.UpgradeCondition;
 import io._3650.itemupgrader.api.type.UpgradeResult;
 import io._3650.itemupgrader.client.ItemUpgraderClient;
 import io._3650.itemupgrader.network.NetworkHandler;
+import io._3650.itemupgrader.recipes.conditions.BasePackEnabledCondition;
 import io._3650.itemupgrader.registry.ModRecipes;
 import io._3650.itemupgrader.registry.ModTypedCriteria;
 import io._3650.itemupgrader.registry.ModUpgradeActions;
@@ -65,15 +66,20 @@ public class ItemUpgrader {
 		bus.addListener(this::setup);
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ItemUpgraderClient::new);
 		
+		ModLoadingContext.get().registerConfig(Type.SERVER, Config.SERVER_SPEC, "itemupgrader-server.toml");
+//		ModLoadingContext.get().registerConfig(Type.COMMON, Config.COMMON_SPEC, "itemupgrader-common.toml");
 		ModLoadingContext.get().registerConfig(Type.CLIENT, Config.CLIENT_SPEC, "itemupgrader-client.toml");
 		
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	private void setup(final FMLCommonSetupEvent event) {
-		LOGGER.info("Item Upgrader init");
-		CraftingHelper.register(ItemUpgraderRegistry.modRes("typed"), TypedIngredient.Serializer.INSTANCE);
-		CraftingHelper.register(ItemUpgraderRegistry.modRes("upgrade"), UpgradeIngredient.Serializer.INSTANCE);
-		NetworkHandler.init();
+		event.enqueueWork(() -> {
+			LOGGER.debug("Item Upgrader common setup");
+			CraftingHelper.register(ItemUpgraderRegistry.modRes("typed"), TypedIngredient.Serializer.INSTANCE);
+			CraftingHelper.register(ItemUpgraderRegistry.modRes("upgrade"), UpgradeIngredient.Serializer.INSTANCE);
+			CraftingHelper.register(BasePackEnabledCondition.Serializer.INSTANCE);
+			NetworkHandler.init();
+		});
 	}
 }

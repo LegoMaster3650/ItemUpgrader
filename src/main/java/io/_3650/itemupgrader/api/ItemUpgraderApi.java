@@ -12,6 +12,7 @@ import com.mojang.logging.LogUtils;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.event.UpgradeEvent;
+import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import io._3650.itemupgrader.registry.Reference;
 import io._3650.itemupgrader.upgrades.ItemUpgradeManager;
 import net.minecraft.ResourceLocationException;
@@ -20,6 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.registries.RegistryObject;
 
 /**
  * API class for interacting with the Item Upgrader system
@@ -32,28 +34,89 @@ public class ItemUpgraderApi {
 	/* ItemUpgrader event system */
 	
 	/**
-	 * Runs an action, automatically getting the <b>REQUIRED</b> ItemStack from the event data passed in
-	 * @param actionId The {@linkplain ResourceLocation} ID of the action to run (<i>Recommended to use RegistryObject.getId()</i>)
-	 * @param data An {@linkplain UpgradeEventData} which requires at least the ITEM entry to be present
+	 * Runs an action, automatically building the data against the given action and getting the <b>REQUIRED</b> ItemStack from the event data passed in<br>
+	 * <br>
+	 * NOTE: If a valid {@linkplain EquipmentSlot} is provided in the data, the upgrade will verify that against the data.
+	 * @param actionEntry A {@linkplain RegistryObject} for the {@linkplain UpgradeActionSerializer} of the action to run
+	 * @param builder An {@linkplain UpgradeEventData.Builder} to be built against the given action
 	 * @throws NoSuchElementException If no {@linkplain UpgradeEntry#ITEM} entry was present
-	 * @see #runAction(ResourceLocation, UpgradeEventData, ItemStack)
+	 * @return The built UpgradeEventData
+	 * @see #runActions(ResourceLocation, UpgradeEventData)
 	 */
-	public static void runAction(ResourceLocation actionId, UpgradeEventData data) throws NoSuchElementException {
+	public static UpgradeEventData runActions(RegistryObject<? extends UpgradeActionSerializer<?>> actionEntry, UpgradeEventData.Builder builder) throws NoSuchElementException {
+		UpgradeEventData data = builder.build(actionEntry.get().getProvidedData());
 		ItemStack stack = data.getOptional(UpgradeEntry.ITEM).orElseThrow(() -> new NoSuchElementException("Missing Item Entry"));
-		runAction(actionId, data, stack);
+		runActions(actionEntry.getId(), data, stack);
+		return data;
 	}
 	
 	/**
-	 * Runs an action on the given item with the given data
+	 * Runs an action on the given item, automatically building the data against the given action<br>
+	 * <br>
+	 * NOTE: If a valid {@linkplain EquipmentSlot} is provided in the data, the upgrade will verify that against the data.
+	 * @param actionEntry A {@linkplain RegistryObject} for the {@linkplain UpgradeActionSerializer} of the action to run
+	 * @param builder An {@linkplain UpgradeEventData.Builder} to be built against the given action
+	 * @param stack The {@linkplain ItemStack} to run the upgrade on
+	 * @return The built UpgradeEventData
+	 * @see #runActions(ResourceLocation, UpgradeEventData, ItemStack)
+	 */
+	public static UpgradeEventData runActions(RegistryObject<? extends UpgradeActionSerializer<?>> actionEntry, UpgradeEventData.Builder builder, ItemStack stack) {
+		UpgradeEventData data = builder.build(actionEntry.get().getProvidedData());
+		runActions(actionEntry, data, stack);
+		return data;
+	}
+	
+	/**
+	 * Runs an action, automatically getting the <b>REQUIRED</b> ItemStack from the event data passed in<br>
+	 * <br>
+	 * NOTE: If a valid {@linkplain EquipmentSlot} is provided in the data, the upgrade will verify that against the data.
+	 * @param actionEntry A {@linkplain RegistryObject} for the {@linkplain UpgradeActionSerializer} of the action to run
+	 * @param data An {@linkplain UpgradeEventData} which requires at least the ITEM entry to be present
+	 * @throws NoSuchElementException If no {@linkplain UpgradeEntry#ITEM} entry was present
+	 * @see #runActions(ResourceLocation, UpgradeEventData, ItemStack)
+	 */
+	public static void runActions(RegistryObject<? extends UpgradeActionSerializer<?>> actionEntry, UpgradeEventData data) throws NoSuchElementException {
+		ItemStack stack = data.getOptional(UpgradeEntry.ITEM).orElseThrow(() -> new NoSuchElementException("Missing Item Entry"));
+		runActions(actionEntry.getId(), data, stack);
+	}
+	
+	/**
+	 * Runs an action on the given item with the given data<br>
+	 * <br>
+	 * NOTE: If a valid {@linkplain EquipmentSlot} is provided in the data, the upgrade will verify that against the data.
+	 * @param actionEntry A {@linkplain RegistryObject} for the {@linkplain UpgradeActionSerializer} of the action to run
+	 * @param data An {@linkplain UpgradeEventData} containing the data that will be provided.
+	 * @param stack The {@linkplain ItemStack} to run the upgrade on
+	 */
+	public static void runActions(RegistryObject<? extends UpgradeActionSerializer<?>> actionEntry, UpgradeEventData data, ItemStack stack) throws NoSuchElementException {
+		runActions(actionEntry.getId(), data, stack);
+	}
+	
+	/**
+	 * Runs an action, automatically getting the <b>REQUIRED</b> ItemStack from the event data passed in<br>
+	 * <br>
+	 * NOTE: If a valid {@linkplain EquipmentSlot} is provided in the data, the upgrade will verify that against the data.
+	 * @param actionId The {@linkplain ResourceLocation} ID of the action to run (<i>Recommended to use RegistryObject.getId()</i>)
+	 * @param data An {@linkplain UpgradeEventData} which requires at least the ITEM entry to be present
+	 * @throws NoSuchElementException If no {@linkplain UpgradeEntry#ITEM} entry was present
+	 * @see #runActions(RegistryObject, UpgradeEventData, ItemStack)
+	 */
+	public static void runActions(ResourceLocation actionId, UpgradeEventData data) throws NoSuchElementException {
+		ItemStack stack = data.getOptional(UpgradeEntry.ITEM).orElseThrow(() -> new NoSuchElementException("Missing Item Entry"));
+		runActions(actionId, data, stack);
+	}
+	
+	/**
+	 * Runs an action on the given item with the given data<br>
+	 * <br>
+	 * NOTE: If a valid {@linkplain EquipmentSlot} is provided in the data, the upgrade will verify that against the data.
 	 * @param actionId The {@linkplain ResourceLocation} ID of the action to run (<i>Recommended to use RegistryObject.getId()</i>)
 	 * @param data An {@linkplain UpgradeEventData} containing the data that will be provided.
 	 * @param stack The {@linkplain ItemStack} to run the upgrade on
-	 * @apiNote If a valid {@linkplain EquipmentSlot} is provided in the data, the upgrade will verify that against the data.
+	 * @see #runActions(RegistryObject, UpgradeEventData)
 	 */
-	public static void runAction(ResourceLocation actionId, UpgradeEventData data, ItemStack stack) {
-		if (stack == null) return;
-		if (stack.isEmpty()) return; //better safe than sorry
-		if (!hasUpgrade(stack)) return; //very safe
+	public static void runActions(ResourceLocation actionId, UpgradeEventData data, ItemStack stack) {
+		if (stack == null || stack.isEmpty()) return; //do nothing if no item is present
 		ItemUpgrade upgrade = getUpgrade(stack); //get upgrade on item
 		if (upgrade == null) return; //stop if no upgrade on item
 		if (!upgrade.isValidItem(stack)) {removeUpgradeNoUpdate(stack); return;} //stop if item upgrade is invalid and remove it
@@ -63,7 +126,7 @@ public class ItemUpgraderApi {
 		
 		upgrade.getActions(actionId).forEach(action -> {
 			if (action.isValidSlot(slot)) {
-				if (action.getSerializer().providedData().verify(data.getEntrySet())) {
+				if (action.getSerializer().getProvidedData().verify(data.getEntrySet())) {
 					action.run(data);
 				} else LOGGER.error("Upgrade data failed entry set verification: " + actionId);
 			}

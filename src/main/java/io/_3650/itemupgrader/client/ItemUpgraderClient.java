@@ -18,8 +18,10 @@ public class ItemUpgraderClient {
 	}
 	
 	public void clientSetup(FMLClientSetupEvent event) {
-		LOGGER.info("Item Upgrader client init");
-		ModKeybinds.init();
+		event.enqueueWork(() -> {
+			LOGGER.debug("Item Upgrader client init");
+			ModKeybinds.init();
+		});
 	}
 	
 }

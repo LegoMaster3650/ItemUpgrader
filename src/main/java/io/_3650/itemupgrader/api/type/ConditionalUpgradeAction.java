@@ -91,7 +91,7 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 		}
 		
 		private void safeAddCondition(List<UpgradeCondition> conditions, UpgradeCondition condition) {
-			Set<UpgradeEntry<?>> test = Sets.difference(condition.requiredData().getRequired(), this.providedData().getRequired());
+			Set<UpgradeEntry<?>> test = Sets.difference(condition.requiredData().getRequired(), this.getProvidedData().getRequired());
 			if (test.isEmpty()) {
 				conditions.add(condition);
 			} else {

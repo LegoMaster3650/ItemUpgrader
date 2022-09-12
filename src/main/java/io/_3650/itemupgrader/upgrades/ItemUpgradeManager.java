@@ -34,6 +34,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.crafting.CraftingHelper;
 
 public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 	
@@ -51,9 +52,21 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 	protected void apply(Map<ResourceLocation, JsonElement> jsonMap, ResourceManager resourceManager, ProfilerFiller profiler) {
 		ImmutableMap.Builder<ResourceLocation, ItemUpgrade> builder = ImmutableMap.builder();
 		
-		jsonMap.forEach((upgradeId, jsonElem) -> {
+		boolean contextValid = true;
+		if (this.serverContext == null) {
+			LOGGER.error("Skipping datapack condition checks for upgrades as the context was null, !!!Report this if you see it!!!");
+			contextValid = false;
+		}
+		
+		for (var upgradeId : jsonMap.keySet()) {
 			try {
-				JsonObject json = jsonElem.getAsJsonObject();
+				JsonObject json = jsonMap.get(upgradeId).getAsJsonObject();
+				
+				//Hopefully will just ignore context at worst idk its 1 AM
+				if (contextValid && !CraftingHelper.processConditions(json, "conditions", this.serverContext)) {
+					LOGGER.debug("Skipping loading upgrade {} as it's conditions were not met", upgradeId);
+					continue;
+				}
 				
 				//base
 				Ingredient base = Ingredient.fromJson(json.get("base"));
@@ -89,7 +102,7 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 			} catch (Exception err) {
 				LOGGER.error("Couldn't parse upgrade " + upgradeId.toString(), err);
 			}
-		});
+		}
 		
 		this.upgrades = builder.build();
 		
@@ -126,6 +139,11 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 		IUpgradeInternals internals = IUpgradeInternals.of(resultId, json);
 		UpgradeResultSerializer<?> resultType = ItemUpgrader.RESULT_REGISTRY.get().getValue(resultId);
 		return resultType.fromJson(internals, json);
+	}
+	
+	private net.minecraftforge.common.crafting.conditions.ICondition.IContext serverContext = null;
+	public void setContext(net.minecraftforge.common.crafting.conditions.ICondition.IContext context) {
+		this.serverContext = context;
 	}
 	
 	@Nullable

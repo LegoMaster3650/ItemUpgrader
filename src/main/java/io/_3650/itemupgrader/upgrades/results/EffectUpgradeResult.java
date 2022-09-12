@@ -44,7 +44,7 @@ public class EffectUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public UpgradeEntrySet requiredData() {
+	public UpgradeEntrySet getRequiredData() {
 		return UpgradeEntrySet.LIVING;
 	}
 	

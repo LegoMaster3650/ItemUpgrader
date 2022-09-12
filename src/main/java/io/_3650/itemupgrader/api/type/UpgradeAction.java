@@ -3,6 +3,7 @@ package io._3650.itemupgrader.api.type;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -32,18 +33,18 @@ public abstract class UpgradeAction extends IUpgradeType {
 	}
 	
 	/**
-	 * Checks if the given slot is valid for this action
+	 * Checks if the given slot is valid for this action<br>
+	 * Note: {@code null} is always valid
 	 * @param slot The {@linkplain EquipmentSlot} to check
 	 * @return Whether the slot is valid for this action or not
 	 */
-	public boolean isValidSlot(EquipmentSlot slot) {
+	public boolean isValidSlot(@Nullable EquipmentSlot slot) {
 		return slot == null || validSlots.isEmpty() || validSlots.contains(slot);
 	}
 	
 	/**
 	 * Gets the set of the valid slots for this upgrade
 	 * @return The {@linkplain Set} of {@linkplain EquipmentSlot}s that are valid for this action
-	 * @return
 	 */
 	public Set<EquipmentSlot> getValidSlots() {
 		return this.validSlots;
@@ -54,9 +55,7 @@ public abstract class UpgradeAction extends IUpgradeType {
 	 * (Note: It still gets turned blue either way to encourage sticking to the standard style)
 	 * @return <b>false</b> to use the automatic tooltip base, <b>true</b> to just use the value of {@linkplain #getActionTooltip(ItemStack)}
 	 */
-	public boolean customTooltipBase() {
-		return false;
-	}
+	public abstract boolean customTooltipBase();
 	
 	/**
 	 * Moved to another method for actions
@@ -88,7 +87,7 @@ public abstract class UpgradeAction extends IUpgradeType {
 	
 	/**
 	 * Use this to return your class's serializer instance.<br>
-	 * Ensure the return type is an UpgradeActionSerializer<<b>This Class</b>> in some form, whether just that or a subclass of that, just please make sure it's not the default Wildcard ? type
+	 * Ensure the return type is an UpgradeActionSerializer&lt<b>This Class</b>&gt in some form, whether just that or a subclass of that, just please make sure it's not the default Wildcard ? type
 	 * @return Your own serializer instance
 	 */
 	public abstract UpgradeActionSerializer<?> getSerializer();

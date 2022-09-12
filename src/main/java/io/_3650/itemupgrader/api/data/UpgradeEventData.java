@@ -202,6 +202,15 @@ public class UpgradeEventData {
 	}
 	
 	/**
+	 * A utility function to safely get a boolean result or false if not present
+	 * @param entry The boolean result to get
+	 * @return The boolean output of the result
+	 */
+	public boolean getBoolResult(UpgradeEntry<Boolean> entry) {
+		return this.getResultOptional(entry).orElse(false);
+	}
+	
+	/**
 	 * The builder for {@linkplain UpgradeEventData}
 	 * @author LegoMaster3650
 	 *

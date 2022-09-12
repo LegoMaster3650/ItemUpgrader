@@ -72,6 +72,7 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<ResourceLocation> PREV_UPGRADE_ID = create("prev_upgrade_id");
 	
 	/**<h1><b><u>Intended for use in results</u></b></h1>**/ public static final UpgradeEntry<Boolean> CANCELLED = create("cancelled");
+	/**<h1><b><u>Intended for use in results</u></b></h1>**/ public static final UpgradeEntry<Boolean> CONSUMED = create("consumed");
 	
 	private static <T> UpgradeEntry<T> create(String name) {
 		return new UpgradeEntry<T>(ItemUpgraderRegistry.modRes(name));

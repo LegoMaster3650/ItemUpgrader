@@ -9,9 +9,7 @@ import com.google.common.collect.Sets;
 import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.ItemUpgraderApi;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
-import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
-import io._3650.itemupgrader.api.event.UpgradeEvent;
 import io._3650.itemupgrader.network.NetworkHandler;
 import io._3650.itemupgrader.network.PlayerLeftClickEmptyPacket;
 import io._3650.itemupgrader.registry.ModUpgradeActions;
@@ -22,6 +20,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.TickEvent;
@@ -34,69 +33,39 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = ItemUpgrader.MOD_ID)
 public class ModEvents {
 	
-	@SubscribeEvent
-	public static void upgradeApplyPre(UpgradeEvent.Apply.Pre event) {
-		UpgradeEventData data = new UpgradeEventData.Builder(event.stack)
-				.entry(UpgradeEntry.UPGRADE_ID, event.upgradeId)
-				.cancellable()
-				.build(UpgradeEntrySet.ITEM_UPGRADE_ID);
-		ItemUpgraderApi.runAction(ModUpgradeActions.UPGRADE_APPLY_PRE.getId(), data, event.stack);
-		if (data.isCancelled() && event.isCancelable()) event.setCanceled(true);
-	}
-	
-	@SubscribeEvent
-	public static void upgradeApplyPost(UpgradeEvent.Apply.Post event) {
-		ItemUpgraderApi.runAction(ModUpgradeActions.UPGRADE_APPLY_POST.getId(), new UpgradeEventData.Builder(event.stack)
-				.entry(UpgradeEntry.UPGRADE_ID, event.upgradeId)
-				.build(UpgradeEntrySet.ITEM_UPGRADE_ID), event.stack);
-	}
-	
-	@SubscribeEvent
-	public static void upgradeRemove(UpgradeEvent.Remove event) {
-		ItemUpgraderApi.runAction(ModUpgradeActions.UPGRADE_REMOVE.getId(), new UpgradeEventData.Builder(event.stack)
-				.entry(UpgradeEntry.PREV_UPGRADE_ID, event.upgradeId)
-				.build(UpgradeEntrySet.ITEM_PREV_UPGRADE_ID), event.stack);
-	}
-	
-	@SubscribeEvent
-	public static void upgradeReplace(UpgradeEvent.Replace event) {
-		UpgradeEventData data = new UpgradeEventData.Builder(event.stack)
-				.entry(UpgradeEntry.UPGRADE_ID, event.upgradeId)
-				.entry(UpgradeEntry.PREV_UPGRADE_ID, event.previousUpgradeId)
-				.cancellable()
-				.build(UpgradeEntrySet.ITEM_REPLACE_UPGRADE_IDS);
-		ItemUpgraderApi.runAction(ModUpgradeActions.UPGRADE_REPLACE.getId(), data, event.stack);
-		if (data.isCancelled() && event.isCancelable()) event.setCanceled(true);
-	}
+	/*
+	 * TICKING
+	 */
 	
 	@SubscribeEvent
 	public static void playerTick(PlayerTickEvent event) {
 		for (EquipmentSlot slot : EquipmentSlot.values()) {
-			UpgradeEventData data = new UpgradeEventData.Builder(event.player, slot)
-					.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
-			ItemUpgraderApi.runAction(event.phase == TickEvent.Phase.END ? ModUpgradeActions.PLAYER_TICK_POST.getId() : ModUpgradeActions.PLAYER_TICK_PRE.getId(), data);
+			UpgradeEventData.Builder builder = new UpgradeEventData.Builder(event.player, slot);
+			ItemUpgraderApi.runActions(event.phase == TickEvent.Phase.END ? ModUpgradeActions.PLAYER_TICK_POST : ModUpgradeActions.PLAYER_TICK_PRE, builder);
 		}
 	}
 	
 	@SubscribeEvent
 	public static void livingTick(LivingUpdateEvent event) {
 		for (EquipmentSlot slot : EquipmentSlot.values()) {
-			UpgradeEventData data = new UpgradeEventData.Builder(event.getEntityLiving(), slot)
-					.build(UpgradeEntrySet.LIVING_SLOT_ITEM);
-			ItemUpgraderApi.runAction(ModUpgradeActions.LIVING_TICK.getId(), data);
+			UpgradeEventData.Builder builder = new UpgradeEventData.Builder(event.getEntityLiving(), slot);
+			ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_TICK, builder);
 		}
 	}
 	
+	/*
+	 * ATTRIBUTES
+	 */
+	
 	@SubscribeEvent
 	public static void attributeModifiers(ItemAttributeModifierEvent event) {
-		UpgradeEventData data = UpgradeEventData.builder()
+		UpgradeEventData.Builder builder = UpgradeEventData.builder()
 				.entry(UpgradeEntry.ITEM, event.getItemStack())
 				.entry(UpgradeEntry.SLOT, event.getSlotType())
 				.entry(ModUpgradeEntry.ATTRIBUTES, MultimapBuilder.hashKeys().hashSetValues().build(event.getOriginalModifiers()))
 				.result(ModUpgradeEntry.ATTRIBUTE_ADDITIONS, MultimapBuilder.hashKeys().hashSetValues().build())
-				.result(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS, Sets.newHashSet())
-				.build(UpgradeEntrySet.SLOT_ITEM);
-		ItemUpgraderApi.runAction(ModUpgradeActions.ATTRIBUTE.getId(), data);
+				.result(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS, Sets.newHashSet());
+		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ATTRIBUTE, builder);
 		Set<AttributeReplacement> replacements = data.getResult(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS);
 		if (!replacements.isEmpty()) {
 			replacements.forEach(replacement -> {
@@ -112,51 +81,79 @@ public class ModEvents {
 		}
 	}
 	
+	/*
+	 * RIGHT CLICK (USE)
+	 */
+
+	@SubscribeEvent
+	public static void interactEntity(PlayerInteractEvent.EntityInteract event) {
+		
+	}
+
+	@SubscribeEvent
+	public static void playerUseBlock(PlayerInteractEvent.RightClickBlock event) {
+		
+	}
+	
 	@SubscribeEvent
 	public static void playerUseItem(PlayerInteractEvent.RightClickItem event) {
 		EquipmentSlot slot = slotFromHand(event.getHand());
-		UpgradeEventData data = new UpgradeEventData.Builder(event.getPlayer(), slot)
-				.cancellable()
-				.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
-		ItemUpgraderApi.runAction(ModUpgradeActions.PLAYER_USE.getId(), data);
+		Player player = event.getPlayer();
+		UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot)
+				.cancellable();
+		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK, builder);
 		if (data.isCancelled()) event.setCanceled(true);
 	}
+	
+	@SubscribeEvent
+	public static void playerUseEmpty(PlayerInteractEvent.RightClickEmpty event) {
+		EquipmentSlot slot = slotFromHand(event.getHand());
+		Player player = event.getPlayer();
+		for (var slot1 : EquipmentSlot.values()) {
+			if (slot1 == slot) continue;
+			else ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1));
+		}
+	}
+	
+	/*
+	 * LEFT CLICK (CLICK)
+	 */
 	
 	@SubscribeEvent
 	public static void playerClickBlock(PlayerInteractEvent.LeftClickBlock event) {
 		EquipmentSlot slot = slotFromHand(event.getHand());
 		BlockPos pos = event.getPos();
 		BlockState state = event.getWorld().getBlockState(pos);
-		UpgradeEventData data = new UpgradeEventData.Builder(event.getPlayer(), slot)
+		Player player = event.getPlayer();
+		UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot)
 				.entry(UpgradeEntry.BLOCK_POS, pos)
 				.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 				.entry(UpgradeEntry.BLOCK_STATE, state)
-				.cancellable()
-				.build(UpgradeEntrySet.PLAYER_BLOCK_INTERACTION);
-		ItemUpgraderApi.runAction(ModUpgradeActions.LEFT_CLICK_BLOCK.getId(), data);
-		if (!data.isCancelled()) {
-			UpgradeEventData data1 = new UpgradeEventData.Builder(event.getPlayer(), slot)
-					.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
-			ItemUpgraderApi.runAction(ModUpgradeActions.LEFT_CLICK.getId(), data1);
+				.result(UpgradeEntry.CONSUMED, false);
+		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK, builder);
+		for (var slot1 : EquipmentSlot.values()) {
+			if (slot1 == slot) continue;
+			ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK_EFFECT, data);
+			if (data.getBoolResult(UpgradeEntry.CONSUMED)) return;
+		}
+		if (!data.getBoolResult(UpgradeEntry.CONSUMED)) {
+			ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK, new UpgradeEventData.Builder(player, slot));
 		}
 	}
 	
 	@SubscribeEvent
 	public static void playerClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
 		EquipmentSlot slot = slotFromHand(event.getHand());
+		Player player = event.getPlayer();
 		boolean emptyStack = event.getItemStack().isEmpty();
-		NetworkHandler.sendToServer(new PlayerLeftClickEmptyPacket(slot, emptyStack));
+		if (event.getSide().isClient()) NetworkHandler.sendToServer(new PlayerLeftClickEmptyPacket(slot, emptyStack));
 		if (emptyStack) {
 			for (var slot1 : EquipmentSlot.values()) {
 				if (slot1 == slot) continue;
-				UpgradeEventData data = new UpgradeEventData.Builder(event.getPlayer(), slot1)
-						.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
-				ItemUpgraderApi.runAction(ModUpgradeActions.LEFT_CLICK_EMPTY.getId(), data);
+				else ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1));
 			}
 		} else {
-			UpgradeEventData data = new UpgradeEventData.Builder(event.getPlayer(), slot)
-					.build(UpgradeEntrySet.PLAYER_SLOT_ITEM);
-			ItemUpgraderApi.runAction(ModUpgradeActions.LEFT_CLICK.getId(), data);
+			ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK, new UpgradeEventData.Builder(player, slot));
 		}
 	}
 	
