@@ -19,16 +19,27 @@ public class ModUpgradeActions {
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> UPGRADE_REMOVE = ACTIONS.register("upgrade_remove", SimpleUpgradeAction.of(UpgradeEntrySet.ITEM_PREV_UPGRADE_ID));
 	
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_TICK = ACTIONS.register("living_tick", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_SLOT_ITEM));
-	public static final RegistryObject<UpgradeActionSerializer<AttributeUpgradeAction>> ATTRIBUTE = ACTIONS.register("attribute", () -> new AttributeUpgradeAction.Serializer());
+	public static final RegistryObject<AttributeUpgradeAction.Serializer> ATTRIBUTE = ACTIONS.register("attribute", () -> new AttributeUpgradeAction.Serializer());
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> PLAYER_TICK_PRE = ACTIONS.register("player_tick_pre", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> PLAYER_TICK_POST = ACTIONS.register("player_tick_post", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
+	
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> RIGHT_CLICK = ACTIONS.register("right_click", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> RIGHT_CLICK_EFFECT = ACTIONS.register("right_click_effect", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> RIGHT_CLICK_BLOCK = ACTIONS.register("right_click_block", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_BLOCK_INTERACTION));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> RIGHT_CLICK_BLOCK_EFFECT = ACTIONS.register("right_click_block_effect", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_BLOCK_INTERACTION));
-	public static final RegistryObject<SimpleUpgradeAction.Serializer> ENTITY_INTERACT = ACTIONS.register("entity_interact", SimpleUpgradeAction.of(null));
+	
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> ENTITY_INTERACT = ACTIONS.register("entity_interact", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_ENTITY_INTERACTION));
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> ENTITY_INTERACT_SPECIFIC = ACTIONS.register("entity_interact_specific", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_ENTITY_INTERACTION));
+	
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LEFT_CLICK = ACTIONS.register("left_click", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LEFT_CLICK_EFFECT = ACTIONS.register("left_click_effect", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LEFT_CLICK_BLOCK = ACTIONS.register("left_click_block", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_BLOCK_INTERACTION));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LEFT_CLICK_BLOCK_EFFECT = ACTIONS.register("left_click_block_effect", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_BLOCK_INTERACTION));
+	
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> PLAYER_ATTACK = ACTIONS.register("player_attack", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_ENTITY_INTERACTION));
+	
+	
+	
+//	public static final RegistryObject<SimpleUpgradeAction.Serializer> 
+	
 }

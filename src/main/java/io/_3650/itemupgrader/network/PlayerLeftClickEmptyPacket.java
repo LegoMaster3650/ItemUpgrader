@@ -2,9 +2,7 @@ package io._3650.itemupgrader.network;
 
 import java.util.function.Supplier;
 
-import io._3650.itemupgrader.api.ItemUpgraderApi;
-import io._3650.itemupgrader.api.data.UpgradeEventData;
-import io._3650.itemupgrader.registry.ModUpgradeActions;
+import io._3650.itemupgrader.event.ModEvents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -23,14 +21,7 @@ public record PlayerLeftClickEmptyPacket(EquipmentSlot slot, boolean emptyStack)
 	public static void handle(PlayerLeftClickEmptyPacket packet, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer player = ctx.get().getSender();
-			if (packet.emptyStack) {
-				for (var slot1 : EquipmentSlot.values()) {
-					if (slot1 == packet.slot) continue;
-					else ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1));
-				}
-			} else {
-				ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK, new UpgradeEventData.Builder(player, packet.slot));
-			}
+			ModEvents.leftClickBase(packet.slot, player, packet.emptyStack);
 		});
 		ctx.get().setPacketHandled(true);
 	}

@@ -165,6 +165,7 @@ public class UpgradeEntrySet {
 	});
 	/**Side, Level, Origin*/
 	public static final UpgradeEntrySet LEVEL_ORIGIN = LEVEL.with(ORIGIN);
+	
 	/* ==== ENTITY STUFF ==== */
 	/**Side, Level, Origin, Entity*/
 	public static final UpgradeEntrySet ENTITY = LEVEL_ORIGIN.with(builder -> {
@@ -196,6 +197,14 @@ public class UpgradeEntrySet {
 	public static final UpgradeEntrySet PLAYER_SLOT = PLAYER.with(SLOT);
 	/**Side, Level, Origin, Entity, Living, Player, Slot, Item*/
 	public static final UpgradeEntrySet PLAYER_SLOT_ITEM = PLAYER_SLOT.with(ITEM);
+	
+	/**Target Entity, Target Entity Position*/
+	public static final UpgradeEntrySet TARGET_ENTITY = create(builder -> {
+		builder.add(UpgradeEntry.TARGET_ENTITY).add(UpgradeEntry.TARGET_ENTITY_POS);
+	});
+	/**Side, Level, Origin, Target Entity, Target Entity Position*/
+	public static final UpgradeEntrySet TARGET_ENTITY_EXTENDED = LEVEL_ORIGIN.with(TARGET_ENTITY);
+	
 	/* ==== UPGRADE STUFF ==== */
 	/**Upgrade ID*/
 	public static final UpgradeEntrySet UPGRADE_ID = create(builder -> {
@@ -213,6 +222,7 @@ public class UpgradeEntrySet {
 	public static final UpgradeEntrySet REPLACE_UPGRADE_IDS = UPGRADE_ID.with(PREV_UPGRADE_ID);
 	/**Upgrade ID, Previous Upgrade ID*/
 	public static final UpgradeEntrySet ITEM_REPLACE_UPGRADE_IDS = ITEM.with(REPLACE_UPGRADE_IDS);
+	
 	/* ==== BLOCK STUFF ==== */
 	/**Block Position*/
 	public static final UpgradeEntrySet BLOCK_POS = create(builder -> {
@@ -248,6 +258,8 @@ public class UpgradeEntrySet {
 	public static final UpgradeEntrySet PLAYER_LEVEL_BLOCK = PLAYER.with(LEVEL_BLOCK);
 	/**Side, Level, Origin, Entity, Living, Player, Slot, Item, Block Pos, Block State, Block Face*/
 	public static final UpgradeEntrySet PLAYER_BLOCK_INTERACTION = PLAYER_SLOT_ITEM.withAll(LEVEL_BLOCK, BLOCK_FACE);
+	/**Side, Level, Origin, Entity, Living, Player, Slot, Item, Target Entity, Target Entity Position*/
+	public static final UpgradeEntrySet PLAYER_ENTITY_INTERACTION = PLAYER_SLOT_ITEM.with(TARGET_ENTITY);
 	
 	//TEMPLATE: public static final UpgradeEntrySet 
 }

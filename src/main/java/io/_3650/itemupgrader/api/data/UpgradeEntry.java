@@ -57,7 +57,7 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<Entity> ENTITY = create("entity");
 	public static final UpgradeEntry<Vec3> ORIGIN = create("origin");
 	public static final UpgradeEntry<Level> LEVEL = create("level");
-	public static final UpgradeEntry<EquipmentSlot> SLOT = create("equipment_slot");
+	public static final UpgradeEntry<EquipmentSlot> SLOT = create("slot");
 	public static final UpgradeEntry<Entity> DAMAGER_ENTITY = create("damager_entity");
 	public static final UpgradeEntry<Entity> DIRECT_DAMAGER = create("direct_damager");
 	public static final UpgradeEntry<DamageSource> DAMAGE_SOURCE = create("damager");
@@ -68,6 +68,8 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<Float> EXPLOSION_RADIUS = create("explosion_radius"); //for the sake of predicates and stuff
 	public static final UpgradeEntry<LivingEntity> LIVING = create("living_entity");
 	public static final UpgradeEntry<Player> PLAYER = create("player");
+	public static final UpgradeEntry<Entity> TARGET_ENTITY = create("target_entity");
+	public static final UpgradeEntry<Vec3> TARGET_ENTITY_POS = create("target_entity_position");
 	public static final UpgradeEntry<ResourceLocation> UPGRADE_ID = create("upgrade_id");
 	public static final UpgradeEntry<ResourceLocation> PREV_UPGRADE_ID = create("prev_upgrade_id");
 	
