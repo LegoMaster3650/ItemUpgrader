@@ -52,7 +52,7 @@ public class UpgradeEntry<T> {
 		return "<upgrade entry " + this.name + ">";
 	}
 	
-	public static final UpgradeEntry<LogicalSide> SIDE = create("dist");
+	public static final UpgradeEntry<LogicalSide> SIDE = create("side");
 	public static final UpgradeEntry<ItemStack> ITEM = create("itemstack");
 	public static final UpgradeEntry<Entity> ENTITY = create("entity");
 	public static final UpgradeEntry<Vec3> ORIGIN = create("origin");
@@ -70,6 +70,7 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<Player> PLAYER = create("player");
 	public static final UpgradeEntry<Entity> TARGET_ENTITY = create("target_entity");
 	public static final UpgradeEntry<Vec3> TARGET_ENTITY_POS = create("target_entity_position");
+	public static final UpgradeEntry<Vec3> ENTITY_INTERACTION_POS = create("target_entity_position");
 	public static final UpgradeEntry<ResourceLocation> UPGRADE_ID = create("upgrade_id");
 	public static final UpgradeEntry<ResourceLocation> PREV_UPGRADE_ID = create("prev_upgrade_id");
 	

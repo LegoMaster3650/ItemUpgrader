@@ -198,11 +198,11 @@ public class UpgradeEntrySet {
 	/**Side, Level, Origin, Entity, Living, Player, Slot, Item*/
 	public static final UpgradeEntrySet PLAYER_SLOT_ITEM = PLAYER_SLOT.with(ITEM);
 	
-	/**Target Entity, Target Entity Position*/
+	/**Target Entity, Target Entity Position, Entity Interaction Position*/
 	public static final UpgradeEntrySet TARGET_ENTITY = create(builder -> {
-		builder.add(UpgradeEntry.TARGET_ENTITY).add(UpgradeEntry.TARGET_ENTITY_POS);
+		builder.add(UpgradeEntry.TARGET_ENTITY).add(UpgradeEntry.TARGET_ENTITY_POS).add(UpgradeEntry.ENTITY_INTERACTION_POS);
 	});
-	/**Side, Level, Origin, Target Entity, Target Entity Position*/
+	/**Side, Level, Origin, Target Entity, Target Entity Position, Entity Interaction Position*/
 	public static final UpgradeEntrySet TARGET_ENTITY_EXTENDED = LEVEL_ORIGIN.with(TARGET_ENTITY);
 	
 	/* ==== UPGRADE STUFF ==== */

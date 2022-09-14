@@ -98,10 +98,12 @@ public class ModEvents {
 		EquipmentSlot slot = slotFromHand(event.getHand());
 		Player player = event.getPlayer();
 		Entity targetEntity = event.getTarget();
-		Vec3 targetPos = targetEntity.position().add(event.getLocalPos());
+		Vec3 targetPos = targetEntity.position();
+		Vec3 interactionPos = targetPos.add(event.getLocalPos());
 		UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot)
 				.entry(UpgradeEntry.TARGET_ENTITY, targetEntity)
 				.entry(UpgradeEntry.TARGET_ENTITY_POS, targetPos)
+				.entry(UpgradeEntry.ENTITY_INTERACTION_POS, interactionPos)
 				.result(UpgradeEntry.CONSUMED, false)
 				.cancellable();
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ENTITY_INTERACT_SPECIFIC, builder);
@@ -120,6 +122,7 @@ public class ModEvents {
 		UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot)
 				.entry(UpgradeEntry.TARGET_ENTITY, targetEntity)
 				.entry(UpgradeEntry.TARGET_ENTITY_POS, targetPos)
+				.entry(UpgradeEntry.ENTITY_INTERACTION_POS, targetPos)
 				.cancellable();
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ENTITY_INTERACT, builder);
 		if (data.isCancelled()) event.setCanceled(true);
@@ -144,7 +147,7 @@ public class ModEvents {
 		}
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
-			UpgradeEventData data1 = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_BLOCK_EFFECT, new UpgradeEventData.Builder(player, slot)
+			UpgradeEventData data1 = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_BLOCK_EFFECT, new UpgradeEventData.Builder(player, slot1)
 					.entry(UpgradeEntry.BLOCK_POS, pos)
 					.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 					.entry(UpgradeEntry.BLOCK_STATE, state)
@@ -214,8 +217,13 @@ public class ModEvents {
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK, builder);
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
-			ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK_EFFECT, data);
-			if (data.getBoolResult(UpgradeEntry.CONSUMED)) return;
+			UpgradeEventData data1 = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK_EFFECT, new UpgradeEventData.Builder(player, slot1)
+					.entry(UpgradeEntry.BLOCK_POS, pos)
+					.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
+					.entry(UpgradeEntry.BLOCK_STATE, state)
+					.result(UpgradeEntry.CONSUMED, false));
+			if (data1.getBoolResult(UpgradeEntry.CONSUMED)) return;
+			
 		}
 		if (!data.getBoolResult(UpgradeEntry.CONSUMED)) {
 			boolean emptyStack = event.getItemStack().isEmpty();

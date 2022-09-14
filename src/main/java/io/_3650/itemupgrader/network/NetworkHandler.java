@@ -20,6 +20,7 @@ public class NetworkHandler {
 	public static void init() {
 		INSTANCE.registerMessage(id++, UpdateItemUpgradesPacket.class, UpdateItemUpgradesPacket::encode, UpdateItemUpgradesPacket::decode, UpdateItemUpgradesPacket::handle);
 		INSTANCE.registerMessage(id++, PlayerLeftClickEmptyPacket.class, PlayerLeftClickEmptyPacket::encode, PlayerLeftClickEmptyPacket::decode, PlayerLeftClickEmptyPacket::handle);
+		INSTANCE.registerMessage(id++, PlayerRightClickEmptyPacket.class, PlayerRightClickEmptyPacket::encode, PlayerRightClickEmptyPacket::decode, PlayerRightClickEmptyPacket::handle);
 	}
 	
 	public static <MSG> void sendToPlayer(ServerPlayer player, MSG msg) {
