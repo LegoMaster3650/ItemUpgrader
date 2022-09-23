@@ -1,12 +1,10 @@
 package io._3650.itemupgrader.api.type;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 
 import io._3650.itemupgrader.ItemUpgrader;
@@ -91,14 +89,11 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 		}
 		
 		private void safeAddCondition(List<UpgradeCondition> conditions, UpgradeCondition condition) {
-			Set<UpgradeEntry<?>> test = Sets.difference(condition.requiredData().getRequired(), this.getProvidedData().getRequired());
+			Set<UpgradeEntry<?>> test = condition.getRequiredData().verifyDifference(this.getProvidedData());
 			if (test.isEmpty()) {
 				conditions.add(condition);
 			} else {
-				Iterator<UpgradeEntry<?>> iter = test.iterator();
-				String errStr = iter.next().toString();
-				while (iter.hasNext()) errStr = errStr + ", " + iter.next();
-				throw new IllegalArgumentException("Missing required entries for condition " + condition.getId() + " - [" + errStr + "]");
+				throw new IllegalArgumentException("Missing required entries for condition:" + condition.getId() + " - " + test);
 			}
 		}
 		

@@ -44,6 +44,14 @@ public class ComponentHelper {
 	}
 	
 	/**
+	 * Utility for creating an empty mutable component array for tooltip functions
+	 * @return An empty array of {@linkplain MutableComponent}s
+	 */
+	public static MutableComponent[] empty() {
+		return new MutableComponent[0];
+	}
+	
+	/**
 	 * Turns a list of components into a single component formatted into a comma seperated list terminating with or<br>
 	 * Examples: "A, B, C, or D", "A or B", "A"
 	 * @param components A {@linkplain List} of {@linkplain MutableComponent}s to format

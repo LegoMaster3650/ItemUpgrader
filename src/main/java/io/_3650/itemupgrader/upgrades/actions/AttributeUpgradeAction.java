@@ -72,8 +72,8 @@ public class AttributeUpgradeAction extends UpgradeAction {
 	}
 	
 	@Override
-	public void run(UpgradeEventData event) {
-		Multimap<Attribute, AttributeModifier> modifiers = event.getEntryOrNull(ModUpgradeEntry.ATTRIBUTES);
+	public void run(UpgradeEventData data) {
+		Multimap<Attribute, AttributeModifier> modifiers = data.getEntryOrNull(ModUpgradeEntry.ATTRIBUTES);
 		if (modifiers == null) return;
 		boolean applied = false;
 		if (modifiers.containsKey(this.attribute)) {
@@ -81,7 +81,7 @@ public class AttributeUpgradeAction extends UpgradeAction {
 				if (modifier.getOperation() == this.operation && (this.name == null || modifier.getName() == this.name)) {
 					AttributeModifier newModifier = new AttributeModifier(modifier.getId(), modifier.getName(), modifier.getAmount() + this.amount, modifier.getOperation());
 					AttributeReplacement replacement = new AttributeReplacement(this.attribute, modifier, newModifier);
-					Set<AttributeReplacement> replacements = event.getResultOrNull(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS);
+					Set<AttributeReplacement> replacements = data.getResultOrNull(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS);
 					applied = replacements != null && replacements.add(replacement);
 					if (applied) {
 						modifiers.remove(this.attribute, modifier);
@@ -92,8 +92,8 @@ public class AttributeUpgradeAction extends UpgradeAction {
 		}
 		
 		if (!applied) {
-			SetMultimap<Attribute, AttributeModifier> additions = event.getResultOrNull(ModUpgradeEntry.ATTRIBUTE_ADDITIONS);
-			applied = additions != null && additions.put(this.attribute, new AttributeModifier(this.uuids.get(event.getEntry(UpgradeEntry.SLOT)), this.name == null ? "Upgrader Attribute" : this.name, this.amount, this.operation));
+			SetMultimap<Attribute, AttributeModifier> additions = data.getResultOrNull(ModUpgradeEntry.ATTRIBUTE_ADDITIONS);
+			applied = additions != null && additions.put(this.attribute, new AttributeModifier(this.uuids.get(data.getEntry(UpgradeEntry.SLOT)), this.name == null ? "Upgrader Attribute" : this.name, this.amount, this.operation));
 		}
 	}
 	
@@ -156,13 +156,13 @@ public class AttributeUpgradeAction extends UpgradeAction {
 
 		@Override
 		public AttributeUpgradeAction fromNetwork(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, FriendlyByteBuf buf) {
-			ResourceLocation netAttributeId = buf.readResourceLocation();
-			Operation netOperation = buf.readEnum(Operation.class);
-			double netAmount = buf.readDouble();
-			String netName = null;
-			if (buf.readBoolean()) netName = buf.readUtf();
-			Map<EquipmentSlot, UUID> netUUIDs = buf.readMap(buffer -> buffer.readEnum(EquipmentSlot.class), buffer -> buffer.readUUID());
-			return new AttributeUpgradeAction(internals, validSlots, netAttributeId, netOperation, netAmount, netName, netUUIDs);
+			ResourceLocation attributeId = buf.readResourceLocation();
+			Operation operation = buf.readEnum(Operation.class);
+			double amount = buf.readDouble();
+			String name = null;
+			if (buf.readBoolean()) name = buf.readUtf();
+			Map<EquipmentSlot, UUID> uuids = buf.readMap(buffer -> buffer.readEnum(EquipmentSlot.class), buffer -> buffer.readUUID());
+			return new AttributeUpgradeAction(internals, validSlots, attributeId, operation, amount, name, uuids);
 		}
 		
 	}

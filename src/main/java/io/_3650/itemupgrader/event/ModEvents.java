@@ -26,6 +26,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
@@ -103,7 +104,7 @@ public class ModEvents {
 		UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot)
 				.entry(UpgradeEntry.TARGET_ENTITY, targetEntity)
 				.entry(UpgradeEntry.TARGET_ENTITY_POS, targetPos)
-				.entry(UpgradeEntry.ENTITY_INTERACTION_POS, interactionPos)
+				.entry(UpgradeEntry.INTERACTION_POS, interactionPos)
 				.result(UpgradeEntry.CONSUMED, false)
 				.cancellable();
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ENTITY_INTERACT_SPECIFIC, builder);
@@ -122,7 +123,7 @@ public class ModEvents {
 		UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot)
 				.entry(UpgradeEntry.TARGET_ENTITY, targetEntity)
 				.entry(UpgradeEntry.TARGET_ENTITY_POS, targetPos)
-				.entry(UpgradeEntry.ENTITY_INTERACTION_POS, targetPos)
+				.entry(UpgradeEntry.INTERACTION_POS, targetPos)
 				.cancellable();
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ENTITY_INTERACT, builder);
 		if (data.isCancelled()) event.setCanceled(true);
@@ -138,9 +139,10 @@ public class ModEvents {
 				.entry(UpgradeEntry.BLOCK_POS, pos)
 				.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 				.entry(UpgradeEntry.BLOCK_STATE, state)
+				.entry(UpgradeEntry.INTERACTION_POS, event.getHitVec().getLocation())
 				.result(UpgradeEntry.CONSUMED, false)
 				.cancellable();
-		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_BLOCK, builder);
+		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_BLOCK, builder, event.getItemStack());
 		if (data.isCancelled()) {
 			event.setCanceled(true);
 			return;
@@ -151,6 +153,7 @@ public class ModEvents {
 					.entry(UpgradeEntry.BLOCK_POS, pos)
 					.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 					.entry(UpgradeEntry.BLOCK_STATE, state)
+					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
 					.result(UpgradeEntry.CONSUMED, false));
 			if (data1.getBoolResult(UpgradeEntry.CONSUMED)) {
 				event.setCancellationResult(InteractionResult.CONSUME);
@@ -159,8 +162,7 @@ public class ModEvents {
 			}
 		}
 		if (!data.getBoolResult(UpgradeEntry.CONSUMED)) {
-			boolean emptyStack = event.getItemStack().isEmpty();
-			rightClickBase(slot, player, emptyStack);
+			rightClickBase(slot, player, event.getItemStack());
 		}
 	}
 	
@@ -177,11 +179,11 @@ public class ModEvents {
 		EquipmentSlot slot = slotFromHand(event.getHand());
 		Player player = event.getPlayer();
 		if (event.getSide().isClient()) NetworkHandler.sendToServer(new PlayerRightClickEmptyPacket(slot));
-		rightClickBase(slot, player, true);
+		rightClickBase(slot, player, event.getItemStack());
 	}
 	
-	public static void rightClickBase(EquipmentSlot slot, Player player, boolean emptyStack) {
-		if (!emptyStack) ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK, new UpgradeEventData.Builder(player, slot));
+	public static void rightClickBase(EquipmentSlot slot, Player player, ItemStack stack) {
+		if (!stack.isEmpty()) ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK, new UpgradeEventData.Builder(player, slot), stack);
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
 			ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1));
@@ -213,21 +215,22 @@ public class ModEvents {
 				.entry(UpgradeEntry.BLOCK_POS, pos)
 				.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 				.entry(UpgradeEntry.BLOCK_STATE, state)
+				.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
 				.result(UpgradeEntry.CONSUMED, false);
-		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK, builder);
+		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK, builder, event.getItemStack());
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
 			UpgradeEventData data1 = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK_EFFECT, new UpgradeEventData.Builder(player, slot1)
 					.entry(UpgradeEntry.BLOCK_POS, pos)
 					.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 					.entry(UpgradeEntry.BLOCK_STATE, state)
+					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
 					.result(UpgradeEntry.CONSUMED, false));
 			if (data1.getBoolResult(UpgradeEntry.CONSUMED)) return;
 			
 		}
 		if (!data.getBoolResult(UpgradeEntry.CONSUMED)) {
-			boolean emptyStack = event.getItemStack().isEmpty();
-			leftClickBase(slot, player, emptyStack);
+			leftClickBase(slot, player, event.getItemStack());
 		}
 	}
 	
@@ -235,13 +238,13 @@ public class ModEvents {
 	public static void playerClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
 		EquipmentSlot slot = slotFromHand(event.getHand());
 		Player player = event.getPlayer();
-		boolean emptyStack = event.getItemStack().isEmpty();
-		if (event.getSide().isClient()) NetworkHandler.sendToServer(new PlayerLeftClickEmptyPacket(slot, emptyStack));
-		leftClickBase(slot, player, emptyStack);
+		ItemStack stack = event.getItemStack();
+		if (event.getSide().isClient()) NetworkHandler.sendToServer(new PlayerLeftClickEmptyPacket(slot, stack.isEmpty()));
+		leftClickBase(slot, player, stack);
 	}
 	
-	public static void leftClickBase(EquipmentSlot slot, Player player, boolean emptyStack) {
-		if (!emptyStack) ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK, new UpgradeEventData.Builder(player, slot));
+	public static void leftClickBase(EquipmentSlot slot, Player player, ItemStack stack) {
+		if (!stack.isEmpty()) ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK, new UpgradeEventData.Builder(player, slot), stack);
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
 			ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1));
@@ -260,6 +263,7 @@ public class ModEvents {
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.PLAYER_ATTACK, new UpgradeEventData.Builder(event.getPlayer(), EquipmentSlot.MAINHAND)
 				.entry(UpgradeEntry.TARGET_ENTITY, event.getTarget())
 				.entry(UpgradeEntry.TARGET_ENTITY_POS, event.getTarget().position())
+				.entry(UpgradeEntry.INTERACTION_POS, event.getTarget().position())
 				.cancellable());
 		if (data.isCancelled()) event.setCanceled(true);
 	}

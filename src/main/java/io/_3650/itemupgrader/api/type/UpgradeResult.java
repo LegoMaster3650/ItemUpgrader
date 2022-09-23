@@ -12,19 +12,25 @@ import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
  */
 public abstract class UpgradeResult extends IUpgradeType {
 	
+	public final UpgradeEntrySet requiredData;
+	
 	/**
 	 * Constructs an {@linkplain IUpgradeType} using the given internals
 	 * @param internals {@linkplain UpgradeResult} containing information for this type
+	 * @param requiredData The {@linkplain UpgradeEntrySet} to return from {@linkplain #getRequiredData()}
 	 */
-	public UpgradeResult(@Nonnull IUpgradeInternals internals) {
+	public UpgradeResult(@Nonnull IUpgradeInternals internals, UpgradeEntrySet requiredData) {
 		super(internals);
+		this.requiredData = requiredData;
 	}
 	
 	/**
 	 * Gets the entry data required by this result to function properly
 	 * @return An {@linkplain UpgradeEntrySet} of every {@linkplain UpgradeEntry} required by this result
 	 */
-	public abstract UpgradeEntrySet getRequiredData();
+	public UpgradeEntrySet getRequiredData() {
+		return this.requiredData;
+	}
 	
 	/**
 	 * Runs this condition with the provided data which is verified against the required entry set

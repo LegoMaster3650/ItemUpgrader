@@ -1,13 +1,11 @@
 package io._3650.itemupgrader.api.type;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 
 import io._3650.itemupgrader.ItemUpgrader;
@@ -114,14 +112,11 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 		}
 		
 		private void safeAddResult(List<UpgradeResult> results, UpgradeResult result) {
-			Set<UpgradeEntry<?>> test = Sets.difference(result.getRequiredData().getRequired(), this.getProvidedData().getRequired());
+			Set<UpgradeEntry<?>> test = result.getRequiredData().verifyDifference(this.getProvidedData());
 			if (test.isEmpty()) {
 				results.add(result);
 			} else {
-				Iterator<UpgradeEntry<?>> iter = test.iterator();
-				String errStr = iter.next().toString();
-				while (iter.hasNext()) errStr = errStr + ", " + iter.next();
-				throw new IllegalArgumentException("Missing required entries for result " + result.getId() + " - [" + errStr + "]");
+				throw new IllegalArgumentException("Missing required entries for result:" + result.getId() + " - " + test);
 			}
 		}
 		

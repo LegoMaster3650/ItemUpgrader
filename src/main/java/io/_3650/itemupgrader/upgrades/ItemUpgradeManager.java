@@ -19,6 +19,7 @@ import com.mojang.logging.LogUtils;
 
 import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.ItemUpgrade;
+import io._3650.itemupgrader.api.registry.ItemUpgraderRegistry;
 import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
@@ -109,8 +110,13 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 	}
 	
 	public static UpgradeAction actionFromJson(JsonObject json) {
+		//get action id
 		ResourceLocation actionId = new ResourceLocation(GsonHelper.getAsString(json, "action"));
+		//minecraft never registers anything anyways, default to item upgrader instead
+		if (actionId.getNamespace() == ResourceLocation.DEFAULT_NAMESPACE) actionId = ItemUpgraderRegistry.modRes(actionId.getNamespace());
+		//get internals
 		IUpgradeInternals internals = IUpgradeInternals.of(actionId, json);
+		//get valid slots
 		Set<EquipmentSlot> validSlots = new LinkedHashSet<>();
 		if (GsonHelper.isStringValue(json, "slot")) {
 			validSlots = new LinkedHashSet<>(1);
@@ -122,22 +128,37 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 				if (GsonHelper.isStringValue(element)) validSlots.add(EquipmentSlot.byName(element.getAsString()));
 			}
 		}
+		//get action serializer
 		UpgradeActionSerializer<?> actionType = ItemUpgrader.ACTION_REGISTRY.get().getValue(actionId);
+		//deserialize
 		return actionType.fromJson(internals, validSlots, json);
 	}
 	
 	public static UpgradeCondition conditionFromJson(JsonObject json) {
+		//get condition id
 		ResourceLocation conditionId = new ResourceLocation(GsonHelper.getAsString(json, "type"));
+		//minecraft never registers anything anyways, default to item upgrader instead
+		if (conditionId.getNamespace() == ResourceLocation.DEFAULT_NAMESPACE) conditionId = ItemUpgraderRegistry.modRes(conditionId.getNamespace());
+		//get internals
 		IUpgradeInternals internals = IUpgradeInternals.of(conditionId, json);
+		//get inverted
 		boolean inverted = GsonHelper.getAsBoolean(json, "inverted", false);
+		//get condition serializer
 		UpgradeConditionSerializer<?> conditionType = ItemUpgrader.CONDITION_REGISTRY.get().getValue(conditionId);
+		//deserialize
 		return conditionType.fromJson(internals, inverted, json);
 	}
 	
 	public static UpgradeResult resultFromJson(JsonObject json) {
+		//get result id
 		ResourceLocation resultId = new ResourceLocation(GsonHelper.getAsString(json, "type"));
+		//minecraft never registers anything anyways, default to item upgrader instead
+		if (resultId.getNamespace() == ResourceLocation.DEFAULT_NAMESPACE) resultId = ItemUpgraderRegistry.modRes(resultId.getNamespace());
+		//get internals
 		IUpgradeInternals internals = IUpgradeInternals.of(resultId, json);
+		//get result serializer
 		UpgradeResultSerializer<?> resultType = ItemUpgrader.RESULT_REGISTRY.get().getValue(resultId);
+		//deserialize
 		return resultType.fromJson(internals, json);
 	}
 	

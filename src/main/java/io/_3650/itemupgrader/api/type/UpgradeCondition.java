@@ -12,15 +12,18 @@ import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
  */
 public abstract class UpgradeCondition extends IUpgradeType {
 	
+	public final UpgradeEntrySet requiredData;
 	private final boolean inverted;
 	
 	/**
 	 * Constructs an {@linkplain IUpgradeType} using the given internals
 	 * @param internals {@linkplain UpgradeCondition} containing information for this type
+	 * @param requiredData The {@linkplain UpgradeEntrySet} to return from {@linkplain #getRequiredData()}
 	 * @param inverted Whether or not the condition is inverted
 	 */
-	public UpgradeCondition(@Nonnull IUpgradeInternals internals, @Nonnull boolean inverted) {
+	public UpgradeCondition(@Nonnull IUpgradeInternals internals, @Nonnull boolean inverted, UpgradeEntrySet requiredData) {
 		super(internals);
+		this.requiredData = requiredData;
 		this.inverted = inverted;
 	}
 	
@@ -28,7 +31,9 @@ public abstract class UpgradeCondition extends IUpgradeType {
 	 * Gets the entry data required by this condition to function properly
 	 * @return An {@linkplain UpgradeEntrySet} of every {@linkplain UpgradeEntry} required by this condition
 	 */
-	public abstract UpgradeEntrySet requiredData();
+	public UpgradeEntrySet getRequiredData() {
+		return this.requiredData;
+	}
 	
 	/**
 	 * Tests this condition against the provided data which is verified against the required entry set

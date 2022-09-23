@@ -57,5 +57,7 @@
 	"upgradeCondition.itemupgrader.has_upgrade.inverse": "upgrade %s is not %s",
 	
 	"upgradeResult.itemupgrader.cancel": "Cancel",
-	"upgradeResult.itemupgrader.effect": "Gain %s"
+	"upgradeResult.itemupgrader.effect": "Gain %s",
+	"upgradeResult.itemupgrader.block_particle": "Display target block particle",
+	"upgradeResult.itemupgrader.run_command": "Run command: %s"
 }

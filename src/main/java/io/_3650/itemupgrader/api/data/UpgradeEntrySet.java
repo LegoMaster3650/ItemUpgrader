@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 
 /**
  * Represents a {@linkplain Set} of Upgrade Entries for use in UpgradeEventData
@@ -19,10 +20,14 @@ import com.google.common.collect.Sets;
  */
 public class UpgradeEntrySet {
 	
-	private final Set<UpgradeEntry<?>> required;
+	private final ImmutableSet<UpgradeEntry<?>> required;
+	private final ImmutableSet<UpgradeEntry<?>> provided;
+	private final EntryCategorySet.Builder categoryBuilder;
 	
-	private UpgradeEntrySet(Set<UpgradeEntry<?>> required) {
+	private UpgradeEntrySet(Set<UpgradeEntry<?>> required, Set<UpgradeEntry<?>> provided, EntryCategorySet.Builder categoryBuilder) {
 		this.required = ImmutableSet.copyOf(required);
+		this.provided = ImmutableSet.copyOf(provided);
+		this.categoryBuilder = categoryBuilder;
 	}
 	
 	/**
@@ -32,19 +37,39 @@ public class UpgradeEntrySet {
 		return this.required;
 	}
 	
-	private static final record VerifierCacheKey(UpgradeEntrySet holder, UpgradeEntrySet target) {}
-	private static final Map<VerifierCacheKey, Boolean> VERIFICATION_CACHE = Maps.newHashMap();
+	public Set<UpgradeEntry<?>> getProvided() {
+		return this.provided;
+	}
+	
+	public EntryCategorySet.Mapper getCategoryMapper() {
+		return this.categoryBuilder.build();
+	}
+	
+	private static final Map<UpgradeEntrySet, Boolean> VERIFICATION_CACHE = Maps.newHashMap();
 	
 	/**
 	 * Verifies the target entry set against this one<br>
-	 * <b>The target entry set is required to at least have every entry in this entry set.</b>
-	 * @param target The target entry set to verify
+	 * <b>The target entry set is required to provide at least every required entry in this entry set.</b>
+	 * @param provided The target entry set to verify
 	 * @return If the target entry set contains every entry in this set
 	 */
-	public boolean verify(@Nonnull UpgradeEntrySet target) {
-		VerifierCacheKey verifierKey = new VerifierCacheKey(this, target);
-		if (VERIFICATION_CACHE.containsKey(verifierKey)) return VERIFICATION_CACHE.get(verifierKey);
-		else return Sets.difference(this.getRequired(), target.getRequired()).isEmpty();
+	public boolean verify(@Nonnull UpgradeEntrySet provided) {
+		if (VERIFICATION_CACHE.containsKey(provided)) return VERIFICATION_CACHE.get(provided);
+		else {
+			boolean diff = Sets.difference(this.required, provided.provided).isEmpty();
+			VERIFICATION_CACHE.put(provided, diff);
+			return diff;
+		}
+	}
+	
+	/**
+	 * Verifies the target entry set against this one, ignoring cache and simply verifying difference<br>
+	 * <b>The target entry set is required to provide at least every required entry in this entry set.</b>
+	 * @param provided The target entry set to verify
+	 * @return A {@linkplain SetView} of every missing required {@linkplain UpgradeEntry}
+	 */
+	public SetView<UpgradeEntry<?>> verifyDifference(UpgradeEntrySet provided) {
+		return Sets.difference(this.required, provided.provided);
 	}
 	
 	/**
@@ -53,8 +78,7 @@ public class UpgradeEntrySet {
 	 * @return An {@linkplain UpgradeEntrySet} with the builder applied
 	 */
 	public UpgradeEntrySet with(Consumer<Builder> consumer) {
-		Builder builder = new Builder();
-		builder.required.addAll(this.required);
+		Builder builder = new Builder(this);
 		consumer.accept(builder);
 		return builder.build();
 	}
@@ -65,10 +89,7 @@ public class UpgradeEntrySet {
 	 * @return A new {@linkplain UpgradeEntrySet} with the two sets combined
 	 */
 	public UpgradeEntrySet with(UpgradeEntrySet set) {
-		Builder builder = new Builder();
-		builder.required.addAll(this.required);
-		builder.required.addAll(set.required);
-		return builder.build();
+		return this.with(builder -> builder.combine(set));
 	}
 	
 	/**
@@ -77,12 +98,26 @@ public class UpgradeEntrySet {
 	 * @return A new {@linkplain UpgradeEntrySet} with all of the sets combined
 	 */
 	public UpgradeEntrySet withAll(UpgradeEntrySet... sets) {
-		Builder builder = new Builder();
-		builder.required.addAll(this.required);
-		for (var set : sets) {
-			builder.required.addAll(set.required);
-		}
-		return builder.build();
+		return this.with(builder -> {
+			for (var set : sets) builder.combine(set);
+		});
+	}
+	
+	public UpgradeEntrySet fillCategories(Consumer<EntryCategorySet.Mapper> mapperConsumer) {
+		EntryCategorySet.Mapper mapper = this.categoryBuilder.build();
+		mapperConsumer.accept(mapper);
+		EntryCategorySet categories = mapper.freeze();
+		return this.with(builder -> {
+			for (var entryVar : categories.getCategoryMap().entrySet()) {
+				var category = entryVar.getKey();
+				var entry = entryVar.getValue();
+				if (entry != null) {
+					builder.category(category);
+					if (categories.isRequired(category)) builder.require(entry);
+					else builder.provide(entry);
+				}
+			}
+		});
 	}
 	
 	/**
@@ -93,19 +128,55 @@ public class UpgradeEntrySet {
 	public static class Builder {
 		
 		private final Set<UpgradeEntry<?>> required = Sets.newIdentityHashSet();
+		private final Set<UpgradeEntry<?>> provided = Sets.newIdentityHashSet();
+		private final EntryCategorySet.Builder categoryBuilder;
+		
+		/**Reverts the given entry set back to a builder*/
+		private Builder(UpgradeEntrySet preset) {
+			this.required.addAll(preset.required);
+			this.provided.addAll(preset.provided);
+			this.categoryBuilder = EntryCategorySet.Builder.copyOf(preset.categoryBuilder);
+		}
+		/**Adds all the data from the given entry to this one*/
+		private void combine(UpgradeEntrySet preset) {
+			this.required.addAll(preset.required);
+			this.provided.addAll(preset.provided);
+			this.categoryBuilder.addAll(preset.categoryBuilder);
+		}
 		
 		/**
 		 * Constructs a new empty builder
 		 */
-		public Builder() {}
+		public Builder() {
+			this.categoryBuilder = new EntryCategorySet.Builder();
+		}
 		
 		/**
-		 * Adds {@code entry} to the builder's required list
+		 * Adds {@code entry} to the builder's required AND provided list<br>
+		 * Requires the given entry to be present in the target when calling {@linkplain UpgradeEntrySet#verify(UpgradeEntrySet)}<br>
 		 * @param entry The {@linkplain UpgradeEntry} to append to the builder's requirements
 		 * @return The {@linkplain Builder} to chain more statements on
+		 * @see #provide(UpgradeEntry)
 		 */
-		public Builder add(UpgradeEntry<?> entry) {
+		public Builder require(UpgradeEntry<?> entry) {
 			this.required.add(entry);
+			this.provided.add(entry);
+			return this;
+		}
+		
+		/**
+		 * Adds {@code entry} to the builder's provided list<br>
+		 * Provides without requiring the entry for verification as the target in {@linkplain UpgradeEntrySet#verify(UpgradeEntrySet)}
+		 * @param entry The {@linkplain UpgradeEntry} to append to the builder's provided entries
+		 * @return The {@linkplain Builder} to chain more statements on
+		 */
+		public Builder provide(UpgradeEntry<?> entry) {
+			this.provided.add(entry);
+			return this;
+		}
+		
+		public Builder category(EntryCategory<?> category) {
+			this.categoryBuilder.add(category);
 			return this;
 		}
 		
@@ -114,7 +185,7 @@ public class UpgradeEntrySet {
 		 * @return A new {@linkplain UpgradeEntrySet} with this builder's required list made immutable
 		 */
 		public UpgradeEntrySet build() {
-			return new UpgradeEntrySet(this.required);
+			return new UpgradeEntrySet(this.required, this.provided, this.categoryBuilder);
 		}
 		
 	}
@@ -139,82 +210,88 @@ public class UpgradeEntrySet {
 	}
 	
 	/* ==== SOME BASE STUFF ==== */
-	/**Origin*/
-	public static final UpgradeEntrySet ORIGIN = create(builder -> {
-		builder.add(UpgradeEntry.ORIGIN);
+	/**NOTHING*/
+	public static final UpgradeEntrySet EMPTY = builder().build();
+	/**Position*/
+	public static final UpgradeEntrySet POSITION = create(builder -> {
+		builder.category(EntryCategory.POSITION).provide(UpgradeEntry.POSITION);
 	});
-	/**Item*/
+	/**Interaction Position*/
+	public static final UpgradeEntrySet INTERACTION_POS = create(builder -> {
+		builder.require(UpgradeEntry.INTERACTION_POS);
+	});
+	/**[Item]*/
 	public static final UpgradeEntrySet ITEM = create(builder -> {
-		builder.add(UpgradeEntry.ITEM);
+		builder.category(EntryCategory.ITEM).provide(UpgradeEntry.ITEM);
 	});
 	/**Slot*/
 	public static final UpgradeEntrySet SLOT = create(builder -> {
-		builder.add(UpgradeEntry.SLOT);
+		builder.require(UpgradeEntry.SLOT);
 	});
-	/**Slot, Item*/
+	/**Slot, [Item]*/
 	public static final UpgradeEntrySet SLOT_ITEM = ITEM.with(builder -> {
-		builder.add(UpgradeEntry.SLOT);
+		builder.require(UpgradeEntry.SLOT);
 	});
 	/**Side*/
 	public static final UpgradeEntrySet SIDED = create(builder -> {
-		builder.add(UpgradeEntry.SIDE);
+		builder.require(UpgradeEntry.SIDE);
 	});
 	/**Side, Level*/
 	public static final UpgradeEntrySet LEVEL = SIDED.with(builder -> {
-		builder.add(UpgradeEntry.LEVEL);
+		builder.require(UpgradeEntry.LEVEL);
 	});
-	/**Side, Level, Origin*/
-	public static final UpgradeEntrySet LEVEL_ORIGIN = LEVEL.with(ORIGIN);
+	/**Side, Level, [Position]*/
+	public static final UpgradeEntrySet LEVEL_POSITION = LEVEL.with(POSITION);
 	
 	/* ==== ENTITY STUFF ==== */
-	/**Side, Level, Origin, Entity*/
-	public static final UpgradeEntrySet ENTITY = LEVEL_ORIGIN.with(builder -> {
-		builder.add(UpgradeEntry.ENTITY);
+	/**Side, Level, [Position], [Entity]*/
+	public static final UpgradeEntrySet ENTITY = LEVEL_POSITION.with(builder -> {
+		builder.category(EntryCategory.ENTITY).provide(UpgradeEntry.ENTITY);
 	});
-	/**Side, Level, Origin, Entity, Item*/
+	/**Side, Level, [Position], [Entity], [Item]*/
 	public static final UpgradeEntrySet ENTITY_ITEM = ENTITY.with(ITEM);
-	/**Side, Level, Origin, Entity, Slot*/
+	/**Side, Level, [Position], [Entity], Slot*/
 	public static final UpgradeEntrySet ENTITY_SLOT = ENTITY.with(SLOT);
-	/**Side, Level, Origin, Entity, Slot, Item*/
+	/**Side, Level, [Position], [Entity], Slot, [Item]*/
 	public static final UpgradeEntrySet ENTITY_SLOT_ITEM = ENTITY_SLOT.with(ITEM);
-	/**Side, Level, Origin, Entity, Living*/
+	/**Side, Level, [Position], [Entity], [Living]*/
 	public static final UpgradeEntrySet LIVING = ENTITY.with(builder -> {
-		builder.add(UpgradeEntry.LIVING);
+		builder.category(EntryCategory.LIVING).provide(UpgradeEntry.LIVING);
 	});
-	/**Side, Level, Origin, Entity, Living, Item*/
+	/**Side, Level, [Position], [Entity], [Living], [Item]*/
 	public static final UpgradeEntrySet LIVING_ITEM = LIVING.with(ITEM);
-	/**Side, Level, Origin, Entity, Living, Slot*/
+	/**Side, Level, [Position], [Entity], [Living], Slot*/
 	public static final UpgradeEntrySet LIVING_SLOT = LIVING.with(SLOT);
-	/**Side, Level, Origin, Entity, Living, Slot, Item*/
+	/**Side, Level, [Position], [Entity], [Living], Slot, [Item]*/
 	public static final UpgradeEntrySet LIVING_SLOT_ITEM = LIVING_SLOT.with(ITEM);
-	/**Side, Level, Origin, Entity, Living, Player*/
+	/**Side, Level, [Position], [Entity], [Living], [Player]*/
 	public static final UpgradeEntrySet PLAYER = LIVING.with(builder -> {
-		builder.add(UpgradeEntry.PLAYER);
+		builder.category(EntryCategory.PLAYER).provide(UpgradeEntry.PLAYER);
 	});
-	/**Side, Level, Origin, Entity, Living, Player, Item*/
+	/**Side, Level, [Position], [Entity], [Living], [Player], [Item]*/
 	public static final UpgradeEntrySet PLAYER_ITEM = PLAYER.with(ITEM);
-	/**Side, Level, Origin, Entity, Living, Player, Slot*/
+	/**Side, Level, [Position], [Entity], [Living], [Player], Slot*/
 	public static final UpgradeEntrySet PLAYER_SLOT = PLAYER.with(SLOT);
-	/**Side, Level, Origin, Entity, Living, Player, Slot, Item*/
+	/**Side, Level, [Position], [Entity], [Living], [Player], Slot, [Item]*/
 	public static final UpgradeEntrySet PLAYER_SLOT_ITEM = PLAYER_SLOT.with(ITEM);
 	
-	/**Target Entity, Target Entity Position, Entity Interaction Position*/
+	/**Target Entity, Target Entity Position, Interaction Position*/
 	public static final UpgradeEntrySet TARGET_ENTITY = create(builder -> {
-		builder.add(UpgradeEntry.TARGET_ENTITY).add(UpgradeEntry.TARGET_ENTITY_POS).add(UpgradeEntry.ENTITY_INTERACTION_POS);
+		builder.require(UpgradeEntry.TARGET_ENTITY).require(UpgradeEntry.TARGET_ENTITY_POS).require(UpgradeEntry.INTERACTION_POS);
 	});
-	/**Side, Level, Origin, Target Entity, Target Entity Position, Entity Interaction Position*/
-	public static final UpgradeEntrySet TARGET_ENTITY_EXTENDED = LEVEL_ORIGIN.with(TARGET_ENTITY);
+	/**Side, Level, [Position], Target Entity, Target Entity Position, Interaction Position*/
+	public static final UpgradeEntrySet TARGET_ENTITY_EXTENDED = LEVEL_POSITION.with(TARGET_ENTITY);
 	
 	/* ==== UPGRADE STUFF ==== */
 	/**Upgrade ID*/
 	public static final UpgradeEntrySet UPGRADE_ID = create(builder -> {
-		builder.add(UpgradeEntry.UPGRADE_ID);
+		builder.require(UpgradeEntry.UPGRADE_ID);
 	});
 	/**Upgrade ID, Item*/
 	public static final UpgradeEntrySet ITEM_UPGRADE_ID = ITEM.with(UPGRADE_ID);
 	/**Previous Upgrade ID*/
 	public static final UpgradeEntrySet PREV_UPGRADE_ID = create(builder -> {
-		builder.add(UpgradeEntry.PREV_UPGRADE_ID);
+		builder.require(UpgradeEntry.PREV_UPGRADE_ID);
 	});
 	/**Previous Upgrade ID, Item*/
 	public static final UpgradeEntrySet ITEM_PREV_UPGRADE_ID = ITEM.with(PREV_UPGRADE_ID);
@@ -226,39 +303,39 @@ public class UpgradeEntrySet {
 	/* ==== BLOCK STUFF ==== */
 	/**Block Position*/
 	public static final UpgradeEntrySet BLOCK_POS = create(builder -> {
-		builder.add(UpgradeEntry.BLOCK_POS);
+		builder.require(UpgradeEntry.BLOCK_POS);
 	});
 	/**Block State*/
 	public static final UpgradeEntrySet BLOCK_STATE = create(builder -> {
-		builder.add(UpgradeEntry.BLOCK_STATE);
+		builder.require(UpgradeEntry.BLOCK_STATE);
 	});
 	/**Block Entity*/
 	public static final UpgradeEntrySet BLOCK_ENTITY = create(builder -> {
-		builder.add(UpgradeEntry.BLOCK_ENTITY);
+		builder.require(UpgradeEntry.BLOCK_ENTITY);
 	});
 	/**Block Face*/
 	public static final UpgradeEntrySet BLOCK_FACE = create(builder -> {
-		builder.add(UpgradeEntry.BLOCK_FACE);
+		builder.require(UpgradeEntry.BLOCK_FACE);
 	});
-	/**Block Pos, Block State*/
+	/**[Block Pos], Block State*/
 	public static final UpgradeEntrySet BLOCK_POS_STATE = BLOCK_POS.with(BLOCK_STATE);
-	/**Block Pos, Block Entity*/
+	/**[Block Pos], Block Entity*/
 	public static final UpgradeEntrySet BLOCK_POS_ENTITY = BLOCK_POS.with(BLOCK_ENTITY);
 	/**Block State, Block Entity*/
 	public static final UpgradeEntrySet BLOCK_STATE_ENTITY = BLOCK_STATE.with(BLOCK_ENTITY);
-	/**Block Pos, Block State, Block Entity*/
+	/**[Block Pos], Block State, Block Entity*/
 	public static final UpgradeEntrySet BLOCK_ENTITY_FULL = BLOCK_POS_STATE.with(BLOCK_ENTITY);
-	/**Side, Level, Block Pos, Block State*/
+	/**Side, Level, [Block Pos], Block State*/
 	public static final UpgradeEntrySet LEVEL_BLOCK = BLOCK_POS_STATE.with(LEVEL);
-	/**Side, Level, Block Pos, Block State, Block Entity*/
+	/**Side, Level, [Block Pos], Block State, Block Entity*/
 	public static final UpgradeEntrySet LEVEL_BLOCK_ENTITY = BLOCK_ENTITY_FULL.with(LEVEL);
 	
 	/* ==== AMALGAMATIONS ==== */
-	/**Side, Level, Origin, Entity, Living, Player, Block Pos, Block State*/
+	/**Side, Level, Origin, [Entity], [Living], [Player], [Block Pos], Block State*/
 	public static final UpgradeEntrySet PLAYER_LEVEL_BLOCK = PLAYER.with(LEVEL_BLOCK);
-	/**Side, Level, Origin, Entity, Living, Player, Slot, Item, Block Pos, Block State, Block Face*/
-	public static final UpgradeEntrySet PLAYER_BLOCK_INTERACTION = PLAYER_SLOT_ITEM.withAll(LEVEL_BLOCK, BLOCK_FACE);
-	/**Side, Level, Origin, Entity, Living, Player, Slot, Item, Target Entity, Target Entity Position*/
+	/**Side, Level, Origin, [Entity], [Living], [Player], Slot, Item, [Block Pos], Block State, Block Face, Interaction Position*/
+	public static final UpgradeEntrySet PLAYER_BLOCK_INTERACTION = PLAYER_SLOT_ITEM.withAll(LEVEL_BLOCK, BLOCK_FACE, INTERACTION_POS);
+	/**Side, Level, Origin, [Entity], [Living], [Player], Slot, Item, Target Entity, Entity Position*/
 	public static final UpgradeEntrySet PLAYER_ENTITY_INTERACTION = PLAYER_SLOT_ITEM.with(TARGET_ENTITY);
 	
 	//TEMPLATE: public static final UpgradeEntrySet 

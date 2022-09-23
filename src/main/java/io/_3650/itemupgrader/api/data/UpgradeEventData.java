@@ -1,16 +1,15 @@
 package io._3650.itemupgrader.api.data;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.ibm.icu.impl.locale.XCldrStub.ImmutableMap;
 
 import net.minecraft.world.entity.Entity;
@@ -75,7 +74,7 @@ public class UpgradeEventData {
 	public <T> T getEntry(UpgradeEntry<T> entry) throws NoSuchElementException {
 		T t = this.getEntryOrNull(entry);
 		if (t == null) {
-			throw new NoSuchElementException("Upgrade event missing entry " + entry.getName().toString());
+			throw new NoSuchElementException("Upgrade event missing nonnull entry " + entry);
 		} else {
 			return t;
 		}
@@ -149,7 +148,7 @@ public class UpgradeEventData {
 	public <T> T getResult(UpgradeEntry<T> entry) throws NoSuchElementException {
 		T t = this.getResultOrNull(entry);
 		if (t == null) {
-			throw new NoSuchElementException("Upgrade event missing result " + entry.getName().toString());
+			throw new NoSuchElementException("Upgrade event missing result " + entry);
 		} else {
 			return t;
 		}
@@ -236,20 +235,20 @@ public class UpgradeEventData {
 		 * {@linkplain UpgradeEntry#PLAYER}<br>
 		 * {@linkplain UpgradeEntry#LIVING}<br>
 		 * {@linkplain UpgradeEntry#ENTITY}<br>
-		 * {@linkplain UpgradeEntry#ORIGIN}<br>
+		 * {@linkplain UpgradeEntry#POSITION}<br>
 		 * {@linkplain UpgradeEntry#LEVEL}<br>
 		 * {@linkplain UpgradeEntry#SIDE}
 		 * @param living A {@linkplain LivingEntity} to use for context
 		 * @param slot An {@linkplain EquipmentSlot} to use for context
 		 */
 		public Builder(Player player, EquipmentSlot slot) {
-			Level level = player.getLevel();
+			Level level = player.level;
 			this.entry(UpgradeEntry.ITEM, player.hasItemInSlot(slot) ? player.getItemBySlot(slot) : ItemStack.EMPTY)
 				.entry(UpgradeEntry.SLOT, slot)
 				.entry(UpgradeEntry.PLAYER, player)
 				.entry(UpgradeEntry.LIVING, player)
 				.entry(UpgradeEntry.ENTITY, player)
-				.entry(UpgradeEntry.ORIGIN, player.position())
+				.entry(UpgradeEntry.POSITION, player.position())
 				.entry(UpgradeEntry.LEVEL, level)
 				.entry(UpgradeEntry.SIDE, level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
 		}
@@ -261,19 +260,19 @@ public class UpgradeEventData {
 		 * {@linkplain UpgradeEntry#SLOT}<br>
 		 * {@linkplain UpgradeEntry#LIVING}<br>
 		 * {@linkplain UpgradeEntry#ENTITY}<br>
-		 * {@linkplain UpgradeEntry#ORIGIN}<br>
+		 * {@linkplain UpgradeEntry#POSITION}<br>
 		 * {@linkplain UpgradeEntry#LEVEL}<br>
 		 * {@linkplain UpgradeEntry#SIDE}
 		 * @param living A {@linkplain LivingEntity} to use for context
 		 * @param slot An {@linkplain EquipmentSlot} to use for context
 		 */
 		public Builder(LivingEntity living, EquipmentSlot slot) {
-			Level level = living.getLevel();
+			Level level = living.level;
 			this.entry(UpgradeEntry.ITEM, living.hasItemInSlot(slot) ? living.getItemBySlot(slot) : ItemStack.EMPTY)
 				.entry(UpgradeEntry.SLOT, slot)
 				.entry(UpgradeEntry.LIVING, living)
 				.entry(UpgradeEntry.ENTITY, living)
-				.entry(UpgradeEntry.ORIGIN, living.position())
+				.entry(UpgradeEntry.POSITION, living.position())
 				.entry(UpgradeEntry.LEVEL, level)
 				.entry(UpgradeEntry.SIDE, level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
 		}
@@ -283,16 +282,16 @@ public class UpgradeEventData {
 		 * Constructs a builder with following properties automatically determined:<br>
 		 * {@linkplain UpgradeEntry#LIVING}<br>
 		 * {@linkplain UpgradeEntry#ENTITY}<br>
-		 * {@linkplain UpgradeEntry#ORIGIN}<br>
+		 * {@linkplain UpgradeEntry#POSITION}<br>
 		 * {@linkplain UpgradeEntry#LEVEL}<br>
 		 * {@linkplain UpgradeEntry#SIDE}
 		 * @param living A {@linkplain LivingEntity} to use for context
 		 */
 		public Builder(LivingEntity living) {
-			Level level = living.getLevel();
+			Level level = living.level;
 			this.entry(UpgradeEntry.LIVING, living)
 				.entry(UpgradeEntry.ENTITY, living)
-				.entry(UpgradeEntry.ORIGIN, living.position())
+				.entry(UpgradeEntry.POSITION, living.position())
 				.entry(UpgradeEntry.LEVEL, level)
 				.entry(UpgradeEntry.SIDE, level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
 		}
@@ -301,15 +300,15 @@ public class UpgradeEventData {
 		 * <b>Complaint with {@linkplain UpgradeEntrySet#ENTITY}</b><br>
 		 * Constructs a builder with following properties automatically determined:<br>
 		 * {@linkplain UpgradeEntry#ENTITY}<br>
-		 * {@linkplain UpgradeEntry#ORIGIN}<br>
+		 * {@linkplain UpgradeEntry#POSITION}<br>
 		 * {@linkplain UpgradeEntry#LEVEL}<br>
 		 * {@linkplain UpgradeEntry#SIDE}
 		 * @param entity An {@linkplain Entity} to use for context
 		 */
 		public Builder(Entity entity) {
-			Level level = entity.getLevel();
+			Level level = entity.level;
 			this.entry(UpgradeEntry.ENTITY, entity)
-				.entry(UpgradeEntry.ORIGIN, entity.position())
+				.entry(UpgradeEntry.POSITION, entity.position())
 				.entry(UpgradeEntry.LEVEL, level)
 				.entry(UpgradeEntry.SIDE, level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
 		}
@@ -424,12 +423,9 @@ public class UpgradeEventData {
 		 * @throws IllegalStateException If one or more required entries in the entry set are not present
 		 */
 		public UpgradeEventData build(UpgradeEntrySet entrySet) throws IllegalStateException {
-			Set<UpgradeEntry<?>> test = Sets.difference(entrySet.getRequired(), this.entries.keySet());
+			SetView<UpgradeEntry<?>> test = Sets.difference(entrySet.getProvided(), this.entries.keySet());
 			if (!test.isEmpty()) {
-				Iterator<UpgradeEntry<?>> iter = test.iterator();
-				String errStr = "";
-				while (iter.hasNext()) errStr = errStr + ", " + iter.next();
-				throw new IllegalStateException("Missing required entries: [" + errStr + "]");
+				throw new IllegalStateException("Missing promised provided entries: " + test.toString());
 			} else {
 				return new UpgradeEventData(entrySet, this.entries, this.results);
 			}

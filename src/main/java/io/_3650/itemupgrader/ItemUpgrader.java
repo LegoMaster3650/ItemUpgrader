@@ -2,6 +2,8 @@ package io._3650.itemupgrader;
 
 import com.mojang.logging.LogUtils;
 
+import io._3650.itemupgrader.api.data.EntryCategory;
+import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.ingredient.TypedCriteria;
 import io._3650.itemupgrader.api.ingredient.TypedIngredient;
 import io._3650.itemupgrader.api.ingredient.UpgradeIngredient;
@@ -41,7 +43,7 @@ import org.slf4j.Logger;
 @Mod(ItemUpgrader.MOD_ID)
 public class ItemUpgrader {
 	
-	private static final Logger LOGGER = LogUtils.getLogger();
+	public static final Logger LOGGER = LogUtils.getLogger(); //TODO re-private
 	
 	public static final String MOD_ID = "itemupgrader";
 	
@@ -76,6 +78,10 @@ public class ItemUpgrader {
 	private void setup(final FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
 			LOGGER.debug("Item Upgrader common setup");
+			//doing this now just because, and because I want to make sure they load in this order just to be safe
+			EntryCategory.init();
+			UpgradeEntry.init();
+			//actual common stuff
 			CraftingHelper.register(ItemUpgraderRegistry.modRes("typed"), TypedIngredient.Serializer.INSTANCE);
 			CraftingHelper.register(ItemUpgraderRegistry.modRes("upgrade"), UpgradeIngredient.Serializer.INSTANCE);
 			CraftingHelper.register(BasePackEnabledCondition.Serializer.INSTANCE);

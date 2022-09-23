@@ -6,6 +6,7 @@ import io._3650.itemupgrader.event.ModEvents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
 public record PlayerRightClickEmptyPacket(EquipmentSlot slot) {
@@ -21,7 +22,7 @@ public record PlayerRightClickEmptyPacket(EquipmentSlot slot) {
 	public static void handle(PlayerRightClickEmptyPacket packet, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer player = ctx.get().getSender();
-			ModEvents.rightClickBase(packet.slot, player, true);
+			ModEvents.rightClickBase(packet.slot, player, ItemStack.EMPTY);
 		});
 		ctx.get().setPacketHandled(true);
 	}

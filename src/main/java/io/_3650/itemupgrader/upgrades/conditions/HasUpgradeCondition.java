@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 
 import io._3650.itemupgrader.api.ItemUpgrade;
 import io._3650.itemupgrader.api.ItemUpgraderApi;
+import io._3650.itemupgrader.api.data.EntryCategory;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
@@ -17,27 +18,27 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class HasUpgradeCondition extends UpgradeCondition {
 	
+	private final UpgradeEntry<LivingEntity> livingEntry;
 	private final EquipmentSlot slot;
 	private final ResourceLocation upgradeId;
 	
-	public HasUpgradeCondition(IUpgradeInternals internals, boolean inverted, EquipmentSlot slot, ResourceLocation upgradeId) {
-		super(internals, inverted);
+	public HasUpgradeCondition(IUpgradeInternals internals, boolean inverted, UpgradeEntry<LivingEntity> livingEntry, EquipmentSlot slot, ResourceLocation upgradeId) {
+		super(internals, inverted, UpgradeEntrySet.LIVING.fillCategories(mapper -> {
+			mapper.set(EntryCategory.LIVING, livingEntry);
+		}));
+		this.livingEntry = livingEntry;
 		this.slot = slot;
 		this.upgradeId = upgradeId;
 	}
 
 	@Override
-	public UpgradeEntrySet requiredData() {
-		return UpgradeEntrySet.LIVING;
-	}
-
-	@Override
 	public boolean test(UpgradeEventData data) {
-		ItemStack stack = data.getEntry(UpgradeEntry.LIVING).getItemBySlot(this.slot);
+		ItemStack stack = data.getEntry(this.livingEntry).getItemBySlot(this.slot);
 		if (!ItemUpgraderApi.hasUpgrade(stack)) return false;
 		return ItemUpgraderApi.getUpgradeKey(stack).equals(this.upgradeId);
 	}
@@ -65,22 +66,25 @@ public class HasUpgradeCondition extends UpgradeCondition {
 
 		@Override
 		public HasUpgradeCondition fromJson(IUpgradeInternals internals, boolean inverted, JsonObject json) {
+			UpgradeEntry<LivingEntity> livingEntry = EntryCategory.LIVING.fromJson(json, "entity");
 			EquipmentSlot slot = EquipmentSlot.byName(GsonHelper.getAsString(json, "slot"));
 			ResourceLocation upgradeId = new ResourceLocation(GsonHelper.getAsString(json, "upgrade"));
-			return new HasUpgradeCondition(internals, inverted, slot, upgradeId);
+			return new HasUpgradeCondition(internals, inverted, livingEntry, slot, upgradeId);
 		}
 
 		@Override
 		public void toNetwork(HasUpgradeCondition condition, FriendlyByteBuf buf) {
+			condition.livingEntry.toNetwork(buf);
 			buf.writeEnum(condition.slot);
 			buf.writeResourceLocation(condition.upgradeId);
 		}
 
 		@Override
 		public HasUpgradeCondition fromNetwork(IUpgradeInternals internals, boolean inverted, FriendlyByteBuf buf) {
+			UpgradeEntry<LivingEntity> livingEntry = EntryCategory.LIVING.fromNetwork(buf);
 			EquipmentSlot netSlot = buf.readEnum(EquipmentSlot.class);
 			ResourceLocation netUpgradeId = buf.readResourceLocation();
-			return new HasUpgradeCondition(internals, inverted, netSlot, netUpgradeId);
+			return new HasUpgradeCondition(internals, inverted, livingEntry, netSlot, netUpgradeId);
 		}
 		
 	}
