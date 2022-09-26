@@ -1,4 +1,4 @@
-package io._3650.itemupgrader.event;
+package io._3650.itemupgrader.events;
 
 import java.util.Set;
 
@@ -23,6 +23,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +33,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -128,7 +131,7 @@ public class ModEvents {
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ENTITY_INTERACT, builder);
 		if (data.isCancelled()) event.setCanceled(true);
 	}
-
+	
 	@SubscribeEvent
 	public static void playerUseBlock(PlayerInteractEvent.RightClickBlock event) {
 		EquipmentSlot slot = slotFromHand(event.getHand());
@@ -143,6 +146,10 @@ public class ModEvents {
 				.result(UpgradeEntry.CONSUMED, false)
 				.cancellable();
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_BLOCK, builder, event.getItemStack());
+		if (data.getBoolResult(UpgradeEntry.CONSUMED)) {
+			event.setCancellationResult(InteractionResult.CONSUME);
+			event.setCanceled(true);
+		}
 		if (data.isCancelled()) {
 			event.setCanceled(true);
 			return;
@@ -161,9 +168,7 @@ public class ModEvents {
 				return;
 			}
 		}
-		if (!data.getBoolResult(UpgradeEntry.CONSUMED)) {
-			rightClickBase(slot, player, event.getItemStack());
-		}
+		rightClickBase(slot, player, event.getItemStack());
 	}
 	
 	@SubscribeEvent
@@ -218,6 +223,7 @@ public class ModEvents {
 				.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
 				.result(UpgradeEntry.CONSUMED, false);
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK, builder, event.getItemStack());
+		if (data.getBoolResult(UpgradeEntry.CONSUMED)) return;
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
 			UpgradeEventData data1 = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK_EFFECT, new UpgradeEventData.Builder(player, slot1)
@@ -229,9 +235,7 @@ public class ModEvents {
 			if (data1.getBoolResult(UpgradeEntry.CONSUMED)) return;
 			
 		}
-		if (!data.getBoolResult(UpgradeEntry.CONSUMED)) {
-			leftClickBase(slot, player, event.getItemStack());
-		}
+		leftClickBase(slot, player, event.getItemStack());
 	}
 	
 	@SubscribeEvent
@@ -256,9 +260,10 @@ public class ModEvents {
 	}
 	
 	/*
-	 * ATTACK
+	 * ATTACK/DAMAGE
 	 */
 	
+	@SubscribeEvent
 	public static void playerAttack(AttackEntityEvent event) {
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.PLAYER_ATTACK, new UpgradeEventData.Builder(event.getPlayer(), EquipmentSlot.MAINHAND)
 				.entry(UpgradeEntry.TARGET_ENTITY, event.getTarget())
@@ -266,6 +271,48 @@ public class ModEvents {
 				.entry(UpgradeEntry.INTERACTION_POS, event.getTarget().position())
 				.cancellable());
 		if (data.isCancelled()) event.setCanceled(true);
+	}
+	
+	@SubscribeEvent
+	public static void livingHurt(LivingHurtEvent event) {
+		LivingEntity living = event.getEntityLiving();
+		for (EquipmentSlot slot : EquipmentSlot.values()) {
+			if (living.hasItemInSlot(slot)) {
+				UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_HURT, new UpgradeEventData.Builder(living, slot)
+						.entry(UpgradeEntry.DAMAGE_SOURCE, event.getSource())
+						.entry(UpgradeEntry.DAMAGE, event.getAmount())
+						.result(UpgradeEntry.DAMAGE, event.getAmount())
+						.cancellable());
+				if (data.isCancelled()) {
+					event.setCanceled(true);
+					return;
+				} else {
+					float resAmount = data.getResult(UpgradeEntry.DAMAGE);
+					if (resAmount != event.getAmount()) event.setAmount(resAmount);
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void livingDamage(LivingDamageEvent event) {
+		LivingEntity living = event.getEntityLiving();
+		for (EquipmentSlot slot : EquipmentSlot.values()) {
+			if (living.hasItemInSlot(slot)) {
+				UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_DAMAGE, new UpgradeEventData.Builder(living, slot)
+						.entry(UpgradeEntry.DAMAGE_SOURCE, event.getSource())
+						.entry(UpgradeEntry.DAMAGE, event.getAmount())
+						.result(UpgradeEntry.DAMAGE, event.getAmount())
+						.cancellable());
+				if (data.isCancelled()) {
+					event.setCanceled(true);
+					return;
+				} else {
+					float resAmount = data.getResult(UpgradeEntry.DAMAGE);
+					if (resAmount != event.getAmount()) event.setAmount(resAmount);
+				}
+			}
+		}
 	}
 	
 }

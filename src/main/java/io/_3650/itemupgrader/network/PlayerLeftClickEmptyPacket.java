@@ -2,7 +2,7 @@ package io._3650.itemupgrader.network;
 
 import java.util.function.Supplier;
 
-import io._3650.itemupgrader.event.ModEvents;
+import io._3650.itemupgrader.events.ModEvents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;

@@ -80,7 +80,6 @@ public class PredicateUpgradeCondition extends UpgradeCondition {
 				.withOptionalParameter(LootContextParams.BLOCK_STATE, blockState)
 				.withOptionalParameter(LootContextParams.DAMAGE_SOURCE, data.getEntryOrNull(UpgradeEntry.DAMAGE_SOURCE))
 				.withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, data.getEntryOrNull(UpgradeEntry.DIRECT_DAMAGER))
-				.withOptionalParameter(LootContextParams.EXPLOSION_RADIUS, data.getEntryOrNull(UpgradeEntry.EXPLOSION_RADIUS))
 				.withOptionalParameter(LootContextParams.KILLER_ENTITY, data.getEntryOrNull(UpgradeEntry.DAMAGER_ENTITY))
 				.withOptionalParameter(LootContextParams.TOOL, data.getEntryOrNull(UpgradeEntry.ITEM))
 				.create(LootContextParamSets.COMMAND);

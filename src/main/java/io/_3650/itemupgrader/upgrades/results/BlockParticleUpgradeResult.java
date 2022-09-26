@@ -10,13 +10,14 @@ import io._3650.itemupgrader.api.type.UpgradeResult;
 import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.api.util.UpgradeJsonHelper;
 import io.netty.buffer.Unpooled;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
@@ -28,13 +29,16 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 	private int count;
 	private final Vec3 delta;
 	private double speed;
+	private final UpgradeEntry<Player> playerEntry;
 	private final boolean clientOnly;
+	
 	public BlockParticleUpgradeResult(IUpgradeInternals internals,
 			UpgradeEntry<Vec3> posEntry,
 			Vec3 offset,
 			int count,
 			Vec3 delta,
 			double speed,
+			UpgradeEntry<Player> playerEntry,
 			boolean clientOnly) {
 		super(internals, UpgradeEntrySet.create(builder -> {
 			builder.require(UpgradeEntry.SIDE).require(UpgradeEntry.LEVEL).require(UpgradeEntry.BLOCK_STATE);
@@ -46,6 +50,7 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 		this.count = count;
 		this.delta = delta;
 		this.speed = speed;
+		this.playerEntry = playerEntry;
 		this.clientOnly = clientOnly;
 	}
 	
@@ -53,19 +58,23 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 	public void execute(UpgradeEventData data) {
 		data.getOptional(UpgradeEntry.LEVEL).ifPresent(level -> {
 			Vec3 spawnPos = data.getEntry(this.posEntry).add(this.offset);
-			if (!this.clientOnly && !level.isClientSide && level instanceof ServerLevel slevel) {
+			if (!level.isClientSide && level instanceof ServerLevel slevel) {
 				data.getOptional(UpgradeEntry.BLOCK_STATE).ifPresent(blockState -> {
 					@SuppressWarnings("deprecation")
-					BlockParticleOption options = BlockParticleOption.DESERIALIZER.fromNetwork(ParticleTypes.BLOCK, new FriendlyByteBuf(Unpooled.buffer(4).writeInt(Block.getId(blockState))));
-					slevel.sendParticles(options, spawnPos.x, spawnPos.y, spawnPos.z, this.count, this.delta.x, this.delta.y, this.delta.z, this.speed);
+					BlockParticleOption options = BlockParticleOption.DESERIALIZER.fromNetwork(ParticleTypes.BLOCK, new FriendlyByteBuf(Unpooled.buffer()).writeVarInt(Block.getId(blockState)));
+					Player player1 = data.getEntryOrNull(this.playerEntry);
+					if (this.clientOnly && player1 != null && player1 instanceof ServerPlayer player) {
+						slevel.sendParticles(player, options, false, spawnPos.x, spawnPos.y, spawnPos.z, this.count, this.delta.x, this.delta.y, this.delta.z, this.speed);
+					} else if (!this.clientOnly) {
+						slevel.sendParticles(options, spawnPos.x, spawnPos.y, spawnPos.z, this.count, this.delta.x, this.delta.y, this.delta.z, this.speed);
+					}
 				});
-			} else if (this.clientOnly && level.isClientSide && level instanceof ClientLevel clevel) {
-				
 			}
 		});
 	}
 	
 	private final Serializer instance = new Serializer();
+	
 	@Override
 	public Serializer getSerializer() {
 		return instance;
@@ -90,17 +99,19 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 			int count = GsonHelper.getAsInt(json, "count", 1);
 			Vec3 delta = UpgradeJsonHelper.getPosition(json, "delta");
 			double speed = GsonHelper.getAsDouble(json, "speed", 0.0F);
+			UpgradeEntry<Player> playerEntry = EntryCategory.PLAYER.fromJson(json);
 			boolean clientOnly = GsonHelper.getAsBoolean(json, "client_only", false);
-			return new BlockParticleUpgradeResult(internals, posEntry, offset, count, delta, speed, clientOnly);
+			return new BlockParticleUpgradeResult(internals, posEntry, offset, count, delta, speed, playerEntry, clientOnly);
 		}
 		
 		@Override
 		public void toNetwork(BlockParticleUpgradeResult result, FriendlyByteBuf buf) {
-			buf.writeResourceLocation(result.posEntry.getId());
+			result.posEntry.toNetwork(buf);
 			buf.writeDouble(result.offset.x).writeDouble(result.offset.y).writeDouble(result.offset.z);
 			buf.writeInt(result.count);
 			buf.writeDouble(result.delta.x).writeDouble(result.delta.y).writeDouble(result.delta.z);
 			buf.writeDouble(result.speed);
+			result.playerEntry.toNetwork(buf);
 			buf.writeBoolean(result.clientOnly);
 		}
 		
@@ -111,8 +122,9 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 			int count = buf.readInt();
 			Vec3 delta = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
 			double speed = buf.readDouble();
+			UpgradeEntry<Player> playerEntry = EntryCategory.PLAYER.fromNetwork(buf);
 			boolean clientOnly = buf.readBoolean();
-			return new BlockParticleUpgradeResult(internals, posEntry, offset, count, delta, speed, clientOnly);
+			return new BlockParticleUpgradeResult(internals, posEntry, offset, count, delta, speed, playerEntry, clientOnly);
 		}
 		
 	}

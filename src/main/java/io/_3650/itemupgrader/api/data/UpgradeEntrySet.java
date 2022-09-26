@@ -22,12 +22,10 @@ public class UpgradeEntrySet {
 	
 	private final ImmutableSet<UpgradeEntry<?>> required;
 	private final ImmutableSet<UpgradeEntry<?>> provided;
-	private final EntryCategorySet.Builder categoryBuilder;
 	
-	private UpgradeEntrySet(Set<UpgradeEntry<?>> required, Set<UpgradeEntry<?>> provided, EntryCategorySet.Builder categoryBuilder) {
+	private UpgradeEntrySet(Set<UpgradeEntry<?>> required, Set<UpgradeEntry<?>> provided) {
 		this.required = ImmutableSet.copyOf(required);
 		this.provided = ImmutableSet.copyOf(provided);
-		this.categoryBuilder = categoryBuilder;
 	}
 	
 	/**
@@ -39,10 +37,6 @@ public class UpgradeEntrySet {
 	
 	public Set<UpgradeEntry<?>> getProvided() {
 		return this.provided;
-	}
-	
-	public EntryCategorySet.Mapper getCategoryMapper() {
-		return this.categoryBuilder.build();
 	}
 	
 	private static final Map<UpgradeEntrySet, Boolean> VERIFICATION_CACHE = Maps.newHashMap();
@@ -103,16 +97,19 @@ public class UpgradeEntrySet {
 		});
 	}
 	
+	/**
+	 * Fills in category values using a category set mapper
+	 * @param mapperConsumer A {@linkplain Consumer} of a {@linkplain EntryCategorySet.Mapper Mapper} that will define all the values
+	 * @return A new {@linkplain UpgradeEntrySet} with the categories defined.
+	 */
 	public UpgradeEntrySet fillCategories(Consumer<EntryCategorySet.Mapper> mapperConsumer) {
-		EntryCategorySet.Mapper mapper = this.categoryBuilder.build();
+		EntryCategorySet.Mapper mapper = new EntryCategorySet.Mapper();
 		mapperConsumer.accept(mapper);
 		EntryCategorySet categories = mapper.freeze();
 		return this.with(builder -> {
-			for (var entryVar : categories.getCategoryMap().entrySet()) {
-				var category = entryVar.getKey();
-				var entry = entryVar.getValue();
+			for (var category : categories.getCategoryMap().keySet()) {
+				var entry = categories.getEntry(category);
 				if (entry != null) {
-					builder.category(category);
 					if (categories.isRequired(category)) builder.require(entry);
 					else builder.provide(entry);
 				}
@@ -121,35 +118,28 @@ public class UpgradeEntrySet {
 	}
 	
 	/**
-	 * The builder for UpgradeEntrySets
-	 * @author legom
-	 *
+	 * The builder for {@linkplain UpgradeEntrySet}s
 	 */
 	public static class Builder {
 		
 		private final Set<UpgradeEntry<?>> required = Sets.newIdentityHashSet();
 		private final Set<UpgradeEntry<?>> provided = Sets.newIdentityHashSet();
-		private final EntryCategorySet.Builder categoryBuilder;
 		
 		/**Reverts the given entry set back to a builder*/
 		private Builder(UpgradeEntrySet preset) {
 			this.required.addAll(preset.required);
 			this.provided.addAll(preset.provided);
-			this.categoryBuilder = EntryCategorySet.Builder.copyOf(preset.categoryBuilder);
 		}
 		/**Adds all the data from the given entry to this one*/
 		private void combine(UpgradeEntrySet preset) {
 			this.required.addAll(preset.required);
 			this.provided.addAll(preset.provided);
-			this.categoryBuilder.addAll(preset.categoryBuilder);
 		}
 		
 		/**
 		 * Constructs a new empty builder
 		 */
-		public Builder() {
-			this.categoryBuilder = new EntryCategorySet.Builder();
-		}
+		public Builder() {}
 		
 		/**
 		 * Adds {@code entry} to the builder's required AND provided list<br>
@@ -175,17 +165,12 @@ public class UpgradeEntrySet {
 			return this;
 		}
 		
-		public Builder category(EntryCategory<?> category) {
-			this.categoryBuilder.add(category);
-			return this;
-		}
-		
 		/**
 		 * Builds the {@linkplain Builder} and finalizes its' contents (unless you use {@linkplain UpgradeEntrySet#with(Consumer)} or {@linkplain UpgradeEntrySet#with(UpgradeEntrySet)}
 		 * @return A new {@linkplain UpgradeEntrySet} with this builder's required list made immutable
 		 */
 		public UpgradeEntrySet build() {
-			return new UpgradeEntrySet(this.required, this.provided, this.categoryBuilder);
+			return new UpgradeEntrySet(this.required, this.provided);
 		}
 		
 	}
@@ -214,7 +199,7 @@ public class UpgradeEntrySet {
 	public static final UpgradeEntrySet EMPTY = builder().build();
 	/**Position*/
 	public static final UpgradeEntrySet POSITION = create(builder -> {
-		builder.category(EntryCategory.POSITION).provide(UpgradeEntry.POSITION);
+		builder.provide(UpgradeEntry.POSITION);
 	});
 	/**Interaction Position*/
 	public static final UpgradeEntrySet INTERACTION_POS = create(builder -> {
@@ -222,7 +207,7 @@ public class UpgradeEntrySet {
 	});
 	/**[Item]*/
 	public static final UpgradeEntrySet ITEM = create(builder -> {
-		builder.category(EntryCategory.ITEM).provide(UpgradeEntry.ITEM);
+		builder.provide(UpgradeEntry.ITEM);
 	});
 	/**Slot*/
 	public static final UpgradeEntrySet SLOT = create(builder -> {
@@ -242,11 +227,21 @@ public class UpgradeEntrySet {
 	});
 	/**Side, Level, [Position]*/
 	public static final UpgradeEntrySet LEVEL_POSITION = LEVEL.with(POSITION);
+	/**Damage*/
+	public static final UpgradeEntrySet DAMAGE = create(builder -> {
+		builder.require(UpgradeEntry.DAMAGE);
+	});
+	/**Damage Source*/
+	public static final UpgradeEntrySet DAMAGE_SOURCE = create(builder -> {
+		builder.require(UpgradeEntry.DAMAGE_SOURCE);
+	});
+	/**Damage, Damage Source*/
+	public static final UpgradeEntrySet DAMAGE_EVENT = DAMAGE.with(DAMAGE_SOURCE);
 	
 	/* ==== ENTITY STUFF ==== */
 	/**Side, Level, [Position], [Entity]*/
 	public static final UpgradeEntrySet ENTITY = LEVEL_POSITION.with(builder -> {
-		builder.category(EntryCategory.ENTITY).provide(UpgradeEntry.ENTITY);
+		builder.provide(UpgradeEntry.ENTITY);
 	});
 	/**Side, Level, [Position], [Entity], [Item]*/
 	public static final UpgradeEntrySet ENTITY_ITEM = ENTITY.with(ITEM);
@@ -256,7 +251,7 @@ public class UpgradeEntrySet {
 	public static final UpgradeEntrySet ENTITY_SLOT_ITEM = ENTITY_SLOT.with(ITEM);
 	/**Side, Level, [Position], [Entity], [Living]*/
 	public static final UpgradeEntrySet LIVING = ENTITY.with(builder -> {
-		builder.category(EntryCategory.LIVING).provide(UpgradeEntry.LIVING);
+		builder.provide(UpgradeEntry.LIVING);
 	});
 	/**Side, Level, [Position], [Entity], [Living], [Item]*/
 	public static final UpgradeEntrySet LIVING_ITEM = LIVING.with(ITEM);
@@ -266,7 +261,7 @@ public class UpgradeEntrySet {
 	public static final UpgradeEntrySet LIVING_SLOT_ITEM = LIVING_SLOT.with(ITEM);
 	/**Side, Level, [Position], [Entity], [Living], [Player]*/
 	public static final UpgradeEntrySet PLAYER = LIVING.with(builder -> {
-		builder.category(EntryCategory.PLAYER).provide(UpgradeEntry.PLAYER);
+		builder.provide(UpgradeEntry.PLAYER);
 	});
 	/**Side, Level, [Position], [Entity], [Living], [Player], [Item]*/
 	public static final UpgradeEntrySet PLAYER_ITEM = PLAYER.with(ITEM);
@@ -333,10 +328,12 @@ public class UpgradeEntrySet {
 	/* ==== AMALGAMATIONS ==== */
 	/**Side, Level, Origin, [Entity], [Living], [Player], [Block Pos], Block State*/
 	public static final UpgradeEntrySet PLAYER_LEVEL_BLOCK = PLAYER.with(LEVEL_BLOCK);
-	/**Side, Level, Origin, [Entity], [Living], [Player], Slot, Item, [Block Pos], Block State, Block Face, Interaction Position*/
+	/**Side, Level, Origin, [Entity], [Living], [Player], Slot, [Item], [Block Pos], Block State, Block Face, Interaction Position*/
 	public static final UpgradeEntrySet PLAYER_BLOCK_INTERACTION = PLAYER_SLOT_ITEM.withAll(LEVEL_BLOCK, BLOCK_FACE, INTERACTION_POS);
-	/**Side, Level, Origin, [Entity], [Living], [Player], Slot, Item, Target Entity, Entity Position*/
+	/**Side, Level, Origin, [Entity], [Living], [Player], Slot, [Item], Target Entity, Entity Position*/
 	public static final UpgradeEntrySet PLAYER_ENTITY_INTERACTION = PLAYER_SLOT_ITEM.with(TARGET_ENTITY);
+	/**Side, Level, [Position], [Entity], [Living], Slot, [Item], Damage, Damage Source*/
+	public static final UpgradeEntrySet LIVING_DAMAGE = LIVING_SLOT_ITEM.with(DAMAGE_EVENT);
 	
 	//TEMPLATE: public static final UpgradeEntrySet 
 }

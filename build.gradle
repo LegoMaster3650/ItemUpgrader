@@ -163,8 +163,9 @@ publishing {
 			artifactId project.archivesBaseName
 			
 			artifact jar
-			artifact sourcesJar
 			artifact apiJar
+			artifact sourcesJar
+			artifact javadocJar
 		}
 	}
 	repositories {

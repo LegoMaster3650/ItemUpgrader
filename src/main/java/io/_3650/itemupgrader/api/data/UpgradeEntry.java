@@ -23,8 +23,8 @@ import net.minecraftforge.fml.LogicalSide;
 /**
  * Represents an upgrade entry type for UpgradeEventData
  * @author LegoMaster3650
- *
- * @param <T> The type that this entry type corresponds to
+ * 
+ * @param <T> The type that this entry corresponds to
  * @see UpgradeEventData
  * @see UpgradeEntrySet
  */
@@ -48,11 +48,11 @@ public class UpgradeEntry<T> {
 	private UpgradeEntry(ResourceLocation id, @Nonnull EntryCategory<T> category) {
 		this.id = id;
 		this.category = category;
-		category.addChild(this);
+		category.addEntry(this);
 	}
 	
 	/**
-	 * Gets the name of this entry
+	 * Gets the id of this entry
 	 * @return The {@linkplain ResourceLocation} associated with this entry
 	 */
 	public ResourceLocation getId() {
@@ -101,11 +101,11 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<Entity> DAMAGER_ENTITY = create("damager_entity", EntryCategory.ENTITY);
 	public static final UpgradeEntry<Entity> DIRECT_DAMAGER = create("direct_damager", EntryCategory.ENTITY);
 	public static final UpgradeEntry<DamageSource> DAMAGE_SOURCE = create("damager");
+	public static final UpgradeEntry<Float> DAMAGE = create("damage", EntryCategory.FLOAT_VALUE);
 	public static final UpgradeEntry<BlockState> BLOCK_STATE = create("block_state");
 	public static final UpgradeEntry<BlockEntity> BLOCK_ENTITY = create("block_entity");
 	public static final UpgradeEntry<BlockPos> BLOCK_POS = create("block_position", EntryCategory.BLOCK_POS, true);
 	public static final UpgradeEntry<Direction> BLOCK_FACE = create("block_face");
-	public static final UpgradeEntry<Float> EXPLOSION_RADIUS = create("explosion_radius"); //for the sake of predicates and stuff
 	public static final UpgradeEntry<LivingEntity> LIVING = create("living_entity", EntryCategory.LIVING, true);
 	public static final UpgradeEntry<Player> PLAYER = create("player", EntryCategory.PLAYER, true);
 	public static final UpgradeEntry<Entity> TARGET_ENTITY = create("target_entity", EntryCategory.ENTITY);
@@ -113,12 +113,14 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<Vec3> INTERACTION_POS = create("interaction_position", EntryCategory.POSITION);
 	public static final UpgradeEntry<ResourceLocation> UPGRADE_ID = create("upgrade_id", EntryCategory.UPGRADE_ID, true);
 	public static final UpgradeEntry<ResourceLocation> PREV_UPGRADE_ID = create("prev_upgrade_id", EntryCategory.UPGRADE_ID);
+	public static final UpgradeEntry<Integer> INT_VALUE = create("int", EntryCategory.INT_VALUE, true);
+	public static final UpgradeEntry<Float> FLOAT_VALUE = create("float", EntryCategory.FLOAT_VALUE, true);
 	
 	/**<h1><b><u>Intended for use in results</u></b></h1>**/ public static final UpgradeEntry<Boolean> CANCELLED = create("cancelled");
 	/**<h1><b><u>Intended for use in results</u></b></h1>**/ public static final UpgradeEntry<Boolean> CONSUMED = create("consumed");
 	
 	/**
-	 * A factory for upgrade entries automatically adding in your mod id for simplicity
+	 * A factory for upgrade entries which automatically adds in your mod id for simplicity
 	 */
 	public static final class Factory {
 		

@@ -1,4 +1,4 @@
-package io._3650.itemupgrader.event;
+package io._3650.itemupgrader.events;
 
 import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.network.NetworkHandler;

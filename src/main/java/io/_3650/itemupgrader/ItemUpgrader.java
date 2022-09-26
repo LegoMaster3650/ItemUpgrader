@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 @Mod(ItemUpgrader.MOD_ID)
 public class ItemUpgrader {
 	
-	public static final Logger LOGGER = LogUtils.getLogger(); //TODO re-private
+	private static final Logger LOGGER = LogUtils.getLogger();
 	
 	public static final String MOD_ID = "itemupgrader";
 	

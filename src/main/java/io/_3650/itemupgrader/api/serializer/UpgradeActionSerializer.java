@@ -21,7 +21,7 @@ public abstract class UpgradeActionSerializer<T extends UpgradeAction> extends F
 	
 	/**
 	 * Gets the entry data guaranteed to be provided by the serialized action
-	 * @return An {@linkplain UpgradeEntrySet} containing every {@linkplain UpgradeEntry} guaranteed to be provided in {@linkplain UpgradeEventData} sent by this action
+	 * @return An {@linkplain UpgradeEntrySet} containing every {@linkplain UpgradeEntry} guaranteed to be provided in any {@linkplain UpgradeEventData} sent by this action
 	 */
 	public abstract UpgradeEntrySet getProvidedData();
 	
