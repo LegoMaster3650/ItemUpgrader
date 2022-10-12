@@ -41,7 +41,10 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 	public MutableComponent getActionTooltip(ItemStack stack) {
 		List<MutableComponent> conditionComponents = new ArrayList<>(this.conditions.size());
 		for (UpgradeCondition condition : this.conditions) {
-			if(condition.isVisible()) conditionComponents.add(new TranslatableComponent("upgradeCondition." + ComponentHelper.keyFormat(condition.getId()) + (condition.isInverted() ? ".inverse" : ""), (Object[]) condition.getTooltipWithOverride(stack)));
+			if (condition.isVisible()) {
+				if (condition.hasTooltipOverride()) conditionComponents.add(new TranslatableComponent(condition.getTooltipOverride()));
+				else conditionComponents.add(new TranslatableComponent("upgradeCondition." + ComponentHelper.keyFormat(condition.getId()) + (condition.isInverted() ? ".inverse" : ""), (Object[]) condition.getTooltip(stack)));
+			}
 		}
 		MutableComponent conditionTooltip = ComponentHelper.andList(conditionComponents);
 		

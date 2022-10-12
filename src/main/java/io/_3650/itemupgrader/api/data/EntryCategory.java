@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import io._3650.itemupgrader.ItemUpgrader;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -251,8 +252,10 @@ public class EntryCategory<T> {
 	public static final EntryCategory<Vec3> POSITION = create("position");
 	/**BlockPos*/
 	public static final EntryCategory<BlockPos> BLOCK_POS = create("block_pos");
+	/**Direction*/
+	public static final EntryCategory<Direction> DIRECTION = create("direction");
 	
-	/**Item*/
+	/**ItemStack*/
 	public static final EntryCategory<ItemStack> ITEM = create("item");
 	
 	/**Upgrade Entry ID*/

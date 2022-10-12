@@ -7,7 +7,6 @@ import com.google.common.collect.SetMultimap;
 
 import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
-import io._3650.itemupgrader.upgrades.actions.AttributeUpgradeAction.AttributeReplacement;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 

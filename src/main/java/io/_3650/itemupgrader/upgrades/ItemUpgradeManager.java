@@ -80,7 +80,10 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 				//is visible
 				boolean visible = GsonHelper.getAsBoolean(json, "visible", true);
 				//description lines
-				int descriptionLines = GsonHelper.getAsInt(json, "description", 0);
+				int descriptionLines;
+				if (GsonHelper.isBooleanValue(json, "description")) {
+					descriptionLines = GsonHelper.getAsBoolean(json, "description", false) ? 1 : 0;
+				} else descriptionLines = GsonHelper.getAsInt(json, "description", 0);
 				//color
 				TextColor color = TextColor.parseColor(GsonHelper.getAsString(json, "color", "#FFFFFF"));
 				
@@ -97,7 +100,6 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 					UpgradeAction act = actionFromJson(GsonHelper.getAsJsonObject(json, "upgrade"));
 					actions.put(act.getId(), act);
 				}
-				MultimapBuilder.treeKeys().arrayListValues();
 				
 				builder.put(upgradeId, new ItemUpgrade(upgradeId, base, validSlots, actions, visible, descriptionLines, color));
 			} catch (Exception err) {

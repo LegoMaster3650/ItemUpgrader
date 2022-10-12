@@ -20,7 +20,7 @@ public class ConsumeUpgradeResult extends UpgradeResult {
 	
 	@Override
 	public void execute(UpgradeEventData data) {
-		data.setResult(UpgradeEntry.CONSUMED, true);
+		data.setModifiableEntry(UpgradeEntry.CONSUMED, true);
 	}
 	
 	private final Serializer instance = new Serializer();

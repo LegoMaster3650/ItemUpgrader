@@ -22,10 +22,12 @@ public class UpgradeEntrySet {
 	
 	private final ImmutableSet<UpgradeEntry<?>> required;
 	private final ImmutableSet<UpgradeEntry<?>> provided;
+	private final ImmutableSet<UpgradeEntry<?>> modified;
 	
-	private UpgradeEntrySet(Set<UpgradeEntry<?>> required, Set<UpgradeEntry<?>> provided) {
+	private UpgradeEntrySet(Set<UpgradeEntry<?>> required, Set<UpgradeEntry<?>> provided, Set<UpgradeEntry<?>> modified) {
 		this.required = ImmutableSet.copyOf(required);
 		this.provided = ImmutableSet.copyOf(provided);
+		this.modified = ImmutableSet.copyOf(modified);
 	}
 	
 	/**
@@ -37,6 +39,10 @@ public class UpgradeEntrySet {
 	
 	public Set<UpgradeEntry<?>> getProvided() {
 		return this.provided;
+	}
+	
+	public Set<UpgradeEntry<?>> getModified() {
+		return this.modified;
 	}
 	
 	private static final Map<UpgradeEntrySet, Boolean> VERIFICATION_CACHE = Maps.newHashMap();
@@ -51,6 +57,7 @@ public class UpgradeEntrySet {
 		if (VERIFICATION_CACHE.containsKey(provided)) return VERIFICATION_CACHE.get(provided);
 		else {
 			boolean diff = Sets.difference(this.required, provided.provided).isEmpty();
+			diff = diff && Sets.difference(this.modified, provided.modified).isEmpty();
 			VERIFICATION_CACHE.put(provided, diff);
 			return diff;
 		}
@@ -124,16 +131,19 @@ public class UpgradeEntrySet {
 		
 		private final Set<UpgradeEntry<?>> required = Sets.newIdentityHashSet();
 		private final Set<UpgradeEntry<?>> provided = Sets.newIdentityHashSet();
+		private final Set<UpgradeEntry<?>> modified = Sets.newIdentityHashSet();
 		
 		/**Reverts the given entry set back to a builder*/
 		private Builder(UpgradeEntrySet preset) {
 			this.required.addAll(preset.required);
 			this.provided.addAll(preset.provided);
+			this.modified.addAll(preset.modified);
 		}
 		/**Adds all the data from the given entry to this one*/
 		private void combine(UpgradeEntrySet preset) {
 			this.required.addAll(preset.required);
 			this.provided.addAll(preset.provided);
+			this.modified.addAll(preset.modified);
 		}
 		
 		/**
@@ -155,9 +165,9 @@ public class UpgradeEntrySet {
 		}
 		
 		/**
-		 * Adds {@code entry} to the builder's provided list<br>
+		 * Adds {@code entry} to the builder's provided set<br>
 		 * Provides without requiring the entry for verification as the target in {@linkplain UpgradeEntrySet#verify(UpgradeEntrySet)}
-		 * @param entry The {@linkplain UpgradeEntry} to append to the builder's provided entries
+		 * @param entry The {@linkplain UpgradeEntry} to append to the builder's provided entry set
 		 * @return The {@linkplain Builder} to chain more statements on
 		 */
 		public Builder provide(UpgradeEntry<?> entry) {
@@ -166,11 +176,22 @@ public class UpgradeEntrySet {
 		}
 		
 		/**
+		 * Adds {@code entry} to the builder's modified set<br>
+		 * The modified list requires certain entries to be modifiable, useful for return data or cancellation
+		 * @param entry The {@linkplain UpgradeEntry} to append to the builder's provided and modified entry sets
+		 * @return The {@linkplain Builder} to chain more statements on
+		 */
+		public Builder modifiable(UpgradeEntry<?> entry) {
+			this.modified.add(entry);
+			return this;
+		}
+		
+		/**
 		 * Builds the {@linkplain Builder} and finalizes its' contents (unless you use {@linkplain UpgradeEntrySet#with(Consumer)} or {@linkplain UpgradeEntrySet#with(UpgradeEntrySet)}
 		 * @return A new {@linkplain UpgradeEntrySet} with this builder's required list made immutable
 		 */
 		public UpgradeEntrySet build() {
-			return new UpgradeEntrySet(this.required, this.provided);
+			return new UpgradeEntrySet(this.required, this.provided, this.modified);
 		}
 		
 	}

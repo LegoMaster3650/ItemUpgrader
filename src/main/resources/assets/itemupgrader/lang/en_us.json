@@ -37,12 +37,15 @@
 	"upgradeAction.itemupgrader.upgrade_remove": "When this upgrade is removed: %s",
 	"upgradeAction.itemupgrader.upgrade_remove.condition": "When this upgrade is removed: If %s, %s",
 	
+	"upgradeAction.itemupgrader.attribute_complex": "%s",
+	"upgradeAction.itemupgrader.attribute_complex.condition": "If %s, %s",
 	"upgradeAction.itemupgrader.living_tick": "%s",
 	"upgradeAction.itemupgrader.living_tick.condition": "If %s, %s",
 	"upgradeAction.itemupgrader.player_tick_pre": "%s",
 	"upgradeAction.itemupgrader.player_tick_pre.condition": "If %s, %s",
 	"upgradeAction.itemupgrader.player_tick_post": "%s",
 	"upgradeAction.itemupgrader.player_tick_post.condition": "If %s, %s",
+	
 	"upgradeAction.itemupgrader.left_click": "On left click: %s",
 	"upgradeAction.itemupgrader.left_click.condition": "On left click: If %s, %s",
 	"upgradeAction.itemupgrader.left_click_effect": "On left click: %s",
@@ -63,24 +66,40 @@
 	"upgradeAction.itemupgrader.entity_interact.condition": "On entity interaction: If %s, %s",
 	"upgradeAction.itemupgrader.entity_interact_specific": "On entity interaction: %s",
 	"upgradeAction.itemupgrader.entity_interact_specific.condition": "On entity interaction: If %s, %s",
+	
 	"upgradeAction.itemupgrader.player_attack": "On player attack: %s",
 	"upgradeAction.itemupgrader.player_attack.condition": "On player attack: %s",
-	"upgradeAction.itemupgrader.living_hurt": "Before damage is taken: %s",
-	"upgradeAction.itemupgrader.living_hurt.condition": "Before damage is taken: If %s, %s",
-	"upgradeAction.itemupgrader.living_damage": "When damage is taken: %s",
-	"upgradeAction.itemupgrader.living_damage.condition": "When damage is taken: If %s, %s",
+	"upgradeAction.itemupgrader.hurt": "Before damage is taken: %s",
+	"upgradeAction.itemupgrader.hurt.condition": "Before damage is taken: If %s, %s",
+	"upgradeAction.itemupgrader.damage": "When damage is taken: %s",
+	"upgradeAction.itemupgrader.damage.condition": "When damage is taken: If %s, %s",
+	"upgradeAction.itemupgrader.fall": "On fall: %s",
+	"upgradeAction.itemupgrader.fall.condition": "On fall: If %s, %s",
 	
 	"upgradeCondition.itemupgrader.predicate": "%s",
-	"upgradeCondition.itemupgrader.compare": "If numbers test positive (HIDE THESE)",
-	"upgradeCondition.itemupgrader.compare.inverse": "If numbers don't test positive (HIDE THESE)",
+	"upgradeCondition.itemupgrader.compare": "%s %s %s",
 	"upgradeCondition.itemupgrader.eyes_in_fluid": "eyes are under %s",
 	"upgradeCondition.itemupgrader.eyes_in_fluid.inverse": "eyes aren't under %s",
 	"upgradeCondition.itemupgrader.has_upgrade": "upgrade %s is %s",
 	"upgradeCondition.itemupgrader.has_upgrade.inverse": "upgrade %s is not %s",
+	"upgradeCondition.itemupgrader.cooldown": "item is not on cooldown",
+	"upgradeCondition.itemupgrader.cooldown.inverse": "item is on cooldown",
+	"upgradeCondition.itemupgrader.tag_boolean": "tag %s is %s",
+	"upgradeCondition.itemupgrader.tag_boolean.inverse": "tag %s is not %s",
+	"upgradeCondition.itemupgrader.tag_int": "tag %s %s %s",
+	"upgradeCondition.itemupgrader.tag_float": "tag %s %s %s",
 	
 	"upgradeResult.itemupgrader.cancel": "Cancel",
 	"upgradeResult.itemupgrader.consume": "Cancel and stop other items from running",
+	"upgradeResult.itemupgrader.attribute": "%s",
 	"upgradeResult.itemupgrader.effect": "Gain %s",
 	"upgradeResult.itemupgrader.block_particle": "Display target block particle",
-	"upgradeResult.itemupgrader.run_command": "Run command: %s"
+	"upgradeResult.itemupgrader.command": "Run command: %s",
+	"upgradeResult.itemupgrader.cooldown": "Add %s ticks of cooldown",
+	"upgradeResult.itemupgrader.tag_boolean": "Set tag %s to %s",
+	"upgradeResult.itemupgrader.tag_int": "Set tag %s %s %s",
+	"upgradeResult.itemupgrader.tag_float": "Set tag %s %s %s",
+	
+	"upgradeResult.itemupgrader.internal_fall_to_food": "Absorb fall damage as hunger"
+	
 }

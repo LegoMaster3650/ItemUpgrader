@@ -9,6 +9,7 @@ import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
 import io._3650.itemupgrader.api.type.UpgradeCondition;
 import io._3650.itemupgrader.api.util.ComponentHelper;
+import io._3650.itemupgrader.upgrades.data.OperationValue;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -16,20 +17,20 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 
-public class CompareNumbersCondition extends UpgradeCondition {
+public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 	
 	private final CompareTarget target;
-	private final CompareOperation op;
+	private final OperationValue op;
 	private final UpgradeEntry<Integer> intEntry;
 	private final UpgradeEntry<Float> floatEntry;
 	private final int intValue;
 	private final float floatValue;
 	
-	public CompareNumbersCondition(
+	public CompareNumbersUpgradeCondition(
 			IUpgradeInternals internals,
 			boolean inverted,
 			CompareTarget target,
-			CompareOperation op,
+			OperationValue op,
 			UpgradeEntry<Integer> intEntry,
 			UpgradeEntry<Float> floatEntry,
 			int intValue,
@@ -39,8 +40,10 @@ public class CompareNumbersCondition extends UpgradeCondition {
 			default:
 			case INTEGER:
 				mapper.set(EntryCategory.INT_VALUE, intEntry);
+				break;
 			case FLOAT:
 				mapper.set(EntryCategory.FLOAT_VALUE, floatEntry);
+				break;
 			}
 		}));
 		this.target = target;
@@ -108,9 +111,9 @@ public class CompareNumbersCondition extends UpgradeCondition {
 		default:
 			return ComponentHelper.arrayify(new TranslatableComponent("tooltip.itemupgrader.error"));
 		case INTEGER:
-			return ComponentHelper.arrayify(new TextComponent(this.intEntry.getId() + " " + this.op.getName() + " " + this.intValue));
+			return new MutableComponent[] {new TranslatableComponent("upgradeEntry." + ComponentHelper.keyFormat(this.intEntry.getId())), new TextComponent(this.op.getName()), new TextComponent("" + this.intValue)};
 		case FLOAT:
-			return ComponentHelper.arrayify(new TextComponent(this.floatEntry.getId() + " " + this.op.getName() + " " + this.floatValue));
+			return new MutableComponent[] {new TranslatableComponent("upgradeEntry." + ComponentHelper.keyFormat(this.floatEntry.getId())), new TextComponent(this.op.getName()), new TextComponent("" + this.floatValue)};
 		}
 	}
 	
@@ -119,33 +122,35 @@ public class CompareNumbersCondition extends UpgradeCondition {
 		this.getSerializer().toNetwork(this, buf);
 	}
 	
-	public static class Serializer extends UpgradeConditionSerializer<CompareNumbersCondition> {
+	public static class Serializer extends UpgradeConditionSerializer<CompareNumbersUpgradeCondition> {
 		
 		@Override
-		public CompareNumbersCondition fromJson(IUpgradeInternals internals, boolean inverted, JsonObject json) {
+		public CompareNumbersUpgradeCondition fromJson(IUpgradeInternals internals, boolean inverted, JsonObject json) {
 			CompareTarget target = CompareTarget.INTEGER;
-			CompareOperation op = CompareOperation.byName(GsonHelper.getAsString(json, "operation", CompareOperation.EQ.getName()));
+			OperationValue op = OperationValue.byName(GsonHelper.getAsString(json, "operation", OperationValue.EQ.getName()));
 			UpgradeEntry<Integer> intEntry;
 			UpgradeEntry<Float> floatEntry;
 			int intValue;
 			float floatValue;
-			if (EntryCategory.INT_VALUE.jsonHasValue(json, "target")) {
-				intEntry = EntryCategory.INT_VALUE.fromJson(json, "target");
-				floatEntry = EntryCategory.FLOAT_VALUE.getDefaultValue();
-				intValue = GsonHelper.getAsInt(json, "value");
-				floatValue = 0.0F;
-			} else {
+			if (EntryCategory.FLOAT_VALUE.jsonHasValue(json, "target")) {
+				//use if float value is present
 				target = CompareTarget.FLOAT;
 				intEntry = EntryCategory.INT_VALUE.getDefaultValue();
 				floatEntry = EntryCategory.FLOAT_VALUE.fromJson(json, "target");
 				intValue = 0;
 				floatValue = GsonHelper.getAsFloat(json, "value");
+			} else {
+				//otherwise default to int
+				intEntry = EntryCategory.INT_VALUE.fromJson(json, "target");
+				floatEntry = EntryCategory.FLOAT_VALUE.getDefaultValue();
+				intValue = GsonHelper.getAsInt(json, "value");
+				floatValue = 0.0F;
 			}
-			return new CompareNumbersCondition(internals, inverted, target, op, intEntry, floatEntry, intValue, floatValue);
+			return new CompareNumbersUpgradeCondition(internals, false, target, op, intEntry, floatEntry, intValue, floatValue);
 		}
 		
 		@Override
-		public void toNetwork(CompareNumbersCondition condition, FriendlyByteBuf buf) {
+		public void toNetwork(CompareNumbersUpgradeCondition condition, FriendlyByteBuf buf) {
 			buf.writeEnum(condition.target);
 			buf.writeEnum(condition.op);
 			condition.intEntry.toNetwork(buf);
@@ -155,14 +160,14 @@ public class CompareNumbersCondition extends UpgradeCondition {
 		}
 		
 		@Override
-		public CompareNumbersCondition fromNetwork(IUpgradeInternals internals, boolean inverted, FriendlyByteBuf buf) {
+		public CompareNumbersUpgradeCondition fromNetwork(IUpgradeInternals internals, boolean inverted, FriendlyByteBuf buf) {
 			CompareTarget target = buf.readEnum(CompareTarget.class);
-			CompareOperation op = buf.readEnum(CompareOperation.class);
+			OperationValue op = buf.readEnum(OperationValue.class);
 			UpgradeEntry<Integer> intEntry = EntryCategory.INT_VALUE.fromNetwork(buf);
 			UpgradeEntry<Float> floatEntry = EntryCategory.FLOAT_VALUE.fromNetwork(buf);
 			int intValue = buf.readInt();
 			float floatValue = buf.readFloat();
-			return new CompareNumbersCondition(internals, inverted, target, op, intEntry, floatEntry, intValue, floatValue);
+			return new CompareNumbersUpgradeCondition(internals, inverted, target, op, intEntry, floatEntry, intValue, floatValue);
 		}
 		
 	}
@@ -170,32 +175,6 @@ public class CompareNumbersCondition extends UpgradeCondition {
 	private static enum CompareTarget {
 		INTEGER,
 		FLOAT;
-	}
-	
-	private static enum CompareOperation {
-		EQ("="),
-		NE("!="),
-		GT(">"),
-		LT("<"),
-		GE(">="),
-		LE("<=");
-		
-		private final String name;
-		
-		private CompareOperation(String name) {
-			this.name = name;
-		}
-		
-		public String getName() {
-			return this.name;
-		}
-		
-		public static CompareOperation byName(String nameIn) {
-			for (var value : values()) {
-				if (value.name.equals(nameIn)) return value;
-			}
-			return EQ;
-		}
 	}
 	
 }

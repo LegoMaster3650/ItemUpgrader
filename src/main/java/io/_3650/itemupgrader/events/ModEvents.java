@@ -16,7 +16,7 @@ import io._3650.itemupgrader.network.NetworkHandler;
 import io._3650.itemupgrader.network.PlayerLeftClickEmptyPacket;
 import io._3650.itemupgrader.network.PlayerRightClickEmptyPacket;
 import io._3650.itemupgrader.registry.ModUpgradeActions;
-import io._3650.itemupgrader.upgrades.actions.AttributeUpgradeAction.AttributeReplacement;
+import io._3650.itemupgrader.upgrades.data.AttributeReplacement;
 import io._3650.itemupgrader.upgrades.data.ModUpgradeEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -35,6 +35,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -74,22 +75,44 @@ public class ModEvents {
 		UpgradeEventData.Builder builder = UpgradeEventData.builder()
 				.entry(UpgradeEntry.ITEM, event.getItemStack())
 				.entry(UpgradeEntry.SLOT, event.getSlotType())
-				.entry(ModUpgradeEntry.ATTRIBUTES, MultimapBuilder.hashKeys().hashSetValues().build(event.getOriginalModifiers()))
-				.result(ModUpgradeEntry.ATTRIBUTE_ADDITIONS, MultimapBuilder.hashKeys().hashSetValues().build())
-				.result(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS, Sets.newHashSet());
+				.entry(ModUpgradeEntry.ATTRIBUTES, event.getModifiers())
+				.modifiableEntry(ModUpgradeEntry.ATTRIBUTE_ADDITIONS, MultimapBuilder.hashKeys().hashSetValues().build())
+				.modifiableEntry(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS, Sets.newHashSet());
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ATTRIBUTE, builder);
-		Set<AttributeReplacement> replacements = data.getResult(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS);
+		Set<AttributeReplacement> replacements = data.getEntry(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS);
 		if (!replacements.isEmpty()) {
-			replacements.forEach(replacement -> {
+			for (var replacement : replacements) {
 				event.removeModifier(replacement.target(), replacement.oldAttribute());
 				event.addModifier(replacement.target(), replacement.newAttribute());
-			});
+			}
 		}
-		SetMultimap<Attribute, AttributeModifier> additions = data.getResult(ModUpgradeEntry.ATTRIBUTE_ADDITIONS);
+		SetMultimap<Attribute, AttributeModifier> additions = data.getEntry(ModUpgradeEntry.ATTRIBUTE_ADDITIONS);
 		if (!additions.isEmpty()) {
-			additions.forEach((attribute, modifier) -> {
-				event.addModifier(attribute, modifier);
-			});
+			for (var entry : additions.entries()) {
+				event.addModifier(entry.getKey(), entry.getValue());
+			}
+		}
+		UpgradeEventData.Builder builder2 = UpgradeEventData.builder()
+				.entry(UpgradeEntry.ITEM, event.getItemStack())
+				.entry(UpgradeEntry.SLOT, event.getSlotType())
+				.entry(ModUpgradeEntry.ATTRIBUTES, event.getModifiers())
+				.modifiableEntry(ModUpgradeEntry.ATTRIBUTE_ADDITIONS, MultimapBuilder.hashKeys().hashSetValues().build())
+				.modifiableEntry(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS, Sets.newHashSet())
+				.modifiableEntry(UpgradeEntry.CONSUMED, false);
+		UpgradeEventData data2 = ItemUpgraderApi.runActions(ModUpgradeActions.ATTRIBUTE_COMPLEX, builder2);
+		if (data2.getBoolEntry(UpgradeEntry.CONSUMED)) return;
+		Set<AttributeReplacement> replacements2 = data2.getEntry(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS);
+		if (!replacements2.isEmpty()) {
+			for (var replacement : replacements2) {
+				event.removeModifier(replacement.target(), replacement.oldAttribute());
+				event.addModifier(replacement.target(), replacement.newAttribute());
+			}
+		}
+		SetMultimap<Attribute, AttributeModifier> additions2 = data2.getEntry(ModUpgradeEntry.ATTRIBUTE_ADDITIONS);
+		if (!additions2.isEmpty()) {
+			for (var entry : additions2.entries()) {
+				event.addModifier(entry.getKey(), entry.getValue());
+			}
 		}
 	}
 	
@@ -108,10 +131,10 @@ public class ModEvents {
 				.entry(UpgradeEntry.TARGET_ENTITY, targetEntity)
 				.entry(UpgradeEntry.TARGET_ENTITY_POS, targetPos)
 				.entry(UpgradeEntry.INTERACTION_POS, interactionPos)
-				.result(UpgradeEntry.CONSUMED, false)
+				.modifiableEntry(UpgradeEntry.CONSUMED, false)
 				.cancellable();
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ENTITY_INTERACT_SPECIFIC, builder);
-		if (data.getBoolResult(UpgradeEntry.CONSUMED)) {
+		if (data.getBoolEntry(UpgradeEntry.CONSUMED)) {
 			event.setCancellationResult(InteractionResult.CONSUME);
 			event.setCanceled(true);
 		} else if (data.isCancelled()) event.setCanceled(true);
@@ -143,10 +166,10 @@ public class ModEvents {
 				.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 				.entry(UpgradeEntry.BLOCK_STATE, state)
 				.entry(UpgradeEntry.INTERACTION_POS, event.getHitVec().getLocation())
-				.result(UpgradeEntry.CONSUMED, false)
+				.modifiableEntry(UpgradeEntry.CONSUMED, false)
 				.cancellable();
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_BLOCK, builder, event.getItemStack());
-		if (data.getBoolResult(UpgradeEntry.CONSUMED)) {
+		if (data.getBoolEntry(UpgradeEntry.CONSUMED)) {
 			event.setCancellationResult(InteractionResult.CONSUME);
 			event.setCanceled(true);
 		}
@@ -161,8 +184,8 @@ public class ModEvents {
 					.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 					.entry(UpgradeEntry.BLOCK_STATE, state)
 					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
-					.result(UpgradeEntry.CONSUMED, false));
-			if (data1.getBoolResult(UpgradeEntry.CONSUMED)) {
+					.modifiableEntry(UpgradeEntry.CONSUMED, false));
+			if (data1.getBoolEntry(UpgradeEntry.CONSUMED)) {
 				event.setCancellationResult(InteractionResult.CONSUME);
 				event.setCanceled(true);
 				return;
@@ -221,9 +244,9 @@ public class ModEvents {
 				.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 				.entry(UpgradeEntry.BLOCK_STATE, state)
 				.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
-				.result(UpgradeEntry.CONSUMED, false);
+				.modifiableEntry(UpgradeEntry.CONSUMED, false);
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK, builder, event.getItemStack());
-		if (data.getBoolResult(UpgradeEntry.CONSUMED)) return;
+		if (data.getBoolEntry(UpgradeEntry.CONSUMED)) return;
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
 			UpgradeEventData data1 = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK_EFFECT, new UpgradeEventData.Builder(player, slot1)
@@ -231,8 +254,8 @@ public class ModEvents {
 					.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 					.entry(UpgradeEntry.BLOCK_STATE, state)
 					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
-					.result(UpgradeEntry.CONSUMED, false));
-			if (data1.getBoolResult(UpgradeEntry.CONSUMED)) return;
+					.modifiableEntry(UpgradeEntry.CONSUMED, false));
+			if (data1.getBoolEntry(UpgradeEntry.CONSUMED)) return;
 			
 		}
 		leftClickBase(slot, player, event.getItemStack());
@@ -280,14 +303,13 @@ public class ModEvents {
 			if (living.hasItemInSlot(slot)) {
 				UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_HURT, new UpgradeEventData.Builder(living, slot)
 						.entry(UpgradeEntry.DAMAGE_SOURCE, event.getSource())
-						.entry(UpgradeEntry.DAMAGE, event.getAmount())
-						.result(UpgradeEntry.DAMAGE, event.getAmount())
+						.modifiableEntry(UpgradeEntry.DAMAGE, event.getAmount())
 						.cancellable());
 				if (data.isCancelled()) {
 					event.setCanceled(true);
 					return;
 				} else {
-					float resAmount = data.getResult(UpgradeEntry.DAMAGE);
+					float resAmount = data.getEntry(UpgradeEntry.DAMAGE);
 					if (resAmount != event.getAmount()) event.setAmount(resAmount);
 				}
 			}
@@ -301,17 +323,37 @@ public class ModEvents {
 			if (living.hasItemInSlot(slot)) {
 				UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_DAMAGE, new UpgradeEventData.Builder(living, slot)
 						.entry(UpgradeEntry.DAMAGE_SOURCE, event.getSource())
-						.entry(UpgradeEntry.DAMAGE, event.getAmount())
-						.result(UpgradeEntry.DAMAGE, event.getAmount())
+						.modifiableEntry(UpgradeEntry.DAMAGE, event.getAmount())
 						.cancellable());
 				if (data.isCancelled()) {
 					event.setCanceled(true);
 					return;
 				} else {
-					float resAmount = data.getResult(UpgradeEntry.DAMAGE);
+					float resAmount = data.getEntry(UpgradeEntry.DAMAGE);
 					if (resAmount != event.getAmount()) event.setAmount(resAmount);
 				}
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void fallDamage(LivingFallEvent event) {
+		LivingEntity living = event.getEntityLiving();
+		if (living.level.isClientSide) return;
+		for (var slot : EquipmentSlot.values()) {
+			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_FALL, new UpgradeEventData.Builder(living, slot)
+					.modifiableEntry(UpgradeEntry.FALL_DIST, event.getDistance())
+					.modifiableEntry(UpgradeEntry.DAMAGE_MULT, event.getDamageMultiplier())
+					.modifiableEntry(UpgradeEntry.CONSUMED, false)
+					.cancellable());
+			if (data.isCancelled()) {
+				event.setCanceled(true);
+				return;
+			} else if (data.getBoolEntry(UpgradeEntry.CONSUMED)) return;
+			float fallDist = data.getEntry(UpgradeEntry.FALL_DIST);
+			float damageMult = data.getEntry(UpgradeEntry.DAMAGE_MULT);
+			if (fallDist != event.getDistance()) event.setDistance(fallDist);
+			if (damageMult != event.getDamageMultiplier()) event.setDamageMultiplier(damageMult);
 		}
 	}
 	

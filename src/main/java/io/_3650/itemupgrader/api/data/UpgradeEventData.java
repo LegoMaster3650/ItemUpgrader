@@ -3,14 +3,15 @@ package io._3650.itemupgrader.api.data;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
-import com.ibm.icu.impl.locale.XCldrStub.ImmutableMap;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -36,12 +37,12 @@ public class UpgradeEventData {
 	
 	private final UpgradeEntrySet entrySet;
 	private final Map<UpgradeEntry<?>, Object> entries;
-	private final Map<UpgradeEntry<?>, Object> results;
+	private final Set<UpgradeEntry<?>> modifiableEntries;
 	
-	private UpgradeEventData(UpgradeEntrySet entrySet, Map<UpgradeEntry<?>, Object> entries, Map<UpgradeEntry<?>, Object> baseResults) {
+	private UpgradeEventData(UpgradeEntrySet entrySet, Map<UpgradeEntry<?>, Object> entries, Set<UpgradeEntry<?>> modifiableEntries) {
 		this.entrySet = entrySet;
-		this.entries = ImmutableMap.copyOf(entries);
-		this.results = baseResults;
+		this.entries = entries;
+		this.modifiableEntries = ImmutableSet.copyOf(modifiableEntries);
 	}
 	
 	/**
@@ -58,7 +59,7 @@ public class UpgradeEventData {
 	 * @return If the entry type is present
 	 */
 	public boolean hasEntry(UpgradeEntry<?> entry) {
-		return this.entries.containsKey(entry);
+		return entry.isNullable() ? this.entries.containsKey(entry) : this.getEntryOrNull(entry) == null;
 	}
 	
 	/**
@@ -103,77 +104,37 @@ public class UpgradeEventData {
 	}
 	
 	/**
-	 * Checks if the event results allow this type
-	 * @param type The {@linkplain UpgradeEntry} type to check for
-	 * @return If the event results allow this type
+	 * Checks if the event allows the given entry to be modified
+	 * @param entry The {@linkplain UpgradeEntry} type to check for
+	 * @return If the event allows this entry to be modified
+	 * @see #hasModifiableEntry(UpgradeEntry)
 	 */
-	public boolean allowsResultType(UpgradeEntry<?> type) {
-		return this.results.containsKey(type);
+	public boolean isModifiableEntry(UpgradeEntry<?> entry) {
+		return this.modifiableEntries.contains(entry);
 	}
 	
 	/**
-	 * Sets a result for this event if it allows this type
-	 * @param <T> The data type held by this result
-	 * @param entry The {@linkplain UpgradeEntry} type to set
-	 * @param result The data to store for this result
-	 * @return Whether the result was permitted to be set or not
-	 */
-	public <T> boolean setResult(UpgradeEntry<T> entry, T result) {
-		if (this.allowsResultType(entry)) {
-			this.results.put(entry, result);
-			return true;
-		} else return false;
-	}
-	
-	/**
-	 * Checks if a VALUE is present for this entry type
+	 * Checks if the event data contains an entry for this type and if it is modifiable
 	 * @param entry The {@linkplain UpgradeEntry} type to check
 	 * @return Whether the result specified has a value
-	 * @see #allowsResultType(UpgradeEntry)
+	 * @see #hasEntry(UpgradeEntry)
+	 * @see #isModifiableEntry(UpgradeEntry)
 	 */
-	public boolean hasResultValue(UpgradeEntry<?> entry) {
-		return this.results.get(entry) != null;
+	public boolean hasModifiableEntry(UpgradeEntry<?> entry) {
+		return this.hasEntry(entry) && this.isModifiableEntry(entry);
 	}
 	
 	/**
-	 * Gets a result value for this event, erroring if null or missing
+	 * Sets a modifiable entry for this event if allowed
 	 * @param <T> The data type held by this result
-	 * @param entry The {@linkplain UpgradeEntry} type to get
-	 * @return The value of the result if present
-	 * @throws NoSuchElementException If the result isn't present
-	 * @see #getResultOrNull(UpgradeEntry)
-	 * @see #getResultOptional(UpgradeEntry)
+	 * @param entry The {@linkplain UpgradeEntry} type to set
+	 * @param value The data to store for this entry
+	 * @return Whether the result was permitted to be set or not
 	 */
-	@Nonnull
-	public <T> T getResult(UpgradeEntry<T> entry) throws NoSuchElementException {
-		T t = this.getResultOrNull(entry);
-		if (t == null) {
-			throw new NoSuchElementException("Upgrade event missing result " + entry);
-		} else {
-			return t;
-		}
-	}
-	
-	/**
-	 * Gets a result value for this event, returning null if missing
-	 * @param <T> The data type provided by this result
-	 * @param entry The {@linkplain UpgradeEntry} type to get
-	 * @return The value of the result if present, or {@code null} if not
-	 */
-	@SuppressWarnings("unchecked")
-	@Nullable
-	public <T> T getResultOrNull(UpgradeEntry<T> entry) {
-		return (T) this.results.get(entry);
-	}
-	
-	/**
-	 * Gets an optional of this result's value which is empty if not present
-	 * @param <T> The data type provided by this result
-	 * @param entry The {@linkplain UpgradeEntry} type to get
-	 * @return An {@linkplain Optional} of the result's value if present
-	 */
-	public <T> Optional<T> getResultOptional(UpgradeEntry<T> entry) {
-		return Optional.ofNullable(this.getResultOrNull(entry));
+	public <T> void setModifiableEntry(UpgradeEntry<T> entry, T value) {
+		if (!entry.isNullable() && value == null) throw new IllegalArgumentException("Tried to set the value of non-nullable entry " + entry + " to null");
+		if (!this.isModifiableEntry(entry)) throw new IllegalStateException("Tried to set the value of unmodifiable entry " + entry);
+		else this.entries.put(entry, value);
 	}
 	
 	/**
@@ -181,15 +142,15 @@ public class UpgradeEventData {
 	 * @return If the event is cancellable
 	 */
 	public boolean isCancellable() {
-		return this.allowsResultType(UpgradeEntry.CANCELLED);
+		return this.hasModifiableEntry(UpgradeEntry.CANCELLED);
 	}
 	
 	/**
 	 * A utility function to quickly cancel the event if it is cancellable
 	 * @return If the cancelled value was successfully set
 	 */
-	public boolean cancel() {
-		return this.setResult(UpgradeEntry.CANCELLED, true);
+	public void cancel() {
+		this.setModifiableEntry(UpgradeEntry.CANCELLED, true);
 	}
 	
 	/**
@@ -197,7 +158,7 @@ public class UpgradeEventData {
 	 * @return If the event is cancelled
 	 */
 	public boolean isCancelled() {
-		return this.getResultOptional(UpgradeEntry.CANCELLED).orElse(false);
+		return this.getOptional(UpgradeEntry.CANCELLED).orElse(false);
 	}
 	
 	/**
@@ -205,8 +166,8 @@ public class UpgradeEventData {
 	 * @param entry The boolean result to get
 	 * @return The boolean output of the result
 	 */
-	public boolean getBoolResult(UpgradeEntry<Boolean> entry) {
-		return this.getResultOptional(entry).orElse(false);
+	public boolean getBoolEntry(UpgradeEntry<Boolean> entry) {
+		return this.getOptional(entry).orElse(false);
 	}
 	
 	/**
@@ -217,7 +178,7 @@ public class UpgradeEventData {
 	public static class Builder {
 		
 		private final Map<UpgradeEntry<?>, Object> entries = Maps.newIdentityHashMap();
-		private final Map<UpgradeEntry<?>, Object> results = Maps.newIdentityHashMap();
+		private final Set<UpgradeEntry<?>> modifiableEntries = Sets.newIdentityHashSet();
 		
 		/**
 		 * Constructs a builder with the {@link UpgradeEntry#ITEM} property set
@@ -338,7 +299,8 @@ public class UpgradeEventData {
 		 * @return This builder
 		 */
 		public <T> Builder entry(UpgradeEntry<T> entry, T value) {
-			this.entries.put(entry, value);
+			if (!entry.isNullable() && value == null) throw new IllegalArgumentException(entry + " has a null value but isn't nullable");
+			else this.entries.put(entry, value);
 			return this;
 		}
 		
@@ -356,29 +318,49 @@ public class UpgradeEventData {
 		}
 		
 		/**
-		 * Adds the given result to the builder
+		 * Adds the given entry to the builder and marks it as modifiable.
 		 * @param <T> The data type provided by this result
 		 * @param entry The {@linkplain UpgradeEntry} type to set
 		 * @param value The data to store for this result
 		 * @return This builder
 		 */
-		public <T> Builder result(UpgradeEntry<T> entry, T defaultValue) {
-			this.results.put(entry, defaultValue);
+		public <T> Builder modifiableEntry(UpgradeEntry<T> entry, T defaultValue) {
+			if (!entry.isNullable() && defaultValue == null) throw new IllegalArgumentException(entry + " has a null value but isn't nullable");
+			else {
+				this.entries.put(entry, defaultValue);
+				this.modifiableEntries.add(entry);
+			}
 			return this;
 		}
 		
 		/**
-		 * Adds the given result to the builder if a condition is met
+		 * Adds the given entry to the builder and marks it as modifiable.
 		 * @param <T> The data type provided by this result
-		 * @param condition A boolean determining whether or not to add the result
 		 * @param entry The {@linkplain UpgradeEntry} type to set
 		 * @param value The data to store for this result
 		 * @return This builder
 		 */
-		public <T> Builder resultIf(boolean condition, UpgradeEntry<T> entry, T defaultValue) {
-			if (condition) this.results.put(entry, defaultValue);
+		public <T> Builder optionalModifiableEntry(UpgradeEntry<T> entry, T defaultValue) {
+			this.entries.put(entry, defaultValue);
+			this.modifiableEntries.add(entry);
 			return this;
 		}
+		
+//		/**
+//		 * Adds the given result to the builder if a condition is met
+//		 * @param <T> The data type provided by this result
+//		 * @param condition A boolean determining whether or not to add the result
+//		 * @param entry The {@linkplain UpgradeEntry} type to set
+//		 * @param value The data to store for this result
+//		 * @return This builder
+//		 */
+//		public <T> Builder modifiableEntryIf(boolean condition, UpgradeEntry<T> entry, T defaultValue) {
+//			if (condition) {
+//				this.entries.put(entry, defaultValue);
+//				this.modifiableEntries.add(entry);
+//			}
+//			return this;
+//		}
 		
 		/**
 		 * Utility function to quickly add the cancellable result to this event
@@ -403,7 +385,7 @@ public class UpgradeEventData {
 		 * @return This builder
 		 */
 		public Builder cancellable(boolean defaultValue) {
-			return this.result(UpgradeEntry.CANCELLED, defaultValue);
+			return this.modifiableEntry(UpgradeEntry.CANCELLED, defaultValue);
 		}
 		
 		/**
@@ -413,7 +395,8 @@ public class UpgradeEventData {
 		 * @return This builder
 		 */
 		public Builder cancellableIf(boolean condition, boolean defaultValue) {
-			return this.resultIf(condition, UpgradeEntry.CANCELLED, defaultValue);
+			if (condition) this.modifiableEntry(UpgradeEntry.CANCELLED, defaultValue);
+			return this;
 		}
 		
 		/**
@@ -427,7 +410,12 @@ public class UpgradeEventData {
 			if (!test.isEmpty()) {
 				throw new IllegalStateException("Missing promised provided entries: " + test.toString());
 			} else {
-				return new UpgradeEventData(entrySet, this.entries, this.results);
+				SetView<UpgradeEntry<?>> modTest = Sets.difference(entrySet.getModified(), this.modifiableEntries);
+				if (!modTest.isEmpty()) {
+					throw new IllegalStateException("Entries are not modifiable as promised: " + test.toString());
+				} else {
+					return new UpgradeEventData(entrySet, this.entries, this.modifiableEntries);
+				}
 			}
 		}
 		

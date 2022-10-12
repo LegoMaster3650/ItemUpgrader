@@ -1,12 +1,14 @@
 package io._3650.itemupgrader.registry;
 
 import io._3650.itemupgrader.ItemUpgrader;
+import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.registry.ItemUpgraderRegistry;
 import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import io._3650.itemupgrader.api.type.SimpleUpgradeAction;
 import io._3650.itemupgrader.api.type.UpgradeAction;
 import io._3650.itemupgrader.upgrades.actions.AttributeUpgradeAction;
+import io._3650.itemupgrader.upgrades.data.ModUpgradeEntrySet;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -22,8 +24,9 @@ public class ModUpgradeActions {
 	// Custom Actions
 	public static final RegistryObject<AttributeUpgradeAction.Serializer> ATTRIBUTE = ACTIONS.register("attribute", () -> new AttributeUpgradeAction.Serializer());
 	
-	
 	// Simple Actions
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> ATTRIBUTE_COMPLEX = ACTIONS.register("attribute_complex", SimpleUpgradeAction.of(ModUpgradeEntrySet.ATTRIBUTES));
+	
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_TICK = ACTIONS.register("living_tick", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_SLOT_ITEM));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> PLAYER_TICK_PRE = ACTIONS.register("player_tick_pre", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> PLAYER_TICK_POST = ACTIONS.register("player_tick_post", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
@@ -42,8 +45,10 @@ public class ModUpgradeActions {
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LEFT_CLICK_BLOCK_EFFECT = ACTIONS.register("left_click_block_effect", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_BLOCK_INTERACTION));
 	
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> PLAYER_ATTACK = ACTIONS.register("player_attack", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_ENTITY_INTERACTION));
-	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_HURT = ACTIONS.register("living_hurt", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_DAMAGE));
-	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_DAMAGE = ACTIONS.register("living_damage", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_DAMAGE));
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_HURT = ACTIONS.register("hurt", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_DAMAGE));
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_DAMAGE = ACTIONS.register("damage", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_DAMAGE));
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_FALL = ACTIONS.register("fall", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_SLOT_ITEM.with(builder -> builder.provide(UpgradeEntry.DAMAGE_MULT).provide(UpgradeEntry.FALL_DIST))));
+	
 	
 	
 //	public static final RegistryObject<SimpleUpgradeAction.Serializer> 

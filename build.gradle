@@ -7,6 +7,7 @@ buildscript {
 	}
 	dependencies {
 		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+		classpath 'org.spongepowered:mixingradle:0.7.+'
 		classpath 'org.parchmentmc:librarian:1.+'
 	}
 }
@@ -15,6 +16,7 @@ apply plugin: 'net.minecraftforge.gradle'
 
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 version = '1.0.0'
@@ -98,6 +100,12 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
 	maven {
+		url 'https://cursemaven.com'
+		content {
+			includeGroup "curse.maven"
+		}
+	}
+	maven {
 		// location of the maven that hosts JEI files
 		name = "Progwml6 maven"
 		url = "https://dvs1.progwml6.com/files/maven/"
@@ -112,10 +120,24 @@ repositories {
 dependencies {
 	minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
 	
+	//bring in appleskin because I need food value feedback
+	runtimeOnly fg.deobf("curse.maven:appleskin-248787:3927564")
+	
 	// compile against the JEI API but do not include it at runtime
 	compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
 	// at runtime, use the full JEI jar
 	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+	
+	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+mixin {
+	add sourceSets.main, 'itemupgrader.refmap.json'
+	config 'itemupgrader.mixins.json'
+	
+	debug.verbose = true
+	debug.export = true
+	dumpTargetOnFailure = true
 }
 
 jar {

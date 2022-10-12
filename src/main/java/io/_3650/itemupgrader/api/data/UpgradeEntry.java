@@ -34,21 +34,19 @@ public class UpgradeEntry<T> {
 	public static final void init() {}
 	
 	private final ResourceLocation id;
+	private final boolean nullable;
 	private final EntryCategory<T> category;
-	
-	private UpgradeEntry(ResourceLocation id) {
-		this.id = id;
-		this.category = null;
-	}
 	
 	/**
 	 * Constructs a new {@linkplain UpgradeEntry} with the given name
-	 * @param name The {@linkplain ResourceLocation} to identify this with
+	 * @param id The {@linkplain ResourceLocation} to identify this with
+	 * @param nullable Whether or not the value of this entry may be null
+	 * @param category The category this entry belongs to (or {@code null} if none)
 	 */
-	private UpgradeEntry(ResourceLocation id, @Nonnull EntryCategory<T> category) {
+	private UpgradeEntry(ResourceLocation id, boolean nullable, @Nonnull EntryCategory<T> category) {
 		this.id = id;
+		this.nullable = nullable;
 		this.category = category;
-		category.addEntry(this);
 	}
 	
 	/**
@@ -57,6 +55,14 @@ public class UpgradeEntry<T> {
 	 */
 	public ResourceLocation getId() {
 		return this.id;
+	}
+	
+	/**
+	 * Checks if the value of this entry may be null
+	 * @return
+	 */
+	public boolean isNullable() {
+		return this.nullable;
 	}
 	
 	/**
@@ -79,45 +85,37 @@ public class UpgradeEntry<T> {
 	
 	private static final Factory FACTORY = new Factory(ItemUpgrader.MOD_ID);
 	
-	private static <T> UpgradeEntry<T> create(String name) {
-		return FACTORY.create(name);
-	}
+	public static final UpgradeEntry<LogicalSide> SIDE = FACTORY.create("side");
+	public static final UpgradeEntry<EquipmentSlot> SLOT = FACTORY.create("slot", true);
+	public static final UpgradeEntry<ItemStack> ITEM = FACTORY.createDefault("itemstack", EntryCategory.ITEM);
+	public static final UpgradeEntry<ItemStack> PREV_ITEM = FACTORY.create("previous_item", EntryCategory.ITEM);
+	public static final UpgradeEntry<Entity> ENTITY = FACTORY.createDefault("entity", EntryCategory.ENTITY);
+	public static final UpgradeEntry<Vec3> POSITION = FACTORY.createDefault("position", EntryCategory.POSITION);
+	public static final UpgradeEntry<Level> LEVEL = FACTORY.create("level");
+	public static final UpgradeEntry<Entity> DAMAGER_ENTITY = FACTORY.create("damager_entity", EntryCategory.ENTITY);
+	public static final UpgradeEntry<Entity> DIRECT_DAMAGER = FACTORY.create("direct_damager", EntryCategory.ENTITY);
+	public static final UpgradeEntry<DamageSource> DAMAGE_SOURCE = FACTORY.create("damager");
+	public static final UpgradeEntry<Float> DAMAGE = FACTORY.create("damage", EntryCategory.FLOAT_VALUE);
+	public static final UpgradeEntry<Float> DAMAGE_MULT = FACTORY.create("damage_multiplier", EntryCategory.FLOAT_VALUE);
+	public static final UpgradeEntry<Float> FALL_DIST = FACTORY.create("fall_distance", EntryCategory.FLOAT_VALUE);
+	public static final UpgradeEntry<BlockState> BLOCK_STATE = FACTORY.create("block_state");
+	public static final UpgradeEntry<BlockEntity> BLOCK_ENTITY = FACTORY.create("block_entity");
+	public static final UpgradeEntry<BlockPos> BLOCK_POS = FACTORY.createDefault("block_position", EntryCategory.BLOCK_POS);
+	public static final UpgradeEntry<Direction> BLOCK_FACE = FACTORY.create("block_face", EntryCategory.DIRECTION);
+	public static final UpgradeEntry<LivingEntity> LIVING = FACTORY.createDefault("living_entity", EntryCategory.LIVING);
+	public static final UpgradeEntry<Player> PLAYER = FACTORY.createDefault("player", EntryCategory.PLAYER);
+	public static final UpgradeEntry<Entity> TARGET_ENTITY = FACTORY.create("target_entity", EntryCategory.ENTITY);
+	public static final UpgradeEntry<Vec3> TARGET_ENTITY_POS = FACTORY.create("target_entity_position", EntryCategory.POSITION);
+	public static final UpgradeEntry<Vec3> INTERACTION_POS = FACTORY.create("interaction_position", EntryCategory.POSITION);
+	public static final UpgradeEntry<ResourceLocation> UPGRADE_ID = FACTORY.createDefault("upgrade_id", EntryCategory.UPGRADE_ID);
+	public static final UpgradeEntry<ResourceLocation> PREV_UPGRADE_ID = FACTORY.create("prev_upgrade_id", EntryCategory.UPGRADE_ID);
+	public static final UpgradeEntry<Integer> INT_VALUE = FACTORY.createDefault("int", EntryCategory.INT_VALUE);
+	public static final UpgradeEntry<Float> FLOAT_VALUE = FACTORY.createDefault("float", EntryCategory.FLOAT_VALUE);
 	
-	private static <T> UpgradeEntry<T> create(String name, EntryCategory<T> category) {
-		return FACTORY.create(name, category);
-	}
-	
-	private static <T> UpgradeEntry<T> create(String name, EntryCategory<T> category, boolean isCategoryDefault) {
-		return FACTORY.create(name, category, isCategoryDefault);
-	}
-	
-	public static final UpgradeEntry<LogicalSide> SIDE = create("side");
-	public static final UpgradeEntry<EquipmentSlot> SLOT = create("slot");
-	public static final UpgradeEntry<ItemStack> ITEM = create("itemstack", EntryCategory.ITEM, true);
-	public static final UpgradeEntry<ItemStack> PREV_ITEM = create("previous_item");
-	public static final UpgradeEntry<Entity> ENTITY = create("entity", EntryCategory.ENTITY, true);
-	public static final UpgradeEntry<Vec3> POSITION = create("position", EntryCategory.POSITION, true);
-	public static final UpgradeEntry<Level> LEVEL = create("level");
-	public static final UpgradeEntry<Entity> DAMAGER_ENTITY = create("damager_entity", EntryCategory.ENTITY);
-	public static final UpgradeEntry<Entity> DIRECT_DAMAGER = create("direct_damager", EntryCategory.ENTITY);
-	public static final UpgradeEntry<DamageSource> DAMAGE_SOURCE = create("damager");
-	public static final UpgradeEntry<Float> DAMAGE = create("damage", EntryCategory.FLOAT_VALUE);
-	public static final UpgradeEntry<BlockState> BLOCK_STATE = create("block_state");
-	public static final UpgradeEntry<BlockEntity> BLOCK_ENTITY = create("block_entity");
-	public static final UpgradeEntry<BlockPos> BLOCK_POS = create("block_position", EntryCategory.BLOCK_POS, true);
-	public static final UpgradeEntry<Direction> BLOCK_FACE = create("block_face");
-	public static final UpgradeEntry<LivingEntity> LIVING = create("living_entity", EntryCategory.LIVING, true);
-	public static final UpgradeEntry<Player> PLAYER = create("player", EntryCategory.PLAYER, true);
-	public static final UpgradeEntry<Entity> TARGET_ENTITY = create("target_entity", EntryCategory.ENTITY);
-	public static final UpgradeEntry<Vec3> TARGET_ENTITY_POS = create("target_entity_position", EntryCategory.POSITION);
-	public static final UpgradeEntry<Vec3> INTERACTION_POS = create("interaction_position", EntryCategory.POSITION);
-	public static final UpgradeEntry<ResourceLocation> UPGRADE_ID = create("upgrade_id", EntryCategory.UPGRADE_ID, true);
-	public static final UpgradeEntry<ResourceLocation> PREV_UPGRADE_ID = create("prev_upgrade_id", EntryCategory.UPGRADE_ID);
-	public static final UpgradeEntry<Integer> INT_VALUE = create("int", EntryCategory.INT_VALUE, true);
-	public static final UpgradeEntry<Float> FLOAT_VALUE = create("float", EntryCategory.FLOAT_VALUE, true);
-	
-	/**<h1><b><u>Intended for use in results</u></b></h1>**/ public static final UpgradeEntry<Boolean> CANCELLED = create("cancelled");
-	/**<h1><b><u>Intended for use in results</u></b></h1>**/ public static final UpgradeEntry<Boolean> CONSUMED = create("consumed");
+	/**<h1><b><u>Intended for use in results</u></b></h1>**/
+	public static final UpgradeEntry<Boolean> CANCELLED = FACTORY.create("cancelled");
+	/**<h1><b><u>Intended for use in results</u></b></h1>**/
+	public static final UpgradeEntry<Boolean> CONSUMED = FACTORY.create("consumed");
 	
 	/**
 	 * A factory for upgrade entries which automatically adds in your mod id for simplicity
@@ -134,40 +132,35 @@ public class UpgradeEntry<T> {
 			this.modId = modId;
 		}
 		
-		/**
-		 * Constructs a new entry using the given name
-		 * @param <T> The type to use for the entry
-		 * @param name The name to use for the entry
-		 * @return A new {@linkplain UpgradeEntry} with the given parameters
-		 */
 		public <T> UpgradeEntry<T> create(String name) {
-			return new UpgradeEntry<>(new ResourceLocation(this.modId, name));
+			return create(name, false, null);
 		}
 		
-		/**
-		 * Constructs a new entry using the given category
-		 * @param <T> The type to use for the entry
-		 * @param name The name to use for the entry
-		 * @param category The category this entry is assigned to
-		 * 
-		 * @return A new {@linkplain UpgradeEntry} with the given parameters
-		 */
-		public <T> UpgradeEntry<T> create(String name, EntryCategory<T> category) {
-			return new UpgradeEntry<>(new ResourceLocation(this.modId, name), category);
+		public <T> UpgradeEntry<T> create(String name, boolean nullable) {
+			return create(name, nullable, null);
 		}
 		
-		/**
-		 * Constructs a new entry using the given
-		 * @param <T> The type to use for the entry
-		 * @param name The name to use for the entry
-		 * @param category The category this entry is assigned to
-		 * @param isCategoryDefault If true, the category default is set to this value
-		 * 
-		 * @return A new {@linkplain UpgradeEntry} with the given parameters
-		 */
-		public <T> UpgradeEntry<T> create(String name, EntryCategory<T> category, boolean isCategoryDefault) {
-			UpgradeEntry<T> entry = new UpgradeEntry<>(new ResourceLocation(this.modId, name), category);
-			if (isCategoryDefault) category.setDefaultValue(entry);
+		public <T> UpgradeEntry<T> create(String name, @Nullable EntryCategory<T> category) {
+			return create(name, false, category);
+		}
+		
+		public <T> UpgradeEntry<T> create(String name, boolean nullable, @Nullable EntryCategory<T> category) {
+			UpgradeEntry<T> entry = new UpgradeEntry<>(new ResourceLocation(this.modId, name), nullable, category);
+			if (category != null) {
+				category.addEntry(entry);
+			}
+			return entry;
+		}
+		
+		public <T> UpgradeEntry<T> createDefault(String name, @Nullable EntryCategory<T> category) {
+			UpgradeEntry<T> entry = create(name, false, category);
+			category.setDefaultValue(entry);
+			return entry;
+		}
+		
+		public <T> UpgradeEntry<T> createDefault(String name, boolean nullable, @Nullable EntryCategory<T> category) {
+			UpgradeEntry<T> entry = create(name, nullable, category);
+			category.setDefaultValue(entry);
 			return entry;
 		}
 		

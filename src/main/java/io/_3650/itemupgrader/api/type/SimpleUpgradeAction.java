@@ -47,7 +47,10 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 	public MutableComponent getResultTooltip(ItemStack stack) {
 		List<MutableComponent> resultComponents = new ArrayList<>(this.results.size());
 		for (UpgradeResult result : this.results) {
-			if (result.isVisible()) resultComponents.add(new TranslatableComponent("upgradeResult." + ComponentHelper.keyFormat(result.getId()), (Object[]) result.getTooltipWithOverride(stack)));
+			if (result.isVisible()) {
+				if (result.hasTooltipOverride()) resultComponents.add(new TranslatableComponent(result.getTooltipOverride()));
+				else resultComponents.add(new TranslatableComponent("upgradeResult." + ComponentHelper.keyFormat(result.getId()), (Object[]) result.getTooltip(stack)));
+			}
 		}
 		return ComponentHelper.andList(resultComponents);
 	}

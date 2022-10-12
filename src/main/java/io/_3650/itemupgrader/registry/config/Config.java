@@ -12,7 +12,7 @@ public class Config {
 		public final BooleanValue basePackEnabled;
 		
 		Server(ForgeConfigSpec.Builder builder) {
-			builder.push("basepack");
+			builder.push("datapack");
 			
 			basePackEnabled = builder.comment("Is the mod's default upgrade datapack enabled?","Disable this if you only want to use custom upgrade datapacks.","[Default: true]").define("basePackEnabled", true);
 			
