@@ -19,6 +19,7 @@ import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import io._3650.itemupgrader.api.type.UpgradeAction;
 import io._3650.itemupgrader.upgrades.data.AttributeReplacement;
 import io._3650.itemupgrader.upgrades.data.ModUpgradeEntry;
+import io._3650.itemupgrader.upgrades.data.ModUpgradeEntrySet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
@@ -112,7 +113,7 @@ public class AttributeUpgradeAction extends UpgradeAction {
 		
 		@Override
 		public UpgradeEntrySet getProvidedData() {
-			return UpgradeEntrySet.SLOT_ITEM;
+			return ModUpgradeEntrySet.ATTRIBUTES;
 		}
 		
 		@Override

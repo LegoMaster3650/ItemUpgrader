@@ -168,7 +168,12 @@ task sourcesJar(type: Jar) {
 
 task javadocJar(type: Jar) {
 	archiveClassifier.set('javadoc')
+	include 'io/_3650/itemupgrader/api/**'
 	from javadoc.destinationDir
+}
+
+javadoc {
+	include 'io/_3650/itemupgrader/api/**'
 }
 
 artifacts {

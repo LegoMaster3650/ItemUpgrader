@@ -59,7 +59,7 @@ public class UpgradeEntry<T> {
 	
 	/**
 	 * Checks if the value of this entry may be null
-	 * @return
+	 * @return Whether the value of this entry is allowed to be null
 	 */
 	public boolean isNullable() {
 		return this.nullable;
@@ -79,6 +79,10 @@ public class UpgradeEntry<T> {
 		return "<entry:" + this.id + ">";
 	}
 	
+	/**
+	 * Writes this entry to the given network buffer
+	 * @param buf The {@linkplain FriendlyByteBuf} to write this entry to
+	 */
 	public void toNetwork(FriendlyByteBuf buf) {
 		buf.writeResourceLocation(this.id);
 	}
@@ -94,7 +98,7 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<Level> LEVEL = FACTORY.create("level");
 	public static final UpgradeEntry<Entity> DAMAGER_ENTITY = FACTORY.create("damager_entity", EntryCategory.ENTITY);
 	public static final UpgradeEntry<Entity> DIRECT_DAMAGER = FACTORY.create("direct_damager", EntryCategory.ENTITY);
-	public static final UpgradeEntry<DamageSource> DAMAGE_SOURCE = FACTORY.create("damager");
+	public static final UpgradeEntry<DamageSource> DAMAGE_SOURCE = FACTORY.createDefault("damager", EntryCategory.DAMAGE_SOURCE);
 	public static final UpgradeEntry<Float> DAMAGE = FACTORY.create("damage", EntryCategory.FLOAT_VALUE);
 	public static final UpgradeEntry<Float> DAMAGE_MULT = FACTORY.create("damage_multiplier", EntryCategory.FLOAT_VALUE);
 	public static final UpgradeEntry<Float> FALL_DIST = FACTORY.create("fall_distance", EntryCategory.FLOAT_VALUE);
@@ -112,9 +116,9 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<Integer> INT_VALUE = FACTORY.createDefault("int", EntryCategory.INT_VALUE);
 	public static final UpgradeEntry<Float> FLOAT_VALUE = FACTORY.createDefault("float", EntryCategory.FLOAT_VALUE);
 	
-	/**<h1><b><u>Intended for use in results</u></b></h1>**/
+	/**<b><u>Intended for use in results</u></b>**/
 	public static final UpgradeEntry<Boolean> CANCELLED = FACTORY.create("cancelled");
-	/**<h1><b><u>Intended for use in results</u></b></h1>**/
+	/**<b><u>Intended for use in results</u></b>**/
 	public static final UpgradeEntry<Boolean> CONSUMED = FACTORY.create("consumed");
 	
 	/**

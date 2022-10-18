@@ -23,6 +23,10 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Class for upgrade actions that rely on a condition in order to run
+ * @author LegoMaster3650
+ */
 public abstract class ConditionalUpgradeAction extends UpgradeAction {
 	
 	private final ImmutableList<UpgradeCondition> conditions;
@@ -37,6 +41,10 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 		return true;
 	}
 	
+	/**
+	 * @see UpgradeAction#getActionTooltip(ItemStack) getActionTooltip(ItemStack)
+	 * @see #getResultTooltip(ItemStack)
+	 */
 	@Override
 	public MutableComponent getActionTooltip(ItemStack stack) {
 		List<MutableComponent> conditionComponents = new ArrayList<>(this.conditions.size());
@@ -58,21 +66,45 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 		}
 	}
 	
+	/**
+	 * @see UpgradeAction#run(UpgradeEventData) run(UpgradeEventData)
+	 * @see #execute(UpgradeEventData)
+	 */
 	@Override
-	public final void run(UpgradeEventData event) {
+	public final void run(UpgradeEventData data) {
 		boolean pass = true;
 		for (UpgradeCondition condition : this.conditions) {
-			pass = pass && (condition.test(event) ^ condition.isInverted()); //I love XOR so much its like a funky conditional NOT
+			pass = pass && (condition.test(data) ^ condition.isInverted()); //I love XOR so much its like a funky conditional NOT
 		}
-		if (pass) this.execute(event);
+		if (pass) this.execute(data);
 	}
 	
+	/**
+	 * Gets the tooltip component for the object applied to the tooltip defined in the language file
+	 * @param stack The ItemStack to get tooltip context from
+	 * @return A MutableComponent to apply to the tooltip specified in the language file
+	 */
 	public abstract MutableComponent getResultTooltip(ItemStack stack);
 	
-	public abstract void execute(UpgradeEventData event);
+	/**
+	 * Defines the behavior for a ConditionalUpgradeAction after running
+	 * @param data The {@linkplain UpgradeEventData} parameters passed in
+	 */
+	public abstract void execute(UpgradeEventData data);
 	
+	/**
+	 * Serializer class for conditional upgrade actions
+	 * @author LegoMaster3650
+	 * 
+	 * @param <T> The {@linkplain ConditionalUpgradeAction} subclass serialized by this serializer
+	 */
 	public static abstract class ConditionalUpgradeActionSerializer<T extends ConditionalUpgradeAction> extends UpgradeActionSerializer<T> {
 		
+		/**
+		 * Gets action conditions from json
+		 * @param json The {@linkplain JsonObject} to get the conditions from
+		 * @return A {@linkplain List} of {@linkplain UpgradeCondition}s read from the json
+		 */
 		public final List<UpgradeCondition> conditionsFromJson(JsonObject json) {
 			ArrayList<UpgradeCondition> conditions = new ArrayList<>();
 			if (json.has("condition")) {
@@ -100,6 +132,11 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 			}
 		}
 		
+		/**
+		 * Writes the given conditional action's conditions to a network buffer
+		 * @param action The {@linkplain ConditionalUpgradeAction} to write to the buffer
+		 * @param buf The {@linkplain FriendlyByteBuf} to write the conditions to
+		 */
 		public final void conditionsToNetwork(ConditionalUpgradeAction action, FriendlyByteBuf buf) {
 			buf.writeInt(action.conditions.size());
 			for (var condition : action.conditions) {
@@ -110,6 +147,11 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 			}
 		}
 		
+		/**
+		 * Reads a list of upgrade conditions from a network buffer
+		 * @param buf The {@linkplain FriendlyByteBuf} to read the conditions from
+		 * @return A {@linkplain List} of {@linkplain UpgradeCondition}s read from the buffer
+		 */
 		public final List<UpgradeCondition> conditionsFromNetwork(FriendlyByteBuf buf) {
 			int netConditionsSize = buf.readInt();
 			ArrayList<UpgradeCondition> netConditions = new ArrayList<>(netConditionsSize);

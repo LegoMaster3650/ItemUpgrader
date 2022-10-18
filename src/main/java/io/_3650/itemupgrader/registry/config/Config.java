@@ -10,11 +10,13 @@ public class Config {
 	public static class Server {
 		
 		public final BooleanValue basePackEnabled;
+		public final BooleanValue basePackRecipes;
 		
 		Server(ForgeConfigSpec.Builder builder) {
 			builder.push("datapack");
 			
 			basePackEnabled = builder.comment("Is the mod's default upgrade datapack enabled?","Disable this if you only want to use custom upgrade datapacks.","[Default: true]").define("basePackEnabled", true);
+			basePackRecipes = builder.comment("Should the mod's default upgrade datapack recipes be enabled?", "Disable this to easily use your own recipes.", "[Default: true]").define("basePackRecipes", true);
 			
 			builder.pop();
 		}

@@ -129,7 +129,6 @@ public class UpgradeEventData {
 	 * @param <T> The data type held by this result
 	 * @param entry The {@linkplain UpgradeEntry} type to set
 	 * @param value The data to store for this entry
-	 * @return Whether the result was permitted to be set or not
 	 */
 	public <T> void setModifiableEntry(UpgradeEntry<T> entry, T value) {
 		if (!entry.isNullable() && value == null) throw new IllegalArgumentException("Tried to set the value of non-nullable entry " + entry + " to null");
@@ -147,7 +146,6 @@ public class UpgradeEventData {
 	
 	/**
 	 * A utility function to quickly cancel the event if it is cancellable
-	 * @return If the cancelled value was successfully set
 	 */
 	public void cancel() {
 		this.setModifiableEntry(UpgradeEntry.CANCELLED, true);
@@ -182,7 +180,7 @@ public class UpgradeEventData {
 		
 		/**
 		 * Constructs a builder with the {@link UpgradeEntry#ITEM} property set
-		 * @param stack
+		 * @param stack An {@linkplain ItemStack} to use for context
 		 */
 		public Builder(ItemStack stack) {
 			this.entry(UpgradeEntry.ITEM, stack);
@@ -199,7 +197,7 @@ public class UpgradeEventData {
 		 * {@linkplain UpgradeEntry#POSITION}<br>
 		 * {@linkplain UpgradeEntry#LEVEL}<br>
 		 * {@linkplain UpgradeEntry#SIDE}
-		 * @param living A {@linkplain LivingEntity} to use for context
+		 * @param player A {@linkplain Player} to use for context
 		 * @param slot An {@linkplain EquipmentSlot} to use for context
 		 */
 		public Builder(Player player, EquipmentSlot slot) {
@@ -321,7 +319,7 @@ public class UpgradeEventData {
 		 * Adds the given entry to the builder and marks it as modifiable.
 		 * @param <T> The data type provided by this result
 		 * @param entry The {@linkplain UpgradeEntry} type to set
-		 * @param value The data to store for this result
+		 * @param defaultValue The data to store for this result
 		 * @return This builder
 		 */
 		public <T> Builder modifiableEntry(UpgradeEntry<T> entry, T defaultValue) {
@@ -337,7 +335,7 @@ public class UpgradeEventData {
 		 * Adds the given entry to the builder and marks it as modifiable.
 		 * @param <T> The data type provided by this result
 		 * @param entry The {@linkplain UpgradeEntry} type to set
-		 * @param value The data to store for this result
+		 * @param defaultValue The data to store for this result
 		 * @return This builder
 		 */
 		public <T> Builder optionalModifiableEntry(UpgradeEntry<T> entry, T defaultValue) {

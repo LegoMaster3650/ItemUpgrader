@@ -2,6 +2,7 @@ package io._3650.itemupgrader.api.type;
 
 import javax.annotation.Nonnull;
 
+import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
@@ -12,7 +13,7 @@ import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
  */
 public abstract class UpgradeCondition extends IUpgradeType {
 	
-	public final UpgradeEntrySet requiredData;
+	private final UpgradeEntrySet requiredData;
 	private final boolean inverted;
 	
 	/**
@@ -44,7 +45,7 @@ public abstract class UpgradeCondition extends IUpgradeType {
 	
 	/**
 	 * Use this to return your class's serializer instance.<br>
-	 * Ensure the return type is an UpgradeConditionSerializer<<b>This Class</b>> in some form, whether just that or a subclass of that, just please make sure it's not the default Wildcard ? type
+	 * Ensure the return type is an UpgradeConditionSerializer&lt;<b>This Class</b>&gt; in some form, whether just that or a subclass of that, just please make sure it's not the default Wildcard ? type
 	 * @return Your own serializer instance
 	 */
 	public abstract UpgradeConditionSerializer<?> getSerializer();

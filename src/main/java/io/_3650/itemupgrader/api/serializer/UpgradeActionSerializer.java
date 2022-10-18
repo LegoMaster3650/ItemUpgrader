@@ -4,7 +4,9 @@ import java.util.Set;
 
 import com.google.gson.JsonObject;
 
+import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
+import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.type.UpgradeAction;
 import io._3650.itemupgrader.api.type.IUpgradeType.IUpgradeInternals;
 import net.minecraft.network.FriendlyByteBuf;

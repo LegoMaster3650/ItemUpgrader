@@ -39,6 +39,13 @@ public class ItemUpgrade {
 	
 	/**
 	 * Constructs an ItemUpgrade instance (you won't need to use this)
+	 * @param upgradeId The {@linkplain ResourceLocation} that identifies this upgrade
+	 * @param base The {@linkplain Ingredient} that defines which items are valid for this upgrade
+	 * @param validSlots The {@linkplain Set} of {@linkplain EquipmentSlot}s that are valid for this upgrade
+	 * @param actions The {@linkplain List} of {@linkplain UpgradeAction}s this upgrade runs
+	 * @param visible Whether the upgrade is visible
+	 * @param descriptionLines The upgrade's description line count
+	 * @param color The upgrade's {@linkplain TextColor}
 	 */
 	public ItemUpgrade(ResourceLocation upgradeId, Ingredient base, Set<EquipmentSlot> validSlots, ListMultimap<ResourceLocation, UpgradeAction> actions, boolean visible, int descriptionLines, TextColor color) {
 		this.id = upgradeId;
@@ -71,7 +78,7 @@ public class ItemUpgrade {
 	private List<ItemStack> validItemsCache;
 	/**
 	 * Gets a complete list of valid items<br>
-	 * <h1><b><u>WARNING: THIS LOOPS THROUGH EVERY ITEM IN THE GAME. ONLY USE THIS IF YOU HAVE TO</u></b></h1>
+	 * <b><u>WARNING: THIS LOOPS THROUGH EVERY ITEM IN THE GAME. ONLY USE THIS IF YOU HAVE TO</u></b>
 	 * @return A {@linkplain List} of {@linkplain ItemStack}s of every registered item that is valid
 	 * @see #isValidItem(ItemStack)
 	 */
@@ -121,7 +128,7 @@ public class ItemUpgrade {
 	/**
 	 * Gets a list of actions present on this item for the given id
 	 * @param actionId The {@linkplain ResourceLocation} id for the action type to get
-	 * @return A {@linkplain List} of {@linkplain UpgradeAction}s present
+	 * @return The {@linkplain List} of {@linkplain UpgradeAction}s this upgrade runs
 	 */
 	public List<UpgradeAction> getActions(ResourceLocation actionId) {
 		return this.actions.get(actionId);

@@ -205,7 +205,7 @@ public class ItemUpgraderApi {
 	 * Applies the given upgrade to an ItemStack<br>
 	 * This fires cancellable events, and will fail to apply the upgrade if they are cancelled.
 	 * @param stack The {@linkplain ItemStack} to apply the upgrade to
-	 * @param upgrade The {@linkplain ResourceLocation} corresponding to the {@linkplain ItemUpgrade} to apply to the stack
+	 * @param upgradeId The {@linkplain ResourceLocation} corresponding to the {@linkplain ItemUpgrade} to apply to the stack
 	 * @return The stack with the upgrade applied
 	 * @see #applyUpgradeNoUpdate(ItemStack, ResourceLocation)
 	 */
@@ -276,7 +276,7 @@ public class ItemUpgraderApi {
 	 * Mainly used to invalidate any upgrades that have found themselves somewhere they don't belong
 	 * @param stack The {@linkplain ItemStack} to remove the upgrade from
 	 * @return The stack with no upgrade applied
-	 * @see {@linkplain #removeUpgrade(ItemStack)} for most use cases
+	 * @see #removeUpgrade(ItemStack) removeUpgrade(ItemStack) for most use cases
 	 */
 	public static ItemStack removeUpgradeNoUpdate(ItemStack stack) {
 		if (hasUpgrade(stack)) {

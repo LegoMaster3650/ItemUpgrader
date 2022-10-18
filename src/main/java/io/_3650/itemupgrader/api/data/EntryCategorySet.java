@@ -42,6 +42,7 @@ public class EntryCategorySet {
 	
 	/**
 	 * Gets the mapped entry for the given category
+	 * @param <T> The type that the category corresponds to
 	 * @param category The category to get the entry for
 	 * @return The mapped entry if present, or the category default value if not
 	 */
@@ -84,6 +85,7 @@ public class EntryCategorySet {
 		
 		/**
 		 * Sets the given category's value to the given entry
+		 * @param <T> The type that the category corresponds to
 		 * @param category The {@linkplain EntryCategory} to set the value for
 		 * @param entry The {@linkplain UpgradeEntry} to use as the value
 		 * @return The {@linkplain Mapper}
@@ -95,6 +97,7 @@ public class EntryCategorySet {
 		
 		/**
 		 * Sets the given category's value to the given entry, marking it as provided rather than required
+		 * @param <T> The type that the category corresponds to
 		 * @param category The {@linkplain EntryCategory} to set the value for
 		 * @param entry The {@linkplain UpgradeEntry} to use as the value
 		 * @return The {@linkplain Mapper}

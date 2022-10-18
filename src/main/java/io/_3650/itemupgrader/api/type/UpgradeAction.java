@@ -80,14 +80,13 @@ public abstract class UpgradeAction extends IUpgradeType {
 	
 	/**
 	 * Defines the behavior for an UpgradeAction after running
-	 * @param event The event data parameters passed in
-	 * @see UpgradeEventData
+	 * @param data The {@linkplain UpgradeEventData} parameters passed in
 	 */
-	public abstract void run(UpgradeEventData event);
+	public abstract void run(UpgradeEventData data);
 	
 	/**
 	 * Use this to return your class's serializer instance.<br>
-	 * Ensure the return type is an UpgradeActionSerializer&lt<b>This Class</b>&gt in some form, whether just that or a subclass of that, just please make sure it's not the default Wildcard ? type
+	 * Ensure the return type is an UpgradeActionSerializer&lt;<b>This Class</b>&gt; in some form, whether just that or a subclass of that, just please make sure it's not the default Wildcard ? type
 	 * @return Your own serializer instance
 	 */
 	public abstract UpgradeActionSerializer<?> getSerializer();

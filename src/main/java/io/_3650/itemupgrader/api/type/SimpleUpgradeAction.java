@@ -25,7 +25,9 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * A simple implementation of a conditional upgrade action with results.<br>
- * Unless you need special event logic, you should use this for most custom upgrade actions.
+ * Unless you need special event logic, you should use this for most custom upgrade actions.<br>
+ * <br>
+ * To use: Initialize a {@linkplain Serializer} with your desired {@linkplain UpgradeEntrySet}
  * @author LegoMaster3650
  */
 public class SimpleUpgradeAction extends ConditionalUpgradeAction {
@@ -56,9 +58,9 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData event) {
+	public void execute(UpgradeEventData data) {
 		for (UpgradeResult result : this.results) {
-			result.execute(event);
+			result.execute(data);
 		}
 	}
 	

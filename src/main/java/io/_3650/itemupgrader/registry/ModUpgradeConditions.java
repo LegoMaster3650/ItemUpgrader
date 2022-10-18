@@ -4,6 +4,8 @@ import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.registry.ItemUpgraderRegistry;
 import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
 import io._3650.itemupgrader.upgrades.conditions.CompareNumbersUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.DamageSourceTypeUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.DamageSourceUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.EyesInFluidUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.HasUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.ItemCooldownUpgradeCondition;
@@ -26,6 +28,7 @@ public class ModUpgradeConditions {
 	public static final RegistryObject<TagVarBoolUpgradeCondition.Serializer> TAGVAR_BOOLEAN = CONDITIONS.register("tag_boolean", () -> new TagVarBoolUpgradeCondition.Serializer());
 	public static final RegistryObject<TagVarIntUpgradeCondition.Serializer> TAGVAR_INT = CONDITIONS.register("tag_int", () -> new TagVarIntUpgradeCondition.Serializer());
 	public static final RegistryObject<TagVarFloatUpgradeCondition.Serializer> TAGVAR_FLOAT = CONDITIONS.register("tag_float", () -> new TagVarFloatUpgradeCondition.Serializer());
-	
+	public static final RegistryObject<DamageSourceUpgradeCondition.Serializer> DAMAGE_SOURCE = CONDITIONS.register("damage_source", () -> new DamageSourceUpgradeCondition.Serializer());
+	public static final RegistryObject<DamageSourceTypeUpgradeCondition.Serializer> DAMAGE_SOURCE_TYPE = CONDITIONS.register("damage_source_type", () -> new DamageSourceTypeUpgradeCondition.Serializer());
 	
 }

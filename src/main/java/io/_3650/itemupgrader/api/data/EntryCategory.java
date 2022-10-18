@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +28,7 @@ import net.minecraft.world.phys.Vec3;
  * @author LegoMaster3650
  * 
  * @param <T> The type that this category corresponds to
- * @see UpgradeCategorySet
+ * @see EntryCategorySet
  * @see UpgradeEntry
  */
 public class EntryCategory<T> {
@@ -70,7 +71,7 @@ public class EntryCategory<T> {
 	
 	/**
 	 * Sets the default value of this category
-	 * @param defaultValue The default {@linkplain UpgradedEntry} to use for this category
+	 * @param defaultValue The default {@linkplain UpgradeEntry} to use for this category
 	 */
 	public void setDefaultValue(@Nonnull UpgradeEntry<T> defaultValue) {
 		if (this.defaultValue != defaultValue) this.defaultValue = defaultValue;
@@ -89,7 +90,7 @@ public class EntryCategory<T> {
 	
 	/**
 	 * Checks if this category has a parent category
-	 * @return If this category has a parent {@linkplain UpgradeCategory}
+	 * @return If this category has a parent {@linkplain EntryCategory}
 	 */
 	public boolean hasParent() {
 		return this.parent != null;
@@ -243,9 +244,9 @@ public class EntryCategory<T> {
 	
 	/**Entity*/
 	public static final EntryCategory<Entity> ENTITY = create("entity");
-	/**Entity &gt Living*/
+	/**Entity &gt; Living*/
 	public static final EntryCategory<LivingEntity> LIVING = create("living", ENTITY);
-	/**Entity &gt Living &gt Player*/
+	/**Entity &gt; Living &gt; Player*/
 	public static final EntryCategory<Player> PLAYER = create("player", LIVING);
 	
 	/**Vec3*/
@@ -266,6 +267,9 @@ public class EntryCategory<T> {
 	
 	/**Float Value*/
 	public static final EntryCategory<Float> FLOAT_VALUE = create("float");
+	
+	/**Damage Source*/
+	public static final EntryCategory<DamageSource> DAMAGE_SOURCE = create("damage_source");
 	
 	/**
 	 * A factory for upgrade categories which automatically ain your mod id for simplicity

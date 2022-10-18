@@ -13,8 +13,18 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * Utility class for getting certain things from json
+ * @author LegoMaster3650
+ */
 public class UpgradeJsonHelper {
 	
+	/**
+	 * Gets a position at the given key, guaranteed not to be null
+	 * @param json The {@linkplain JsonObject} to get the position from
+	 * @param key The json key to check for the position
+	 * @return The {@linkplain Vec3} described in the json, defaulting to zero if not present
+	 */
 	@Nonnull
 	public static Vec3 getPosition(JsonObject json, String key) {
 		if (GsonHelper.isObjectNode(json, key)) {
@@ -25,7 +35,13 @@ public class UpgradeJsonHelper {
 			return new Vec3(x, y, z);
 		} else return Vec3.ZERO;
 	}
-	
+
+	/**
+	 * Gets an integer position at the given key, guaranteed not to be null
+	 * @param json The {@linkplain JsonObject} to get the position from
+	 * @param key The json key to check for the position
+	 * @return The {@linkplain Vec3i} described in the json, defaulting to zero if not present
+	 */
 	@Nonnull
 	public static Vec3i getIntPosition(JsonObject json, String key) {
 		if (GsonHelper.isObjectNode(json, key)) {
@@ -37,26 +53,75 @@ public class UpgradeJsonHelper {
 		} else return Vec3i.ZERO;
 	}
 	
+	/**
+	 * Checks if the given json element is a number
+	 * @param json The {@linkplain JsonElement} to check
+	 * @return Whether the given element is a number
+	 */
 	public static boolean isJsonNumber(JsonElement json) {
 		return json.isJsonPrimitive() && json.getAsJsonPrimitive().isNumber();
 	}
 	
+	/**
+	 * Gets the given json element as an integer with a default value if it fails
+	 * @param json The {@linkplain JsonElement} to get as an integer
+	 * @param defaultValue The default value if the conversion fails
+	 * @return The given element as an integer, or the default value if it failed
+	 */
 	public static int getAsInt(JsonElement json, int defaultValue) {
 		return isJsonNumber(json) ? json.getAsInt() : defaultValue;
 	}
 	
+	/**
+	 * Gets the given json element as a long with a default value if it fails
+	 * @param json The {@linkplain JsonElement} to get as a long
+	 * @param defaultValue The default value if the conversion fails
+	 * @return The given element as a long, or the default value if it failed
+	 */
+	public static long getAsLong(JsonElement json, long defaultValue) {
+		return isJsonNumber(json) ? json.getAsLong() : defaultValue;
+	}
+	
+	/**
+	 * Gets the given json element as a float with a default value if it fails
+	 * @param json The {@linkplain JsonElement} to get as a float
+	 * @param defaultValue The default value if the conversion fails
+	 * @return The given element as a float, or the default value if it failed
+	 */
 	public static float getAsFloat(JsonElement json, float defaultValue) {
 		return isJsonNumber(json) ? json.getAsFloat() : defaultValue;
 	}
-	
+
+	/**
+	 * Gets the given json element as a double with a default value if it fails
+	 * @param json The {@linkplain JsonElement} to get as a double
+	 * @param defaultValue The default value if the conversion fails
+	 * @return The given element as a double, or the default value if it failed
+	 */
 	public static double getAsDouble(JsonElement json, double defaultValue) {
 		return isJsonNumber(json) ? json.getAsDouble() : defaultValue;
 	}
 	
-	public static Vec3 getVec3(JsonObject json, String key) {
+	/**
+	 * Gets a {@linkplain Vec3} from a json array at the given key<br>
+	 * <b>REQUIRES IT TO BE NON-NULL</b>
+	 * @param json The {@linkplain JsonObject} to get the Vec3 from
+	 * @param key The key in the json to get the Vec3 from
+	 * @return The {@linkplain Vec3} from the json
+	 * @throws NullPointerException if the json doesn't have a valid Vec3 array present
+	 */
+	@Nonnull
+	public static Vec3 getVec3(JsonObject json, String key) throws NullPointerException {
 		return Objects.requireNonNull(getVec3(json, key, null));
 	}
 	
+	/**
+	 * Gets a {@linkplain Vec3} from a json array at the given key
+	 * @param json The {@linkplain JsonObject} to get the Vec3 from
+	 * @param key The key in the json to get the Vec3 from
+	 * @param defaultValue The default value to return if the value is missing
+	 * @return The {@linkplain Vec3} from the json, or the default value if there is no valid Vec3 array present
+	 */
 	public static Vec3 getVec3(JsonObject json, String key, Vec3 defaultValue) {
 		if (GsonHelper.isArrayNode(json, key)) {
 			JsonArray values = GsonHelper.getAsJsonArray(json, key);
@@ -69,11 +134,27 @@ public class UpgradeJsonHelper {
 			}
 		} else return defaultValue;
 	}
-	
-	public static Vec3i getVec3i(JsonObject json, String key) {
+
+	/**
+	 * Gets a {@linkplain Vec3i} from a json array at the given key<br>
+	 * <b>REQUIRES IT TO BE NON-NULL</b>
+	 * @param json The {@linkplain JsonObject} to get the Vec3i from
+	 * @param key The key in the json to get the Vec3i from
+	 * @return The {@linkplain Vec3i} from the json
+	 * @throws NullPointerException if the json doesn't have a valid Vec3i array present
+	 */
+	@Nonnull
+	public static Vec3i getVec3i(JsonObject json, String key) throws NullPointerException {
 		return Objects.requireNonNull(getVec3i(json, key, null));
 	}
-	
+
+	/**
+	 * Gets a {@linkplain Vec3i} from a json array at the given key
+	 * @param json The {@linkplain JsonObject} to get the Vec3i from
+	 * @param key The key in the json to get the Vec3i from
+	 * @param defaultValue The default value to return if the value is missing
+	 * @return The {@linkplain Vec3i} from the json, or the default value if there is no valid Vec3i array present
+	 */
 	public static Vec3i getVec3i(JsonObject json, String key, Vec3i defaultValue) {
 		if (GsonHelper.isArrayNode(json, key)) {
 			JsonArray values = GsonHelper.getAsJsonArray(json, key);
@@ -87,10 +168,25 @@ public class UpgradeJsonHelper {
 		} else return defaultValue;
 	}
 	
-	public static Vec2 getVec2(JsonObject json, String key) {
+	/**
+	 * Gets a {@linkplain Vec2} from a json array at the given key<br>
+	 * <b>REQUIRES IT TO BE NON-NULL</b>
+	 * @param json The {@linkplain JsonObject} to get the Vec2 from
+	 * @param key The key in the json to get the Vec2 from
+	 * @return The {@linkplain Vec2} from the json
+	 * @throws NullPointerException if the json doesn't have a valid Vec2 array present
+	 */
+	public static Vec2 getVec2(JsonObject json, String key) throws NullPointerException {
 		return Objects.requireNonNull(getVec2(json, key, null));
 	}
 	
+	/**
+	 * Gets a {@linkplain Vec2} from a json array at the given key
+	 * @param json The {@linkplain JsonObject} to get the Vec2 from
+	 * @param key The key in the json to get the Vec2 from
+	 * @param defaultValue The default value to return if the value is missing
+	 * @return The {@linkplain Vec2} from the json, or the default value if there is no valid Vec2 array present
+	 */
 	public static Vec2 getVec2(JsonObject json, String key, Vec2 defaultValue) {
 		if (GsonHelper.isArrayNode(json, key)) {
 			JsonArray values = GsonHelper.getAsJsonArray(json, key);

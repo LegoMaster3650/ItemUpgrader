@@ -43,6 +43,7 @@ public abstract class IUpgradeType {
 	 * <br>
 	 * This one sucks so much but java is bad so here I am<br>
 	 * Why is this needed? Because java hates the wildcard typing and stuff or something so I'm letting you deal with it in your own classes to get it to shut up.
+	 * @param buf The {@linkplain FriendlyByteBuf} to serialize this to
 	 */
 	public abstract void hackyToNetworkReadJavadoc(FriendlyByteBuf buf);
 	
@@ -99,7 +100,7 @@ public abstract class IUpgradeType {
 	/**
 	 * Bundles together all of the data in an {@linkplain IUpgradeType} to keep you from having to juggle around 3 variables you probably won't need<br>
 	 * And if you do, feel free to get any of them from this.<br>
-	 * @apiNote The methods in this record are mainly just quality of life things for internal use only, don't pay much attention to them
+	 * <b>NOTE:</b> The methods in this record are mainly just quality of life things for internal use only, don't pay much attention to them
 	 * @param id The {@linkplain ResourceLocation} associated with the object
 	 * @param tooltipOverride A {@linkplain String} containing a translation key for an override if present, or {@code null} if not
 	 * @param visible A {@code boolean} specifying whether to display the object in tooltips or not

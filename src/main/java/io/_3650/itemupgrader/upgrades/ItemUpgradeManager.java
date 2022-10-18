@@ -55,7 +55,7 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 		
 		boolean contextValid = true;
 		if (this.serverContext == null) {
-			LOGGER.error("Skipping datapack condition checks for upgrades as the context was null, !!!Report this if you see it!!!");
+			for (int i = 0; i < 5; i++) LOGGER.error("Skipping datapack condition checks for upgrades as the context was null, !!!Report this if you see it!!!");
 			contextValid = false;
 		}
 		

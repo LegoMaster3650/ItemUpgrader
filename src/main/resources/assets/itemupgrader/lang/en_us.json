@@ -88,6 +88,10 @@
 	"upgradeCondition.itemupgrader.tag_boolean.inverse": "tag %s is not %s",
 	"upgradeCondition.itemupgrader.tag_int": "tag %s %s %s",
 	"upgradeCondition.itemupgrader.tag_float": "tag %s %s %s",
+	"upgradeCondition.itemupgrader.damage_source": "damage source matches",
+	"upgradeCondition.itemupgrader.damage_source.inverse": "damage source matches",
+	"upgradeCondition.itemupgrader.damage_source_type": "damage source is %s",
+	"upgradeCondition.itemupgrader.damage_source_type.inverse": "damage source is not %s",
 	
 	"upgradeResult.itemupgrader.cancel": "Cancel",
 	"upgradeResult.itemupgrader.consume": "Cancel and stop other items from running",

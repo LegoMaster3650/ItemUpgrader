@@ -3,6 +3,7 @@ package io._3650.itemupgrader.api.registry;
 import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.ingredient.TypedCriteria;
 import io._3650.itemupgrader.api.type.UpgradeAction;
+import io._3650.itemupgrader.api.type.UpgradeCondition;
 import io._3650.itemupgrader.api.type.UpgradeResult;
 import net.minecraft.resources.ResourceLocation;
 

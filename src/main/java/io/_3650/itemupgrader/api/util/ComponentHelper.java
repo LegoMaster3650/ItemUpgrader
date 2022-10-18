@@ -11,7 +11,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 /**
  * Helpful class for dealing with some text component stuff
  * @author LegoMaster3650
- *
  */
 public class ComponentHelper {
 	
