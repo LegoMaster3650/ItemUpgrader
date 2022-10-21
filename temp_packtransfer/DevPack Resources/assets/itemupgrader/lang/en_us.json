@@ -1,0 +1,29 @@
+{
+	"upgrade.itemupgrader.obsidian_shield": "Obsidian Shield",
+	"upgrade.itemupgrader.obsidian_shield.description": "Protects the Wielder from Flames temporarily.",
+	"upgrade.itemupgrader.obsidian_shield.icon": "☠",
+	
+	"upgrade.itemupgrader.turtle_helmet": "Turtle Shell",
+	"upgrade.itemupgrader.turtle_helmet.description": "Wield the Power of the Turtle!",
+	"upgrade.itemupgrader.turtle_helmet.icon": "§l⌂",
+	
+	"upgrade.itemupgrader.dolphins_gift": "Dolphin's Gift",
+	"upgrade.itemupgrader.dolphins_gift.description.1": "Grants the gift of movement to those who swim like the dolphin.",
+	"upgrade.itemupgrader.dolphins_gift.description.2": "You must surface every 4 seconds to maintain your speed.",
+	"upgrade.itemupgrader.dolphins_gift.icon": "§l⏩",
+	
+	"tooltip.itemupgrader.dolphins_gift.entering_water": "entering water",
+	
+	"upgrade.itemupgrader.tough_skin": "Feathery Fall",
+	"upgrade.itemupgrader.tough_skin.description.1": "Fall damage becomes hunger damage, make sure you carry food!",
+	"upgrade.itemupgrader.tough_skin.description.2": "Doesn't work when below 3 whole hunger bars.",
+	"upgrade.itemupgrader.tough_skin.icon": "§lX",
+	
+	"upgrade.itemupgrader.dual_wield": "Dual Wield",
+	"upgrade.itemupgrader.dual_wield.description": "Attack significantly faster, but at what cost?",
+	"upgrade.itemupgrader.dual_wield.icon": "🗡",
+	
+	"tooltip.itemupgrader.dual_wield.flag": "upgrade is in both hands",
+	
+	"predicate.itemupgrader.not_burning": "not burning"
+}

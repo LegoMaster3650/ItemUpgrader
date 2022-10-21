@@ -1,0 +1,26 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:shield"
+	},
+	"slots": ["offhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "itemupgrader:living_tick",
+			"condition": {
+				"type": "itemupgrader:predicate",
+				"predicate": "itemupgrader:not_burning"
+			},
+			"result": {
+				"type": "itemupgrader:effect",
+				"effect": "minecraft:fire_resistance",
+				"duration": 200,
+				"show_particles": false
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

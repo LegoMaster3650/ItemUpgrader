@@ -1,0 +1,11 @@
+{
+	"type":"itemupgrader:item_upgrade",
+	"catalyst": {
+		"item": "minecraft:netherite_scrap"
+	},
+	"upgrade": "itemupgrader:dual_wield",
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled",
+		"recipe_only": true
+	}]
+}

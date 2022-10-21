@@ -1,0 +1,11 @@
+{
+	"type":"itemupgrader:item_upgrade",
+	"catalyst": {
+		"item": "minecraft:tropical_fish"
+	},
+	"upgrade": "itemupgrader:dolphins_gift",
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled",
+		"recipe_only": true
+	}]
+}

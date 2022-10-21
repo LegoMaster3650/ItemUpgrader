@@ -1,0 +1,11 @@
+{
+	"type":"itemupgrader:item_upgrade",
+	"catalyst": {
+		"item": "minecraft:turtle_helmet"
+	},
+	"upgrade": "itemupgrader:turtle_helmet",
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled",
+		"recipe_only": true
+	}]
+}

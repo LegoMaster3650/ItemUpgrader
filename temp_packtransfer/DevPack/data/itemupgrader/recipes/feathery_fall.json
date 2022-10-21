@@ -1,0 +1,11 @@
+{
+	"type":"itemupgrader:item_upgrade",
+	"catalyst": {
+		"item": "minecraft:leather"
+	},
+	"upgrade": "itemupgrader:feathery_fall",
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled",
+		"recipe_only": true
+	}]
+}

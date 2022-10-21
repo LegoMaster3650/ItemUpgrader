@@ -1,0 +1,60 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:sword"
+	},
+	"color": "#56b6c7",
+	"slots": ["mainhand", "offhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "itemupgrader:living_tick",
+			"slot": "offhand",
+			"condition": {
+				"type": "itemupgrader:has_upgrade",
+				"slot": "mainhand",
+				"upgrade": "itemupgrader:dual_wield"
+			},
+			"result": {
+				"type": "itemupgrader:tag_boolean",
+				"tag": "dualWieldFlag",
+				"value": true
+			},
+			"visible": false
+		},
+		{
+			"action": "itemupgrader:living_tick",
+			"slot": "offhand",
+			"condition": {
+				"type": "itemupgrader:has_upgrade",
+				"slot": "mainhand",
+				"upgrade": "itemupgrader:dual_wield",
+				"inverted": true
+			},
+			"result": {
+				"type": "itemupgrader:tag_boolean",
+				"tag": "dualWieldFlag",
+				"value": false
+			},
+			"visible": false
+		},
+		{
+			"action": "itemupgrader:attribute_complex",
+			"slot": "offhand",
+			"condition": {
+				"type": "itemupgrader:tag_boolean",
+				"tag": "dualWieldFlag",
+				"tooltip_override": "tooltip.itemupgrader.dual_wield.flag"
+			},
+			"result": {
+				"type": "itemupgrader:attribute",
+				"attribute": "generic.attack_speed",
+				"operation": "multiply_base",
+				"amount": 1.0
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

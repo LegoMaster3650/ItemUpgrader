@@ -1,0 +1,69 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:boots"
+	},
+	"color": "#EEDDFF",
+	"slots": ["feet"],
+	"description": 2,
+	"upgrade": [
+		{
+			"action": "itemupgrader:living_tick",
+			"visible": false,
+			"condition": [
+				{
+					"type": "itemupgrader:tag_boolean",
+					"tag": "dolphinFlag",
+					"value": false
+				},
+				{
+					"type": "itemupgrader:eyes_in_fluid",
+					"fluid": "water",
+					"inverted": true
+				}
+			],
+			"result": [
+				{
+					"type": "itemupgrader:tag_boolean",
+					"tag": "dolphinFlag",
+					"value": true
+				}
+			]
+		},
+		{
+			"action": "itemupgrader:living_tick",
+			"condition": [
+				{
+					"type": "itemupgrader:tag_boolean",
+					"tooltip_override": "tooltip.itemupgrader.dolphins_gift.entering_water",
+					"tag": "dolphinFlag",
+					"value": true
+				},
+				{
+					"type": "itemupgrader:eyes_in_fluid",
+					"visible": false,
+					"fluid": "water",
+					"inverted": false
+				}
+			],
+			"result": [
+				{
+					"type": "itemupgrader:effect",
+					"effect": "minecraft:dolphins_grace",
+					"duration": 80,
+					"amplifier": 0,
+					"show_particles": false
+				},
+				{
+					"type": "itemupgrader:tag_boolean",
+					"visible": false,
+					"tag": "dolphinFlag",
+					"value": false
+				}
+			]
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}
