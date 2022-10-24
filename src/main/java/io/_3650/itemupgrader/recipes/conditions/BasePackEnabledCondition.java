@@ -25,8 +25,15 @@ public class BasePackEnabledCondition implements ICondition {
 	}
 	
 	@Override
+	public boolean test(IContext context) {
+		return test();
+	}
+	
+	@Override
 	public boolean test() {
-		return Config.SERVER.basePackEnabled.get() && !(this.recipeOnly && !Config.SERVER.basePackRecipes.get());
+		boolean basePackEnabled = Config.COMMON.basePackEnabled.get();
+		boolean basePackRecipes = Config.COMMON.basePackRecipes.get();
+		return basePackEnabled && !(this.recipeOnly && !basePackRecipes);
 	}
 	
 	public static class Serializer implements IConditionSerializer<BasePackEnabledCondition> {

@@ -1,0 +1,20 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:boots"
+	},
+	"color": "#d9d6be",
+	"slots": ["feet"],
+	"description": 2,
+	"upgrade": [
+		{
+			"action": "itemupgrader:fall",
+			"result": {
+				"type": "itemupgrader:internal_fall_to_food"
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

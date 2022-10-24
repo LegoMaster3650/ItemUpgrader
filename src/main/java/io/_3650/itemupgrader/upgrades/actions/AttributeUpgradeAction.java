@@ -99,9 +99,11 @@ public class AttributeUpgradeAction extends UpgradeAction {
 		}
 	}
 	
+	private final Serializer instance = new Serializer();
+	
 	@Override
 	public Serializer getSerializer() {
-		return new Serializer();
+		return instance;
 	}
 	
 	@Override

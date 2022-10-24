@@ -5,7 +5,10 @@
 	"refmap": "itemupgrader.refmap.json",
 	"mixins": [
 		"FoodDataMixin",
-		"LivingEntityInvoker"
+		"MixinApplyBonusCount",
+		"LivingEntityMixin",
+		"LivingEntityInvoker",
+		"ServerPlayerInvoker"
 	],
 	"minVersion": "0.8"
 }

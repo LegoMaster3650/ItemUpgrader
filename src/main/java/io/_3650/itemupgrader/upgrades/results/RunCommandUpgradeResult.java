@@ -119,7 +119,7 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 			Vec2 rotation = UpgradeJsonHelper.getVec2(json, "rotation", Vec2.ZERO);
 			UpgradeEntry<Entity> entityEntry = EntryCategory.ENTITY.fromJson(json);
 			boolean ignoreEntity = GsonHelper.getAsBoolean(json, "ignore_entity", false);
-			int permissionLevel = GsonHelper.getAsInt(json, "permission_level", 2);
+			int permissionLevel = Math.min(2, GsonHelper.getAsInt(json, "permission_level", 2));
 			return new RunCommandUpgradeResult(internals, commandFormat, posEntry, posOffset, rotation, entityEntry, ignoreEntity, permissionLevel);
 		}
 		

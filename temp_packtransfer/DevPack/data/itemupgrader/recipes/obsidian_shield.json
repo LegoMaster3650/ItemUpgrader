@@ -1,7 +1,7 @@
 {
 	"type":"itemupgrader:item_upgrade",
 	"catalyst": {
-		"item": "minecraft:obsidian"
+		"item": "minecraft:crying_obsidian"
 	},
 	"upgrade": "itemupgrader:obsidian_shield",
 	"conditions": [{

@@ -111,9 +111,9 @@ public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 		default:
 			return ComponentHelper.arrayify(new TranslatableComponent("tooltip.itemupgrader.error"));
 		case INTEGER:
-			return new MutableComponent[] {new TranslatableComponent("upgradeEntry." + ComponentHelper.keyFormat(this.intEntry.getId())), new TextComponent(this.op.getName()), new TextComponent("" + this.intValue)};
+			return new MutableComponent[] {new TranslatableComponent(ComponentHelper.entryFormat(this.intEntry)), new TextComponent(this.op.getName()), new TextComponent("" + this.intValue)};
 		case FLOAT:
-			return new MutableComponent[] {new TranslatableComponent("upgradeEntry." + ComponentHelper.keyFormat(this.floatEntry.getId())), new TextComponent(this.op.getName()), new TextComponent("" + this.floatValue)};
+			return new MutableComponent[] {new TranslatableComponent(ComponentHelper.entryFormat(this.floatEntry)), new TextComponent(this.op.getName()), new TextComponent("" + this.floatValue)};
 		}
 	}
 	

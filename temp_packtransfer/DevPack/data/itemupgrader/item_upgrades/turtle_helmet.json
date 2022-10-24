@@ -9,6 +9,7 @@
 			"item": "minecraft:turtle_helmet"
 		}
 	},
+	"color": "#2f9151",
 	"slots": ["head"],
 	"description": 1,
 	"upgrade": [

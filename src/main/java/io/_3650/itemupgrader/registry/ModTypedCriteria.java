@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -47,6 +48,9 @@ public class ModTypedCriteria {
 	public static final RegistryObject<TypedCriteria> CHESTPLATE = TYPED_CRITERIA.register("chestplate", () -> new TypedCriteria(item -> armorCheck(item, EquipmentSlot.CHEST)));
 	public static final RegistryObject<TypedCriteria> LEGGINGS = TYPED_CRITERIA.register("leggings", () -> new TypedCriteria(item -> armorCheck(item, EquipmentSlot.LEGS)));
 	public static final RegistryObject<TypedCriteria> BOOTS = TYPED_CRITERIA.register("boots", () -> new TypedCriteria(item -> armorCheck(item, EquipmentSlot.FEET)));
+	
+	//Misc.
+	public static final RegistryObject<TypedCriteria> FORTUNE_ENCHANTABLE = TYPED_CRITERIA.register("fortune", () -> new TypedCriteria(item -> Enchantments.BLOCK_FORTUNE.canEnchant(new ItemStack(item))));
 	
 	//Utility functions
 	private static boolean armorCheck(Item item, EquipmentSlot slot) {

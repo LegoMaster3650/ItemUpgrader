@@ -258,6 +258,18 @@ public class UpgradeEntrySet {
 	});
 	/**Damage, Damage Source*/
 	public static final UpgradeEntrySet DAMAGE_EVENT = DAMAGE.with(DAMAGE_SOURCE);
+	/**Enchantment ID*/
+	public static final UpgradeEntrySet ENCHANTMENT_ID = create(builder -> {
+		builder.require(UpgradeEntry.ENCHANTMENT_ID);
+	});
+	/**Enchantment Level*/
+	public static final UpgradeEntrySet ENCHANTMENT_LEVEL = create(builder -> {
+		builder.require(UpgradeEntry.ENCHANTMENT_LEVEL);
+	});
+	/**Enchantment ID, Enchantment Level*/
+	public static final UpgradeEntrySet ENCHANTMENT = ENCHANTMENT_ID.with(ENCHANTMENT_LEVEL);
+	/**[Item], Enchantment ID, Enchantment Level*/
+	public static final UpgradeEntrySet ITEM_ENCHANTMENT = ITEM.with(ENCHANTMENT);
 	
 	/* ==== ENTITY STUFF ==== */
 	/**Side, Level, [Position], [Entity]*/

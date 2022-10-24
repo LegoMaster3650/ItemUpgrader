@@ -48,7 +48,7 @@ public class ItemCooldownUpgradeResult extends UpgradeResult {
 	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		return ComponentHelper.arrayify(new TextComponent("" + this.cooldownTicks));
+		return ComponentHelper.arrayify(new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(this.cooldownTicks / 20.0D)));
 	}
 	
 	@Override

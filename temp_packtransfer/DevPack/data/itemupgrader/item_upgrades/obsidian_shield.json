@@ -3,6 +3,7 @@
 		"type": "itemupgrader:typed",
 		"group": "itemupgrader:shield"
 	},
+	"color": "dark_purple",
 	"slots": ["offhand"],
 	"description": 1,
 	"upgrade": [
@@ -15,7 +16,7 @@
 			"result": {
 				"type": "itemupgrader:effect",
 				"effect": "minecraft:fire_resistance",
-				"duration": 200,
+				"duration": 300,
 				"show_particles": false
 			}
 		}

@@ -2,6 +2,7 @@ package io._3650.itemupgrader.api.util;
 
 import java.util.List;
 
+import io._3650.itemupgrader.api.data.UpgradeEntry;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -21,6 +22,15 @@ public class ComponentHelper {
 	 */
 	public static String keyFormat(ResourceLocation id) {
 		return id.getNamespace() + "." + id.getPath();
+	}
+	
+	/**
+	 * Quickly formats an entry into a text component key
+	 * @param entry The {@linkplain UpgradeEntry} to format
+	 * @return The given entry reformatted
+	 */
+	public static String entryFormat(UpgradeEntry<?> entry) {
+		return "upgradeEntry." + keyFormat(entry.getId());
 	}
 	
 	/**
@@ -79,7 +89,7 @@ public class ComponentHelper {
 		if (components.size() == 2) return components.get(0).append(new TranslatableComponent("itemupgrader.text.and")).append(components.get(1));
 		MutableComponent main = components.get(0);
 		for (var i = 1; i < components.size() - 1; i++) {
-			main.append(new TranslatableComponent("itemupgrader.text.list", components.get(i)));
+			main.append(new TranslatableComponent("itemupgrader.text.list")).append(components.get(i));
 		}
 		return main.append(new TranslatableComponent("itemupgrader.text.and.list")).append(components.get(components.size() - 1));
 	}

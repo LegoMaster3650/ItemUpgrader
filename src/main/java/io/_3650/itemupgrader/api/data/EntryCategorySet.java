@@ -92,6 +92,7 @@ public class EntryCategorySet {
 		 */
 		public <T> Mapper set(EntryCategory<T> category, UpgradeEntry<? extends T> entry) {
 			this.categories.put(category, entry == null ? category.getDefaultValue() : entry);
+			if (category.hasParent()) this.set(category.getParent(), entry);
 			return this;
 		}
 		

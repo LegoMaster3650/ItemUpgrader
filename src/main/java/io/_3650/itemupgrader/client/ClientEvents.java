@@ -72,7 +72,7 @@ public class ClientEvents {
 					for (UpgradeAction action : upgrade.getActions(actionId)) {
 						if (action.isVisible()) {
 							if (action.getValidSlots().isEmpty()) {
-								if (action.customTooltipBase()) tooltip.add(upgradeLine(action.getActionTooltipWithOverride(stack).withStyle(ChatFormatting.BLUE)));
+								if (action.customTooltipBase()) tooltip.add(upgradeLine(action.getActionTooltipWithOverride(stack)));
 								else tooltip.add(upgradeLine(new TranslatableComponent(actionKey, action.getActionTooltipWithOverride(stack)).withStyle(ChatFormatting.BLUE)));
 								doSlotsDisplay = true;
 							} else {
@@ -89,7 +89,7 @@ public class ClientEvents {
 					if (actionEmptyLine || hasDescription) tooltip.add(upgradeLine(new TextComponent("")));
 					tooltip.add(upgradeLine(new TranslatableComponent("tooltip.itemupgrader.slots", ComponentHelper.slotInOn(slot)).withStyle(ChatFormatting.GRAY)));
 					for (var action : slotActions.get(slot)) {
-						if (action.customTooltipBase()) tooltip.add(upgradeLine(action.getActionTooltipWithOverride(stack).withStyle(ChatFormatting.BLUE)));
+						if (action.customTooltipBase()) tooltip.add(upgradeLine(action.getActionTooltipWithOverride(stack)));
 						else tooltip.add(upgradeLine(new TranslatableComponent("upgradeAction." + ComponentHelper.keyFormat(action.getId()), action.getActionTooltipWithOverride(stack)).withStyle(ChatFormatting.BLUE)));
 						actionEmptyLine = true;
 					}

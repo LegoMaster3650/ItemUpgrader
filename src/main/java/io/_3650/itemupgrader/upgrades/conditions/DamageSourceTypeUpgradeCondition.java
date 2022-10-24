@@ -58,7 +58,7 @@ public class DamageSourceTypeUpgradeCondition extends UpgradeCondition {
 		@Override
 		public DamageSourceTypeUpgradeCondition fromJson(IUpgradeInternals internals, boolean inverted, JsonObject json) {
 			UpgradeEntry<DamageSource> sourceEntry = EntryCategory.DAMAGE_SOURCE.fromJson(json);
-			String sourceType = GsonHelper.getAsString(json, "type");
+			String sourceType = GsonHelper.getAsString(json, "source");
 			return new DamageSourceTypeUpgradeCondition(internals, inverted, sourceEntry, sourceType);
 		}
 		

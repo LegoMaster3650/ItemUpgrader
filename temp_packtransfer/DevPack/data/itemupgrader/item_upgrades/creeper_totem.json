@@ -1,0 +1,20 @@
+{
+	"base": {
+		"item": "minecraft:totem_of_undying"
+	},
+	"color": "#60cf44",
+	"slots": ["mainhand","offhand"],
+	"description": 2,
+	"upgrade": [
+		{
+			"action": "itemupgrader:totem",
+			"result": {
+				"type": "itemupgrader:explosion",
+				"power": 5
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

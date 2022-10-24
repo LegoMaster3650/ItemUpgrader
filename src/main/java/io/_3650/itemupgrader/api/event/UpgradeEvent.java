@@ -15,11 +15,11 @@ public abstract class UpgradeEvent extends Event {
 	/**
 	 * The main {@linkplain ItemStack} for this event
 	 */
-	public ItemStack stack;
+	public final ItemStack stack;
 	/**
 	 * The {@linkplain ResourceLocation} id of the upgrade associated with this event
 	 */
-	public ResourceLocation upgradeId;
+	public final ResourceLocation upgradeId;
 	
 	/**
 	 * Constructs a new upgrade event with the two parameters
@@ -88,7 +88,7 @@ public abstract class UpgradeEvent extends Event {
 		/**
 		 * The previous upgrade ID being replaced
 		 */
-		public ResourceLocation previousUpgradeId;
+		public final ResourceLocation previousUpgradeId;
 		
 		public Replace(ItemStack stack, ResourceLocation upgradeId, ResourceLocation previousUpgradeId) {
 			super(stack, upgradeId);

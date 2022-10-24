@@ -3,7 +3,7 @@
 		"type": "itemupgrader:typed",
 		"group": "itemupgrader:sword"
 	},
-	"color": "#56b6c7",
+	"color": "#cf8678",
 	"slots": ["mainhand", "offhand"],
 	"description": 1,
 	"upgrade": [

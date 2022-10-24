@@ -37,6 +37,12 @@
 	"upgradeAction.itemupgrader.upgrade_remove": "When this upgrade is removed: %s",
 	"upgradeAction.itemupgrader.upgrade_remove.condition": "When this upgrade is removed: If %s, %s",
 	
+	"upgradeAction.itemupgrader.loot_enchantment": "%s",
+	"upgradeAction.itemupgrader.loot_enchantment.condition": "If %s, %s",
+	"action.itemupgrader.loot_enchantment.tooltip": "Add %s levels of %s",
+	"action.itemupgrader.loot_enchantment.tooltip.one": "Add %s level of %s",
+	"action.itemupgrader.loot_enchantment.tooltip.decrease": "Remove %s levels of %s",
+	
 	"upgradeAction.itemupgrader.attribute_complex": "%s",
 	"upgradeAction.itemupgrader.attribute_complex.condition": "If %s, %s",
 	"upgradeAction.itemupgrader.living_tick": "%s",
@@ -69,12 +75,18 @@
 	
 	"upgradeAction.itemupgrader.player_attack": "On player attack: %s",
 	"upgradeAction.itemupgrader.player_attack.condition": "On player attack: %s",
+	"upgradeAction.itemupgrader.pre_hurt": "Before damage is started: %s",
+	"upgradeAction.itemupgrader.pre_hurt.condition": "Before damage is started: If %s, %s",
 	"upgradeAction.itemupgrader.hurt": "Before damage is taken: %s",
 	"upgradeAction.itemupgrader.hurt.condition": "Before damage is taken: If %s, %s",
 	"upgradeAction.itemupgrader.damage": "When damage is taken: %s",
 	"upgradeAction.itemupgrader.damage.condition": "When damage is taken: If %s, %s",
 	"upgradeAction.itemupgrader.fall": "On fall: %s",
 	"upgradeAction.itemupgrader.fall.condition": "On fall: If %s, %s",
+	"upgradeAction.itemupgrader.totem": "On totem use: %s",
+	"upgradeAction.itemupgrader.totem.condition": "On totem use: If %s, %s",
+	"upgradeAction.itemupgrader.totem_post": "After totem use: %s",
+	"upgradeAction.itemupgrader.totem_post.condition": "After totem use: If %s, %s",
 	
 	"upgradeCondition.itemupgrader.predicate": "%s",
 	"upgradeCondition.itemupgrader.compare": "%s %s %s",
@@ -99,11 +111,19 @@
 	"upgradeResult.itemupgrader.effect": "Gain %s",
 	"upgradeResult.itemupgrader.block_particle": "Display target block particle",
 	"upgradeResult.itemupgrader.command": "Run command: %s",
-	"upgradeResult.itemupgrader.cooldown": "Add %s ticks of cooldown",
+	"upgradeResult.itemupgrader.cooldown": "Add %s seconds of cooldown",
 	"upgradeResult.itemupgrader.tag_boolean": "Set tag %s to %s",
 	"upgradeResult.itemupgrader.tag_int": "Set tag %s %s %s",
 	"upgradeResult.itemupgrader.tag_float": "Set tag %s %s %s",
+	"upgradeResult.itemupgrader.save_position": "Save position %s to tag %s",
+	"upgradeResult.itemupgrader.load_position": "Load position tag %s",
+	"upgradeResult.itemupgrader.damage": "Deal %s %s damage to %s",
+	"upgradeResult.itemupgrader.sound": "Play sound %s",
+	"upgradeResult.itemupgrader.explosion": "Explode with radius %s",
 	
-	"upgradeResult.itemupgrader.internal_fall_to_food": "Absorb fall damage as hunger"
+	"upgradeResult.itemupgrader.update_position": "Update position %s",
+	
+	"upgradeResult.itemupgrader.internal_fall_to_food": "Absorb fall damage as hunger",
+	"upgradeResult.itemupgrader.internal_spawnpoint": "Return to spawnpoint"
 	
 }

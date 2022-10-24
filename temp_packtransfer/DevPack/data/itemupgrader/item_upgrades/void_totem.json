@@ -1,0 +1,44 @@
+{
+	"base": {
+		"item": "minecraft:totem_of_undying"
+	},
+	"color": "#2d1282",
+	"slots": ["mainhand","offhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "itemupgrader:pre_hurt",
+			"tooltip_override": "tooltip.itemupgrader.void_totem.effect",
+			"condition": {
+				"type": "itemupgrader:damage_source_type",
+				"source": "outOfWorld"
+			},
+			"result": [
+				{
+					"type": "itemupgrader:cancel"
+				},
+				{
+					"type": "itemupgrader:damage",
+					"amount": 1000,
+					"source": "magic"
+				},
+				{
+					"type": "itemupgrader:effect",
+					"effect": "minecraft:levitation",
+					"duration": 50,
+					"amplifier": 127,
+					"ambient": true
+				},
+				{
+					"type": "itemupgrader:effect",
+					"effect": "minecraft:slow_falling",
+					"duration": 1200,
+					"ambient": true
+				}
+			]
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

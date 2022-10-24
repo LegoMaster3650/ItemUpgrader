@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -166,6 +167,27 @@ public class UpgradeEventData {
 	 */
 	public boolean getBoolEntry(UpgradeEntry<Boolean> entry) {
 		return this.getOptional(entry).orElse(false);
+	}
+	
+	public <T> UpgradeEventData forceModifyEntry(UpgradeEntry<T> entry, T value) {
+		if (!entry.isNullable() && value == null) throw new IllegalArgumentException("Tried to set the value of non-nullable entry " + entry + " to null");
+		if (!this.entries.containsKey(entry)) throw new IllegalStateException("Tried to force-set the value of unpresent entry " + entry);
+		else this.entries.put(entry, value);
+		return this;
+	}
+	
+	/**
+	 * Forcefully modifies the contents of the event data using an EMPTY builder
+	 * @param builderConsumer
+	 * @return
+	 */
+	public UpgradeEventData modify(Consumer<Builder> builderConsumer) {
+		Builder builder = new Builder();
+		builderConsumer.accept(builder);
+		for (var key : builder.entries.keySet()) {
+			if (this.entries.containsKey(key)) this.entries.put(key, builder.entries.get(key));
+		}
+		return this;
 	}
 	
 	/**

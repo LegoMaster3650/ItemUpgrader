@@ -1,0 +1,21 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:fortune_enchantable"
+		}
+	],
+	"color": "#44cfc8",
+	"slots": ["mainhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "itemupgrader:loot_enchantment",
+			"enchantment": "minecraft:fortune",
+			"amount": 1
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

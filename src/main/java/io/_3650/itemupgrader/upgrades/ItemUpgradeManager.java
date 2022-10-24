@@ -85,7 +85,8 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 					descriptionLines = GsonHelper.getAsBoolean(json, "description", false) ? 1 : 0;
 				} else descriptionLines = GsonHelper.getAsInt(json, "description", 0);
 				//color
-				TextColor color = TextColor.parseColor(GsonHelper.getAsString(json, "color", "#FFFFFF"));
+				TextColor color = TextColor.parseColor(GsonHelper.getAsString(json, "color", "#ffffff"));
+				if (color == null) color = TextColor.parseColor("#ffffff");
 				
 				//actions
 				ListMultimap<ResourceLocation, UpgradeAction> actions = MultimapBuilder.treeKeys().arrayListValues().build();

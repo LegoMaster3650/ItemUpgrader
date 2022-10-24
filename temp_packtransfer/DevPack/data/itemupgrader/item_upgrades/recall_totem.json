@@ -1,0 +1,19 @@
+{
+	"base": {
+		"item": "minecraft:totem_of_undying"
+	},
+	"color": "#e8c23a",
+	"slots": ["mainhand","offhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "itemupgrader:totem",
+			"result": {
+				"type": "itemupgrader:internal_spawnpoint"
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

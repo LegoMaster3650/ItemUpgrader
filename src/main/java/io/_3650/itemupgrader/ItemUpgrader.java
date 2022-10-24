@@ -68,8 +68,8 @@ public class ItemUpgrader {
 		bus.addListener(this::setup);
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ItemUpgraderClient::new);
 		
-		ModLoadingContext.get().registerConfig(Type.SERVER, Config.SERVER_SPEC, "itemupgrader-server.toml");
-//		ModLoadingContext.get().registerConfig(Type.COMMON, Config.COMMON_SPEC, "itemupgrader-common.toml");
+//		ModLoadingContext.get().registerConfig(Type.SERVER, Config.SERVER_SPEC, "itemupgrader-server.toml");
+		ModLoadingContext.get().registerConfig(Type.COMMON, Config.COMMON_SPEC, "itemupgrader-common.toml");
 		ModLoadingContext.get().registerConfig(Type.CLIENT, Config.CLIENT_SPEC, "itemupgrader-client.toml");
 		
 		MinecraftForge.EVENT_BUS.register(this);
