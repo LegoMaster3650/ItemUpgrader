@@ -34,10 +34,11 @@ public class ItemCooldownUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		Player player = data.getEntry(this.playerEntry);
 		ItemStack stack = data.getEntry(this.itemEntry);
 		player.getCooldowns().addCooldown(stack.getItem(), this.cooldownTicks);
+		return true;
 	}
 	
 	private final Serializer instance = new Serializer();

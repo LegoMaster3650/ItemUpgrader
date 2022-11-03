@@ -1,0 +1,34 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:pickaxe"
+		}
+	],
+	"color": "#bd9435",
+	"slots": ["mainhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "mining_speed",
+			"condition": {
+				"type": "block_tag",
+				"tag": "forge:stone",
+				"tooltip_override": "tooltip.itemupgrader.dwarven.stone"
+			},
+			"amount": 0.6
+		},
+		{
+			"action": "mining_speed",
+			"condition": {
+				"type": "block_tag",
+				"tag": "itemupgrader:any_deepslate",
+				"tooltip_override": "tooltip.itemupgrader.dwarven.deep"
+			},
+			"amount": 0.2
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

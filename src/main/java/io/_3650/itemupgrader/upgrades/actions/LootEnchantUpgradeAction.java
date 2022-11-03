@@ -34,8 +34,8 @@ public class LootEnchantUpgradeAction extends ConditionalUpgradeAction {
 	}
 	
 	@Override
-	public MutableComponent getResultTooltip(ItemStack stack) {
-		return new TranslatableComponent("action.itemupgrader.loot_enchantment.tooltip" + (this.modifier < 0 ? ".decrease" : this.modifier == 1 ? ".one" : ""), Config.CLIENT.useRomanNumerals.get() ? new TranslatableComponent("enchantment.level." + this.modifier) : new TextComponent("" + Mth.abs(this.modifier)), new TranslatableComponent("enchantment." + ComponentHelper.keyFormat(this.enchantId)));
+	public MutableComponent applyResultTooltip(MutableComponent tooltip, ItemStack stack) {
+		return tooltip.append(new TranslatableComponent("action.itemupgrader.loot_enchantment.tooltip" + (this.modifier < 0 ? ".decrease" : this.modifier == 1 ? ".one" : ""), Config.CLIENT.useRomanNumerals.get() ? new TranslatableComponent("enchantment.level." + this.modifier) : new TextComponent("" + Mth.abs(this.modifier)), new TranslatableComponent("enchantment." + ComponentHelper.keyFormat(this.enchantId))));
 	}
 	
 	@Override
@@ -51,6 +51,11 @@ public class LootEnchantUpgradeAction extends ConditionalUpgradeAction {
 	@Override
 	public Serializer getSerializer() {
 		return instance;
+	}
+	
+	@Override
+	public MutableComponent[] getTooltip(ItemStack stack) {
+		return ComponentHelper.empty();
 	}
 	
 	@Override

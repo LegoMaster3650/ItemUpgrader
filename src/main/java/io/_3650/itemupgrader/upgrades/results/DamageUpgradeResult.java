@@ -9,7 +9,7 @@ import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeResult;
 import io._3650.itemupgrader.api.util.ComponentHelper;
-import io._3650.itemupgrader.upgrades.ModDamageSource;
+import io._3650.itemupgrader.upgrades.data.ModDamageSource;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -35,9 +35,10 @@ public class DamageUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		Entity entity = data.getEntry(this.entityEntry);
 		entity.hurt(getDamageSource(this.damageSource), this.damage);
+		return true;
 	}
 	
 	private final Serializer instance = new Serializer();

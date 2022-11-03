@@ -74,7 +74,8 @@ public class EntryCategory<T> {
 	 * @param defaultValue The default {@linkplain UpgradeEntry} to use for this category
 	 */
 	public void setDefaultValue(@Nonnull UpgradeEntry<T> defaultValue) {
-		if (this.defaultValue != defaultValue) this.defaultValue = defaultValue;
+		if (this.defaultValue == null) this.defaultValue = defaultValue;
+		else throw new IllegalStateException("Trying to set default value for " + this + ", but it already has a default value " + this.defaultValue + "!");
 	}
 	
 	/**
@@ -114,6 +115,7 @@ public class EntryCategory<T> {
 	public boolean addEntry(UpgradeEntry<? extends T> entry) {
 		boolean pass = !this.entries.containsKey(entry.getId());
 		this.entries.put(entry.getId(), (UpgradeEntry<T>) entry);
+		//I know this isn't the best idea but it's a compromise for user friendliness
 		this.entries.put(new ResourceLocation(entry.getId().getPath()), (UpgradeEntry<T>) entry);
 		if (this.hasParent()) pass = this.parent.addEntry(entry) && pass;
 		return pass;

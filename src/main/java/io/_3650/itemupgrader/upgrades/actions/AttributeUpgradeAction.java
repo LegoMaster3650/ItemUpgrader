@@ -1,5 +1,6 @@
 package io._3650.itemupgrader.upgrades.actions;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -15,8 +16,9 @@ import com.google.gson.JsonObject;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
-import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
-import io._3650.itemupgrader.api.type.UpgradeAction;
+import io._3650.itemupgrader.api.type.ConditionalUpgradeAction;
+import io._3650.itemupgrader.api.type.UpgradeCondition;
+import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.upgrades.data.AttributeReplacement;
 import io._3650.itemupgrader.upgrades.data.ModUpgradeEntry;
 import io._3650.itemupgrader.upgrades.data.ModUpgradeEntrySet;
@@ -34,7 +36,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class AttributeUpgradeAction extends UpgradeAction {
+public class AttributeUpgradeAction extends ConditionalUpgradeAction {
 	
 	private final ResourceLocation attributeId;
 	private final Attribute attribute;
@@ -43,8 +45,8 @@ public class AttributeUpgradeAction extends UpgradeAction {
 	private final String name;
 	private final Map<EquipmentSlot, UUID> uuids;
 	
-	public AttributeUpgradeAction(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, ResourceLocation attributeId, Operation operation, double amount, @Nullable String name, Map<EquipmentSlot, UUID> uuids) {
-		super(internals, validSlots);
+	public AttributeUpgradeAction(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, List<UpgradeCondition> conditions, ResourceLocation attributeId, Operation operation, double amount, @Nullable String name, Map<EquipmentSlot, UUID> uuids) {
+		super(internals, validSlots, conditions);
 		this.attributeId = attributeId;
 		this.attribute = Objects.requireNonNull(ForgeRegistries.ATTRIBUTES.getValue(attributeId));
 		this.operation = operation;
@@ -53,12 +55,8 @@ public class AttributeUpgradeAction extends UpgradeAction {
 		this.uuids = uuids;
 	}
 	
-	public boolean customTooltipBase() {
-		return true;
-	}
-	
 	@Override
-	public MutableComponent getActionTooltip(ItemStack stack) {
+	public MutableComponent applyResultTooltip(MutableComponent tooltip, ItemStack stack) {
 		//Set amount
 		double displayAmount = this.amount;
 		if (this.operation == AttributeModifier.Operation.MULTIPLY_BASE || this.operation == AttributeModifier.Operation.MULTIPLY_TOTAL) displayAmount = this.amount * 100.0D;
@@ -66,15 +64,15 @@ public class AttributeUpgradeAction extends UpgradeAction {
 		
 		//Make component
 		if (this.amount >= 0.0D) {
-			return new TranslatableComponent("attribute.modifier.plus."+ this.operation.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), new TranslatableComponent(this.attribute.getDescriptionId())).withStyle(ChatFormatting.BLUE);
+			return tooltip.append(new TranslatableComponent("attribute.modifier.plus."+ this.operation.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), new TranslatableComponent(this.attribute.getDescriptionId())).withStyle(ChatFormatting.BLUE));
 		} else {
 			displayAmount *= -1.0D;
-			return new TranslatableComponent("attribute.modifier.take."+ this.operation.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), new TranslatableComponent(this.attribute.getDescriptionId())).withStyle(ChatFormatting.RED);
+			return tooltip.append(new TranslatableComponent("attribute.modifier.take."+ this.operation.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(displayAmount), new TranslatableComponent(this.attribute.getDescriptionId())).withStyle(ChatFormatting.RED));
 		}
 	}
 	
 	@Override
-	public void run(UpgradeEventData data) {
+	public void execute(UpgradeEventData data) {
 		Multimap<Attribute, AttributeModifier> modifiers = data.getEntry(ModUpgradeEntry.ATTRIBUTES);
 		if (modifiers == null) return;
 		boolean applied = false;
@@ -107,11 +105,16 @@ public class AttributeUpgradeAction extends UpgradeAction {
 	}
 	
 	@Override
+	public MutableComponent[] getTooltip(ItemStack stack) {
+		return ComponentHelper.empty();
+	}
+	
+	@Override
 	public void hackyToNetworkReadJavadoc(FriendlyByteBuf buf) {
 		this.getSerializer().toNetwork(this, buf);
 	}
 	
-	public static class Serializer extends UpgradeActionSerializer<AttributeUpgradeAction> {
+	public static class Serializer extends ConditionalUpgradeActionSerializer<AttributeUpgradeAction> {
 		
 		@Override
 		public UpgradeEntrySet getProvidedData() {
@@ -120,6 +123,7 @@ public class AttributeUpgradeAction extends UpgradeAction {
 		
 		@Override
 		public AttributeUpgradeAction fromJson(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, JsonObject json) {
+			List<UpgradeCondition> conditions = this.conditionsFromJson(json);
 			ResourceLocation attributeId = new ResourceLocation(GsonHelper.getAsString(json, "attribute"));
 			Operation operation = getAttributeOperationByName(GsonHelper.getAsString(json, "operation", "add"));
 			double amount = GsonHelper.getAsDouble(json, "amount");
@@ -144,11 +148,12 @@ public class AttributeUpgradeAction extends UpgradeAction {
 					uuids.put(slot, UUID.randomUUID());
 				}
 			}
-			return new AttributeUpgradeAction(internals, validSlots, attributeId, operation, amount, name, uuids);
+			return new AttributeUpgradeAction(internals, validSlots, conditions, attributeId, operation, amount, name, uuids);
 		}
 
 		@Override
 		public void toNetwork(AttributeUpgradeAction action, FriendlyByteBuf buf) {
+			this.conditionsToNetwork(action, buf);
 			buf.writeResourceLocation(action.attributeId);
 			buf.writeEnum(action.operation);
 			buf.writeDouble(action.amount);
@@ -160,13 +165,14 @@ public class AttributeUpgradeAction extends UpgradeAction {
 
 		@Override
 		public AttributeUpgradeAction fromNetwork(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, FriendlyByteBuf buf) {
+			List<UpgradeCondition> conditions = this.conditionsFromNetwork(buf);
 			ResourceLocation attributeId = buf.readResourceLocation();
 			Operation operation = buf.readEnum(Operation.class);
 			double amount = buf.readDouble();
 			String name = null;
 			if (buf.readBoolean()) name = buf.readUtf();
 			Map<EquipmentSlot, UUID> uuids = buf.readMap(buffer -> buffer.readEnum(EquipmentSlot.class), buffer -> buffer.readUUID());
-			return new AttributeUpgradeAction(internals, validSlots, attributeId, operation, amount, name, uuids);
+			return new AttributeUpgradeAction(internals, validSlots, conditions, attributeId, operation, amount, name, uuids);
 		}
 		
 	}

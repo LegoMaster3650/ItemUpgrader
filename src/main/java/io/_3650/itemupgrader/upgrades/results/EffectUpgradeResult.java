@@ -47,9 +47,9 @@ public class EffectUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		LivingEntity entity = data.getEntry(this.livingEntry);
-		entity.addEffect(new MobEffectInstance(this.effect, this.duration, this.amplifier, this.ambient, this.showParticles, this.showIcon));
+		return entity.addEffect(new MobEffectInstance(this.effect, this.duration, this.amplifier, this.ambient, this.showParticles, this.showIcon));
 	}
 	
 	@Override

@@ -1,0 +1,23 @@
+{
+	"base": [
+		{
+			"item": "minecraft:compass"
+		}
+	],
+	"color": "#e34f4f",
+	"slots": ["mainhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "right_click",
+			"result": [
+				{
+					"type": "internal_tell_coords"
+				}
+			]
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

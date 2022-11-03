@@ -22,6 +22,7 @@ import io._3650.itemupgrader.upgrades.data.ModUpgradeEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,6 +41,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -98,28 +100,25 @@ public class ModEvents {
 				event.addModifier(entry.getKey(), entry.getValue());
 			}
 		}
-		UpgradeEventData.Builder builder2 = UpgradeEventData.builder()
-				.entry(UpgradeEntry.ITEM, event.getItemStack())
-				.entry(UpgradeEntry.SLOT, event.getSlotType())
-				.entry(ModUpgradeEntry.ATTRIBUTES, event.getModifiers())
-				.modifiableEntry(ModUpgradeEntry.ATTRIBUTE_ADDITIONS, MultimapBuilder.hashKeys().hashSetValues().build())
-				.modifiableEntry(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS, Sets.newHashSet())
-				.modifiableEntry(UpgradeEntry.CONSUMED, false);
-		UpgradeEventData data2 = ItemUpgraderApi.runActions(ModUpgradeActions.ATTRIBUTE_COMPLEX, builder2);
-		if (data2.getBoolEntry(UpgradeEntry.CONSUMED)) return;
-		Set<AttributeReplacement> replacements2 = data2.getEntry(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS);
-		if (!replacements2.isEmpty()) {
-			for (var replacement : replacements2) {
-				event.removeModifier(replacement.target(), replacement.oldAttribute());
-				event.addModifier(replacement.target(), replacement.newAttribute());
-			}
+	}
+	
+	//close enough to an attribute for me
+	@SubscribeEvent
+	public static void breakSpeed(PlayerEvent.BreakSpeed event) {
+		Player player = event.getPlayer();
+		BlockState state = event.getState();
+		BlockPos pos = event.getPos();
+		float breakSpeed = event.getNewSpeed();
+		for (var slot : EquipmentSlot.values()) {
+			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.BREAKING_SPEED, new UpgradeEventData.Builder(player, slot)
+					.entry(UpgradeEntry.PLAYER, player)
+					.entry(UpgradeEntry.BLOCK_STATE, state)
+					.entry(UpgradeEntry.BLOCK_POS, pos)
+					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
+					.modifiableEntry(ModUpgradeEntry.BREAKING_SPEED, breakSpeed));
+			breakSpeed = data.getEntry(ModUpgradeEntry.BREAKING_SPEED);
 		}
-		SetMultimap<Attribute, AttributeModifier> additions2 = data2.getEntry(ModUpgradeEntry.ATTRIBUTE_ADDITIONS);
-		if (!additions2.isEmpty()) {
-			for (var entry : additions2.entries()) {
-				event.addModifier(entry.getKey(), entry.getValue());
-			}
-		}
+		event.setNewSpeed(breakSpeed);
 	}
 	
 	/*
@@ -294,23 +293,31 @@ public class ModEvents {
 	public static void playerAttack(AttackEntityEvent event) {
 		Player player = event.getPlayer();
 		if (player.level.isClientSide) return;
-		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.PLAYER_ATTACK, new UpgradeEventData.Builder(player, EquipmentSlot.MAINHAND)
-				.entry(UpgradeEntry.TARGET_ENTITY, event.getTarget())
-				.entry(UpgradeEntry.TARGET_ENTITY_POS, event.getTarget().position())
-				.entry(UpgradeEntry.INTERACTION_POS, event.getTarget().position())
-				.cancellable());
-		if (data.isCancelled()) event.setCanceled(true);
+		for (var hand : InteractionHand.values()) {
+			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.PLAYER_ATTACK, new UpgradeEventData.Builder(player, slotFromHand(hand))
+					.entry(UpgradeEntry.TARGET_ENTITY, event.getTarget())
+					.entry(UpgradeEntry.TARGET_ENTITY_POS, event.getTarget().position())
+					.entry(UpgradeEntry.INTERACTION_POS, event.getTarget().position())
+					.modifiableEntry(UpgradeEntry.CONSUMED, false)
+					.cancellable());
+			if (data.isCancelled()) {
+				event.setCanceled(true);
+				break;
+			} else if (data.getBoolEntry(UpgradeEntry.CONSUMED)) break;
+		}
 	}
 	
 	@SubscribeEvent
 	public static void livingPreHurt(LivingAttackEvent event) {
 		LivingEntity living = event.getEntityLiving();
 		if (living.level.isClientSide) return;
+		DamageSource source = event.getSource();
+		float amount = event.getAmount();
 		for (EquipmentSlot slot : EquipmentSlot.values()) {
 			if (living.hasItemInSlot(slot)) {
 				UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_PRE_HURT, new UpgradeEventData.Builder(living, slot)
-						.entry(UpgradeEntry.DAMAGE_SOURCE, event.getSource())
-						.entry(UpgradeEntry.DAMAGE, event.getAmount())
+						.entry(UpgradeEntry.DAMAGE_SOURCE, source)
+						.entry(UpgradeEntry.DAMAGE, amount)
 						.cancellable());
 				if (data.isCancelled()) {
 					event.setCanceled(true);

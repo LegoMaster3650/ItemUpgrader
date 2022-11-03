@@ -10,7 +10,6 @@ import com.google.common.collect.ImmutableSet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
@@ -50,33 +49,21 @@ public abstract class UpgradeAction extends IUpgradeType {
 		return this.validSlots;
 	}
 	
-	/**
-	 * Mostly for internal use, determines whether to automatically use a default translated component as the base for the tooltip or if this action type uses its' own.<br>
-	 * (Note: It still gets turned blue either way to encourage sticking to the standard style)
-	 * @return <b>false</b> to use the automatic tooltip base, <b>true</b> to just use the value of {@linkplain #getActionTooltip(ItemStack)}
-	 */
-	public abstract boolean customTooltipBase();
+	@Nullable
+	private String descriptionId;
 	
-	/**
-	 * Moved to another method for actions
-	 * @see #getActionTooltip(ItemStack)
-	 */
 	@Override
-	public final MutableComponent[] getTooltip(ItemStack stack) {
-		return new MutableComponent[] {this.getActionTooltip(stack)};
+	protected String descriptorIdBase() {
+		return "upgradeAction";
 	}
 	
 	/**
-	 * Gets the tooltip component for the object applied to the tooltip defined in the language file
+	 * Allows post-processing logic to be applied to the given tooltip
+	 * @param tooltip The pre-generated default tooltip to be modified
 	 * @param stack The {@linkplain ItemStack} to get tooltip context from
-	 * @return A {@linkplain MutableComponent} to apply to the tooltip specified in the language file
-	 * @see IUpgradeType#getTooltip(ItemStack)
+	 * @return The tooltip after modification (you can overwrite it)
 	 */
-	public abstract MutableComponent getActionTooltip(ItemStack stack);
-	
-	public final MutableComponent getActionTooltipWithOverride(ItemStack stack) {
-		return this.hasTooltipOverride() ? new TranslatableComponent(this.getTooltipOverride()) : this.getActionTooltip(stack);
-	}
+	public abstract MutableComponent applyTooltip(MutableComponent tooltip, ItemStack stack);
 	
 	/**
 	 * Defines the behavior for an UpgradeAction after running

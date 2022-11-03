@@ -7,9 +7,9 @@
 	"description": 1,
 	"upgrade": [
 		{
-			"action": "itemupgrader:totem",
+			"action": "totem",
 			"result": {
-				"type": "itemupgrader:internal_spawnpoint"
+				"type": "internal_spawnpoint"
 			}
 		}
 	],

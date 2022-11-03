@@ -10,7 +10,7 @@
 	"description": 1,
 	"upgrade": [
 		{
-			"action": "itemupgrader:loot_enchantment",
+			"action": "loot_enchantment",
 			"enchantment": "minecraft:fortune",
 			"amount": 1
 		}

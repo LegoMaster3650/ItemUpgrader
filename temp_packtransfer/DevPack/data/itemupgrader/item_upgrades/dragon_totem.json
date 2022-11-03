@@ -7,33 +7,33 @@
 	"description": 2,
 	"upgrade": [
 		{
-			"action": "itemupgrader:totem_post",
+			"action": "totem_post",
 			"result": [
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:strength",
 					"duration": 600,
 					"amplifier": 1
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:speed",
 					"duration": 600,
 					"amplifier": 4
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:haste",
 					"duration": 600,
 					"amplifier": 1
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:glowing",
 					"duration": 600
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:saturation",
 					"duration": 100
 				}

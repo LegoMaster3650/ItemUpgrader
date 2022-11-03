@@ -7,9 +7,9 @@
 	"description": 2,
 	"upgrade": [
 		{
-			"action": "itemupgrader:totem",
+			"action": "totem",
 			"result": {
-				"type": "itemupgrader:explosion",
+				"type": "explosion",
 				"power": 5
 			}
 		}

@@ -54,9 +54,9 @@ public class AttributeUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		Multimap<Attribute, AttributeModifier> modifiers = data.getEntry(ModUpgradeEntry.ATTRIBUTES);
-		if (modifiers == null) return;
+		if (modifiers == null) return false;
 		boolean applied = false;
 		if (modifiers.containsKey(this.attribute)) {
 			for (AttributeModifier modifier : modifiers.get(this.attribute)) {
@@ -77,6 +77,8 @@ public class AttributeUpgradeResult extends UpgradeResult {
 			SetMultimap<Attribute, AttributeModifier> additions = data.getEntry(ModUpgradeEntry.ATTRIBUTE_ADDITIONS);
 			applied = additions != null && additions.put(this.attribute, new AttributeModifier(this.uuids.get(data.getEntry(UpgradeEntry.SLOT)), this.name == null ? "Upgrader Attribute" : this.name, this.amount, this.operation));
 		}
+		
+		return applied; //how convenient
 	}
 	
 	private final Serializer instance = new Serializer();

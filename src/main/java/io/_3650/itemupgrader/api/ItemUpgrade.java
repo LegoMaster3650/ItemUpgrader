@@ -13,7 +13,7 @@ import com.google.common.collect.MultimapBuilder;
 import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import io._3650.itemupgrader.api.type.UpgradeAction;
-import io._3650.itemupgrader.api.type.IUpgradeType.IUpgradeInternals;
+import io._3650.itemupgrader.api.util.UpgradeSerializer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
@@ -200,17 +200,7 @@ public class ItemUpgrade {
 			//actions of type
 			buf.writeInt(actionsList.size());
 			for (UpgradeAction action : actionsList) {
-				action.getInternals().to(buf);
-				Set<EquipmentSlot> actionValidSlots = action.getValidSlots();
-				boolean hasActionValidSlots = actionValidSlots != null;
-				buf.writeBoolean(hasActionValidSlots);
-				if (hasActionValidSlots) {
-					buf.writeInt(actionValidSlots.size());
-					for (var slot : actionValidSlots) {
-						buf.writeEnum(slot);
-					}
-				}
-				action.hackyToNetworkReadJavadoc(buf);
+				UpgradeSerializer.actionToNetwork(action, buf);
 			}
 		}
 		//is visible
@@ -241,22 +231,12 @@ public class ItemUpgrade {
 		int netValidActionsCount = buf.readInt();
 		ListMultimap<ResourceLocation, UpgradeAction> netActions = MultimapBuilder.hashKeys(netValidActionsCount).arrayListValues().build();
 		for (int i = 0; i < netValidActionsCount; i++) {
-			ResourceLocation netActionId = buf.readResourceLocation();
-			UpgradeActionSerializer<?> serializer = ItemUpgrader.ACTION_REGISTRY.get().getValue(netActionId);
+			ResourceLocation actionId = buf.readResourceLocation();
+			UpgradeActionSerializer<?> serializer = ItemUpgrader.ACTION_REGISTRY.get().getValue(actionId);
 			//actions of type
-			int netActionsCount = buf.readInt();
-			for (var j = 0; j < netActionsCount; j++) {
-				IUpgradeInternals internals = IUpgradeInternals.of(netActionId, buf);
-				Set<EquipmentSlot> netActionValidSlots = ImmutableSet.of();
-				if (buf.readBoolean()) {
-					int actionValidSlotsSize = buf.readInt();
-					netActionValidSlots = new LinkedHashSet<>(actionValidSlotsSize);
-					for (int k = 0; k < actionValidSlotsSize; k++) {
-						netActionValidSlots.add(buf.readEnum(EquipmentSlot.class));
-					}
-				}
-				UpgradeAction netAction = serializer.fromNetwork(internals, netActionValidSlots, buf);
-				netActions.put(netActionId, netAction);
+			int actionsCount = buf.readInt();
+			for (var j = 0; j < actionsCount; j++) {
+				netActions.put(actionId, UpgradeSerializer.actionFromNetwork(actionId, serializer, buf));
 			}
 		}
 		//is visible

@@ -20,6 +20,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class BlockParticleUpgradeResult extends UpgradeResult {
@@ -43,7 +44,7 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 		super(internals, UpgradeEntrySet.create(builder -> {
 			builder.require(UpgradeEntry.SIDE).require(UpgradeEntry.LEVEL).require(UpgradeEntry.BLOCK_STATE);
 		}).fillCategories(mapper -> {
-			mapper.set(EntryCategory.POSITION, posEntry);
+			mapper.set(EntryCategory.POSITION, posEntry).set(EntryCategory.PLAYER, playerEntry);
 		}));
 		this.posEntry = posEntry;
 		this.offset = offset;
@@ -54,23 +55,25 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 		this.clientOnly = clientOnly;
 	}
 	
+	private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
+	
 	@Override
-	public void execute(UpgradeEventData data) {
-		data.getOptional(UpgradeEntry.LEVEL).ifPresent(level -> {
-			Vec3 spawnPos = data.getEntry(this.posEntry).add(this.offset);
-			if (!level.isClientSide && level instanceof ServerLevel slevel) {
-				data.getOptional(UpgradeEntry.BLOCK_STATE).ifPresent(blockState -> {
-					@SuppressWarnings("deprecation")
-					BlockParticleOption options = BlockParticleOption.DESERIALIZER.fromNetwork(ParticleTypes.BLOCK, new FriendlyByteBuf(Unpooled.buffer()).writeVarInt(Block.getId(blockState)));
-					Player player1 = data.getEntryOrNull(this.playerEntry);
-					if (this.clientOnly && player1 != null && player1 instanceof ServerPlayer player) {
-						slevel.sendParticles(player, options, false, spawnPos.x, spawnPos.y, spawnPos.z, this.count, this.delta.x, this.delta.y, this.delta.z, this.speed);
-					} else if (!this.clientOnly) {
-						slevel.sendParticles(options, spawnPos.x, spawnPos.y, spawnPos.z, this.count, this.delta.x, this.delta.y, this.delta.z, this.speed);
-					}
-				});
-			}
-		});
+	public boolean execute(UpgradeEventData data) {
+		if (!(data.getEntry(UpgradeEntry.LEVEL) instanceof ServerLevel level)) return false;
+		Vec3 spawnPos = data.getEntry(this.posEntry).add(this.offset);
+		BlockState state = data.getEntry(UpgradeEntry.BLOCK_STATE);
+		@SuppressWarnings("deprecation") //L + ratio cope and seethe (why do I think this will backfire in 1.19)
+		BlockParticleOption options = BlockParticleOption.DESERIALIZER.fromNetwork(ParticleTypes.BLOCK, new FriendlyByteBuf(Unpooled.buffer()).writeVarInt(Block.getId(state)));
+		if (this.clientOnly && data.getEntry(this.playerEntry) instanceof ServerPlayer player) {
+			LOGGER.debug("client");
+			level.sendParticles(player, options, false, spawnPos.x, spawnPos.y, spawnPos.z, this.count, this.delta.x, this.delta.y, this.delta.z, this.speed);
+			return true;
+		} else if (!this.clientOnly) {
+			LOGGER.debug("server");
+			level.sendParticles(options, spawnPos.x, spawnPos.y, spawnPos.z, this.count, this.delta.x, this.delta.y, this.delta.z, this.speed);
+			return true;
+		}
+		return true;
 	}
 	
 	private final Serializer instance = new Serializer();

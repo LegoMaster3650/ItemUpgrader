@@ -3,14 +3,14 @@
 		"type": "itemupgrader:typed",
 		"group": "itemupgrader:boots"
 	},
-	"color": "#d9d6be",
+	"color": "#d6d6b2",
 	"slots": ["feet"],
 	"description": 2,
 	"upgrade": [
 		{
-			"action": "itemupgrader:fall",
+			"action": "fall",
 			"result": {
-				"type": "itemupgrader:internal_fall_to_food"
+				"type": "internal_fall_to_food"
 			}
 		}
 	],

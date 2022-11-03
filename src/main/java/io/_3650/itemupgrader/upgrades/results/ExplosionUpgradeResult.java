@@ -37,14 +37,16 @@ public class ExplosionUpgradeResult extends UpgradeResult {
 		this.allowGriefing = allowGriefing;
 	}
 	
+	//SPECIAL RETURN: Did destroy blocks?
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		Entity entity = data.getEntry(this.entityEntry);
 		Level level = entity.level;
-		if (level.isClientSide) return;
-		boolean destructive = ForgeEventFactory.getMobGriefingEvent(level, entity);
+		if (level.isClientSide) return false;
+		boolean destructive = this.allowGriefing && ForgeEventFactory.getMobGriefingEvent(level, entity);
 		Vec3 pos = data.getEntry(this.posEntry);
 		level.explode(entity, pos.x(), pos.y(), pos.z(), this.radius, destructive ? BlockInteraction.BREAK : BlockInteraction.NONE);
+		return destructive;
 	}
 	
 	private final Serializer instance = new Serializer();

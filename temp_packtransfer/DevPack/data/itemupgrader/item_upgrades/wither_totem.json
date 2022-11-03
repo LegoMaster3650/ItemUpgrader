@@ -2,62 +2,62 @@
 	"base": {
 		"item": "minecraft:totem_of_undying"
 	},
-	"color": "#261d1d",
+	"color": "#362929",
 	"slots": ["mainhand","offhand"],
 	"description": 2,
 	"upgrade": [
 		{
-			"action": "itemupgrader:totem_post",
+			"action": "totem_post",
 			"result": [
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:resistance",
 					"duration": 650,
 					"amplifier": 4
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:speed",
 					"duration": 600,
 					"amplifier": 4
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:absorption",
 					"duration": 600,
 					"amplifier": 4
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:regeneration",
 					"duration": 60,
 					"amplifier": 4
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:jump_boost",
 					"duration": 600,
 					"amplifier": 4
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:haste",
 					"duration": 600,
 					"amplifier": 4
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:weakness",
 					"duration": 600,
 					"amplifier": 2
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:glowing",
 					"duration": 600
 				},
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:saturation",
 					"duration": 600,
 					"amplifier": 1

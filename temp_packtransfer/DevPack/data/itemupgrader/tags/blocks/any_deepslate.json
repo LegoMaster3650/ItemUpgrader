@@ -1,0 +1,9 @@
+{
+	"replace": false,
+	"values": [
+		"#minecraft:deepslate_ore_replaceables",
+		"#forge:ore_bearing_ground/deepslate",
+		"#forge:ores_in_ground/deepslate",
+		"#forge:cobblestone/deepslate"
+	]
+}

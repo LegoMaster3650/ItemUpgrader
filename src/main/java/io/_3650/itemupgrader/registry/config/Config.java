@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
 public class Config {
 	
@@ -39,12 +40,34 @@ public class Config {
 		public final BooleanValue showUpgradeID;
 		public final BooleanValue useRomanNumerals;
 		
+		public final IntValue coordinateDisplayMode;
+		public final IntValue timeDisplayMode;
+		
 		Client(ForgeConfigSpec.Builder builder) {
 			builder.push("tooltip");
 			
 			requiresKeyHeld = builder.comment("Does the upgrade tooltip require a key to be held to expand?", "[Default: true]").define("requiresKeyHeld", true);
 			showUpgradeID = builder.comment("Show an item's upgrade id when advanced tooltips are enabled", "[Default: false]").define("showUpgradeID", false);
 			useRomanNumerals = builder.comment("Uses roman numerals instead of numbers when describing enchantments.", "[Default: false]").define("useRomanNumerals", false);
+			
+			builder.pop();
+			///////////////////////////////////////////////////////////
+			builder.push("information_format");
+			
+			coordinateDisplayMode = builder.comment(
+					"The display mode for any Reveal coordinates upgrades.",
+					"1 - XYZ: X.XXX / Y.YYYYY / Z.ZZZ",
+					"2 - XYZ: X.XXX, Y.YYYYY, Z.ZZZ",
+					"3 - X.XXX / Y.YYYYY / Z.ZZZ",
+					"4 - X.XXX, Y.YYYYY, Z.ZZZ",
+					"[Default: 1]").defineInRange("coordinateDisplayMode", 1, 1, 4);
+			timeDisplayMode = builder.comment(
+					"The display mode for any Reveal time upgrades.",
+					"1 - Day #, HH:MM AM/PM",
+					"2 - Day #, HH:MM",
+					"3 - HH:MM AM/PM",
+					"4 - HH:MM",
+					"[Default: 1]").defineInRange("timeDisplayMode", 1, 1, 4);
 			
 			builder.pop();
 		}

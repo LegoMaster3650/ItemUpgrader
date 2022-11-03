@@ -7,97 +7,97 @@
 	"description": 2,
 	"upgrade": [
 		{
-			"action": "itemupgrader:right_click",
+			"action": "right_click",
 			"condition": [
 				{
-					"type": "itemupgrader:tag_boolean",
+					"type": "tag_boolean",
 					"tooltip_override": "tooltip.itemupgrader.wormhole_totem.has_position",
 					"tag": "wormholeSet",
 					"value": true
 				},
 				{
-					"type": "itemupgrader:cooldown",
+					"type": "cooldown",
 					"visible": false
 				}
 			],
 			"result": [
 				{
-					"type": "itemupgrader:sound",
+					"type": "sound",
 					"visible": false,
 					"sound": "entity.enderman.teleport"
 				},
 				{
-					"type": "itemupgrader:command",
+					"type": "command",
 					"visible": false,
 					"command": "particle minecraft:reverse_portal ~ ~0.5 ~ 0.2 1 0.2 1 100"
 				},
 				{
-					"type": "itemupgrader:load_position",
+					"type": "load_position",
 					"tooltip_override": "tooltip.itemupgrader.wormhole_totem.load_position",
 					"tag": "wormholePos"
 				},
 				{
-					"type": "itemupgrader:damage",
+					"type": "damage",
 					"tooltip_override": "tooltip.itemupgrader.wormhole_totem.consume_totem",
 					"amount": 1000,
 					"source": "magic"
 				},
 				{
-					"type": "itemupgrader:update_position",
+					"type": "update_position",
 					"visible": false
 				},
 				{
-					"type": "itemupgrader:sound",
+					"type": "sound",
 					"visible": false,
 					"sound": "block.portal.travel"
 				}
 			]
 		},
 		{
-			"action": "itemupgrader:right_click",
+			"action": "right_click",
 			"condition": {
-				"type": "itemupgrader:tag_boolean",
+				"type": "tag_boolean",
 				"tooltip_override": "tooltip.itemupgrader.wormhole_totem.no_position",
 				"tag": "wormholeSet",
 				"value": false
 			},
 			"result": [
 				{
-					"type": "itemupgrader:save_position",
+					"type": "save_position",
 					"tooltip_override": "tooltip.itemupgrader.wormhole_totem.save_position",
 					"tag": "wormholePos"
 				},
 				{
-					"type": "itemupgrader:cooldown",
+					"type": "cooldown",
 					"cooldown": 100
 				},
 				{
-					"type": "itemupgrader:tag_boolean",
+					"type": "tag_boolean",
 					"visible": false,
 					"tag": "wormholeSet",
 					"value": true
 				},
 				{
-					"type": "itemupgrader:sound",
+					"type": "sound",
 					"visible": false,
 					"sound": "item.lodestone_compass.lock"
 				},
 				{
-					"type": "itemupgrader:command",
+					"type": "command",
 					"visible": false,
 					"command": "particle minecraft:portal ~ ~0.5 ~ 0.2 1 0.2 3 200"
 				}
 			]
 		},
 		{
-			"action": "itemupgrader:left_click",
+			"action": "left_click",
 			"condition": [
 				{
-					"type": "itemupgrader:predicate",
+					"type": "predicate",
 					"predicate": "itemupgrader:is_sneaking"
 				},
 				{
-					"type": "itemupgrader:tag_boolean",
+					"type": "tag_boolean",
 					"tooltip_override": "tooltip.itemupgrader.wormhole_totem.has_position",
 					"tag": "wormholeSet",
 					"value": true
@@ -105,23 +105,23 @@
 			],
 			"result": [
 				{
-					"type": "itemupgrader:tag_boolean",
+					"type": "tag_boolean",
 					"tooltip_override": "tooltip.itemupgrader.wormhole_totem.unset_position",
 					"tag": "wormholeSet",
 					"value": false
 				},
 				{
-					"type": "itemupgrader:save_position",
+					"type": "save_position",
 					"visible": false,
 					"tag": "wormholePos"
 				},
 				{
-					"type": "itemupgrader:sound",
+					"type": "sound",
 					"visible": false,
 					"sound": "block.fire.extinguish"
 				},
 				{
-					"type": "itemupgrader:command",
+					"type": "command",
 					"visible": false,
 					"command": "particle minecraft:smoke ~ ~0.5 ~ 0.2 1 0.2 0.1 35"
 				}

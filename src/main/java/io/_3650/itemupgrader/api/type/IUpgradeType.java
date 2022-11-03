@@ -1,12 +1,13 @@
 package io._3650.itemupgrader.api.type;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 
+import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -64,6 +65,38 @@ public abstract class IUpgradeType {
 	}
 	
 	/**
+	 * The descriptor identifier for this upgrade type variant
+	 * @return The descriptor identifier for this upgrade type variant
+	 */
+	@Nonnull
+	protected abstract String descriptorIdBase();
+	
+	/**
+	 * The descriptor id suffix for this upgrade type variant
+	 * @return The descriptor id suffix for this upgrade type variant
+	 */
+	@Nullable
+	protected String descriptorIdSuffix() {
+		return null;
+	}
+	
+	@Nullable
+	private String descriptionId;
+	
+	/**
+	 * Gets the unlocalized descriptor id for translation
+	 * @return The unlocalized descriptor id for translation
+	 */
+	@Nonnull
+	public final String getDescriptionId() {
+		if (this.descriptionId == null) {
+			this.descriptionId = Util.makeDescriptionId(this.descriptorIdBase(), this.getId());
+			if (this.descriptorIdSuffix() != null) this.descriptionId += "." + this.descriptorIdSuffix();
+		}
+		return this.descriptionId;
+	}
+	
+	/**
 	 * Gets this object's visibility (used for tooltips)
 	 * @return If this object is visible
 	 */
@@ -86,15 +119,6 @@ public abstract class IUpgradeType {
 	@Nullable
 	public final String getTooltipOverride() {
 		return this.internals.tooltipOverride;
-	}
-	
-	/**
-	 * An internal getter for this object's tooltip that replaces it with the override if present
-	 * @param stack The {@linkplain ItemStack} to use for context to {@linkplain #getTooltip(ItemStack)} if no override is present
-	 * @return A list of {@linkplain MutableComponent}s to apply to the tooltip specified in the language file
-	 */
-	public final MutableComponent[] getTooltipWithOverride(ItemStack stack) {
-		return this.hasTooltipOverride() ? new MutableComponent[] {new TranslatableComponent(this.getTooltipOverride())} : this.getTooltip(stack);
 	}
 	
 	/**

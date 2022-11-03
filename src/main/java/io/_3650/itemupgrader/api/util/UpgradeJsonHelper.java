@@ -1,8 +1,11 @@
 package io._3650.itemupgrader.api.util;
 
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,6 +21,31 @@ import net.minecraft.world.phys.Vec3;
  * @author LegoMaster3650
  */
 public class UpgradeJsonHelper {
+	
+	/**
+	 * Applies given function to the given json element and collects the results into an ArrayList.<br>
+	 * If the element is a json object, it runs for the element.<br>
+	 * If the element is a json array, it runs for every json object contained in the array.<br>
+	 * @param <T> The type to collect into the array.
+	 * @param jsonUnknown The unknown {@linkplain JsonElement} to collect
+	 * @param jsonFunc The {@linkplain Function} to convert a JsonObject into the desired type. This can return null to skip the object.
+	 * @return An {@linkplain ArrayList} containing every resulting non-null object
+	 */
+	public static <T> ArrayList<T> collectObjects(JsonElement jsonUnknown, Function<JsonObject, T> jsonFunc) {
+		ArrayList<T> res = new ArrayList<>();
+		if (jsonUnknown.isJsonArray()) {
+			jsonUnknown.getAsJsonArray().forEach(json -> {
+				if (json.isJsonObject()) {
+					@Nullable T t = jsonFunc.apply(json.getAsJsonObject());
+					if (t != null) res.add(t);
+				}
+			});
+		} else if (jsonUnknown.isJsonObject()) {
+			T t = jsonFunc.apply(jsonUnknown.getAsJsonObject());
+			if (t != null) res.add(t);
+		}
+		return res;
+	}
 	
 	/**
 	 * Gets a position at the given key, guaranteed not to be null

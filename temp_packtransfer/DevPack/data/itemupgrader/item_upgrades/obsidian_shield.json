@@ -8,13 +8,13 @@
 	"description": 1,
 	"upgrade": [
 		{
-			"action": "itemupgrader:living_tick",
+			"action": "living_tick",
 			"condition": {
-				"type": "itemupgrader:predicate",
+				"type": "predicate",
 				"predicate": "itemupgrader:not_burning"
 			},
 			"result": {
-				"type": "itemupgrader:effect",
+				"type": "effect",
 				"effect": "minecraft:fire_resistance",
 				"duration": 300,
 				"show_particles": false

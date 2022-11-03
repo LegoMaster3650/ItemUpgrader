@@ -7,19 +7,16 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 
-import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
-import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
+import io._3650.itemupgrader.api.util.UpgradeSerializer;
+import io._3650.itemupgrader.api.util.UpgradeTooltipHelper;
 import io._3650.itemupgrader.api.util.ComponentHelper;
-import io._3650.itemupgrader.upgrades.ItemUpgradeManager;
-import net.minecraft.ChatFormatting;
+import io._3650.itemupgrader.api.util.UpgradeJsonHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
@@ -37,33 +34,15 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 	}
 	
 	@Override
-	public boolean customTooltipBase() {
-		return true;
-	}
-	
-	/**
-	 * @see UpgradeAction#getActionTooltip(ItemStack) getActionTooltip(ItemStack)
-	 * @see #getResultTooltip(ItemStack)
-	 */
-	@Override
-	public MutableComponent getActionTooltip(ItemStack stack) {
-		List<MutableComponent> conditionComponents = new ArrayList<>(this.conditions.size());
-		for (UpgradeCondition condition : this.conditions) {
+	public MutableComponent applyTooltip(MutableComponent tooltip, ItemStack stack) {
+		ArrayList<MutableComponent> conditionComponents = new ArrayList<>(this.conditions.size());
+		for (var condition : this.conditions) {
 			if (condition.isVisible()) {
-				if (condition.hasTooltipOverride()) conditionComponents.add(new TranslatableComponent(condition.getTooltipOverride()));
-				else conditionComponents.add(new TranslatableComponent("upgradeCondition." + ComponentHelper.keyFormat(condition.getId()) + (condition.isInverted() ? ".inverse" : ""), (Object[]) condition.getTooltip(stack)));
+				conditionComponents.add(UpgradeTooltipHelper.condition(condition, stack));
 			}
 		}
-		MutableComponent conditionTooltip = ComponentHelper.andList(conditionComponents);
-		
-		MutableComponent resultTooltip = this.getResultTooltip(stack);
-		
-		String tooltipKey = "upgradeAction." + this.getId().getNamespace() + "." + this.getId().getPath();
-		if (conditionComponents.isEmpty()) {
-			return new TranslatableComponent(tooltipKey, resultTooltip).withStyle(ChatFormatting.BLUE);
-		} else {
-			return new TranslatableComponent(tooltipKey + ".condition", conditionTooltip, resultTooltip).withStyle(ChatFormatting.BLUE);
-		}
+		if (!conditionComponents.isEmpty()) tooltip.append(new TranslatableComponent("tooltip.itemupgrader.if", ComponentHelper.andList(conditionComponents)));
+		return this.applyResultTooltip(tooltip, stack);
 	}
 	
 	/**
@@ -77,20 +56,28 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 			pass = pass && (condition.test(data) ^ condition.isInverted()); //I love XOR so much its like a funky conditional NOT
 		}
 		if (pass) this.execute(data);
+		else this.onFail(data);
 	}
 	
 	/**
-	 * Gets the tooltip component for the object applied to the tooltip defined in the language file
-	 * @param stack The ItemStack to get tooltip context from
-	 * @return A MutableComponent to apply to the tooltip specified in the language file
+	 * Allows post-processing logic to be applied to the given tooltip
+	 * @param tooltip The current existing tooltip for the action
+	 * @param stack The {@linkplain ItemStack} to get tooltip context from
+	 * @return The tooltip after modification (you can overwrite it)
 	 */
-	public abstract MutableComponent getResultTooltip(ItemStack stack);
+	public abstract MutableComponent applyResultTooltip(MutableComponent tooltip, ItemStack stack);
 	
 	/**
 	 * Defines the behavior for a ConditionalUpgradeAction after running
 	 * @param data The {@linkplain UpgradeEventData} parameters passed in
 	 */
 	public abstract void execute(UpgradeEventData data);
+	
+	/**
+	 * Defines the optional behavior for a ConditionalUpgradeAction if the conditions don't passs
+	 * @param data The {@linkplain UpgradeEventData} parameters passed in
+	 */
+	public void onFail(UpgradeEventData data) {};
 	
 	/**
 	 * Serializer class for conditional upgrade actions
@@ -106,30 +93,21 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 		 * @return A {@linkplain List} of {@linkplain UpgradeCondition}s read from the json
 		 */
 		public final List<UpgradeCondition> conditionsFromJson(JsonObject json) {
-			ArrayList<UpgradeCondition> conditions = new ArrayList<>();
+			ArrayList<UpgradeCondition> conditions;
 			if (json.has("condition")) {
-				if (GsonHelper.isArrayNode(json, "condition")) {
-					GsonHelper.getAsJsonArray(json, "condition").forEach(conditionJson -> {
-						if (conditionJson.isJsonObject()) {
-							UpgradeCondition condition = ItemUpgradeManager.conditionFromJson(conditionJson.getAsJsonObject());
-							this.safeAddCondition(conditions, condition);
-						}
-					});
-				} else {
-					UpgradeCondition condition = ItemUpgradeManager.conditionFromJson(GsonHelper.getAsJsonObject(json, "condition"));
-					this.safeAddCondition(conditions, condition);
-				}
-			}
+				conditions = UpgradeJsonHelper.collectObjects(json.get("condition"), conditionJson -> {
+					UpgradeCondition condition = UpgradeSerializer.condition(conditionJson);
+					if (this.verifyCondition(condition)) return condition;
+					else return null;
+				});
+			} else conditions = new ArrayList<>(0);
 			return conditions;
 		}
 		
-		private void safeAddCondition(List<UpgradeCondition> conditions, UpgradeCondition condition) {
+		private boolean verifyCondition(UpgradeCondition condition) {
 			Set<UpgradeEntry<?>> test = condition.getRequiredData().verifyDifference(this.getProvidedData());
-			if (test.isEmpty()) {
-				conditions.add(condition);
-			} else {
-				throw new IllegalArgumentException("Missing required entries for condition:" + condition.getId() + " - " + test);
-			}
+			if (test.isEmpty()) return true;
+			else throw new IllegalArgumentException("Missing required entries for condition:" + condition.getId() + " - " + test);
 		}
 		
 		/**
@@ -140,10 +118,7 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 		public final void conditionsToNetwork(ConditionalUpgradeAction action, FriendlyByteBuf buf) {
 			buf.writeInt(action.conditions.size());
 			for (var condition : action.conditions) {
-				buf.writeResourceLocation(condition.getId());
-				condition.getInternals().to(buf);
-				buf.writeBoolean(condition.isInverted());
-				condition.hackyToNetworkReadJavadoc(buf);
+				UpgradeSerializer.conditionToNetwork(condition, buf);
 			}
 		}
 		
@@ -153,16 +128,12 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 		 * @return A {@linkplain List} of {@linkplain UpgradeCondition}s read from the buffer
 		 */
 		public final List<UpgradeCondition> conditionsFromNetwork(FriendlyByteBuf buf) {
-			int netConditionsSize = buf.readInt();
-			ArrayList<UpgradeCondition> netConditions = new ArrayList<>(netConditionsSize);
-			for (var i = 0; i < netConditionsSize; i++) {
-				ResourceLocation conditionId = buf.readResourceLocation();
-				IUpgradeInternals internals = IUpgradeInternals.of(conditionId, buf);
-				boolean inverted = buf.readBoolean();
-				UpgradeConditionSerializer<?> serializer = ItemUpgrader.CONDITION_REGISTRY.get().getValue(conditionId);
-				netConditions.add(serializer.fromNetwork(internals, inverted, buf));
+			int conditionsSize = buf.readInt();
+			ArrayList<UpgradeCondition> conditions = new ArrayList<>(conditionsSize);
+			for (var i = 0; i < conditionsSize; i++) {
+				conditions.add(UpgradeSerializer.conditionFromNetwork(buf));
 			}
-			return netConditions;
+			return conditions;
 		}
 	}
 	

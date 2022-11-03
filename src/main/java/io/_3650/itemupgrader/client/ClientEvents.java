@@ -12,6 +12,7 @@ import io._3650.itemupgrader.api.ItemUpgrade;
 import io._3650.itemupgrader.api.ItemUpgraderApi;
 import io._3650.itemupgrader.api.type.UpgradeAction;
 import io._3650.itemupgrader.api.util.ComponentHelper;
+import io._3650.itemupgrader.api.util.UpgradeTooltipHelper;
 import io._3650.itemupgrader.registry.config.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.KeybindComponent;
@@ -68,12 +69,10 @@ public class ClientEvents {
 				ListMultimap<EquipmentSlot, UpgradeAction> slotActions = MultimapBuilder.linkedHashKeys().arrayListValues().build();
 				
 				for (ResourceLocation actionId : upgrade.getValidActions()) {
-					String actionKey = "upgradeAction." + ComponentHelper.keyFormat(actionId);
 					for (UpgradeAction action : upgrade.getActions(actionId)) {
 						if (action.isVisible()) {
 							if (action.getValidSlots().isEmpty()) {
-								if (action.customTooltipBase()) tooltip.add(upgradeLine(action.getActionTooltipWithOverride(stack)));
-								else tooltip.add(upgradeLine(new TranslatableComponent(actionKey, action.getActionTooltipWithOverride(stack)).withStyle(ChatFormatting.BLUE)));
+								tooltip.add(upgradeLine(UpgradeTooltipHelper.action(action, stack)));
 								doSlotsDisplay = true;
 							} else {
 								for (var slot : action.getValidSlots()) {
@@ -89,8 +88,7 @@ public class ClientEvents {
 					if (actionEmptyLine || hasDescription) tooltip.add(upgradeLine(new TextComponent("")));
 					tooltip.add(upgradeLine(new TranslatableComponent("tooltip.itemupgrader.slots", ComponentHelper.slotInOn(slot)).withStyle(ChatFormatting.GRAY)));
 					for (var action : slotActions.get(slot)) {
-						if (action.customTooltipBase()) tooltip.add(upgradeLine(action.getActionTooltipWithOverride(stack)));
-						else tooltip.add(upgradeLine(new TranslatableComponent("upgradeAction." + ComponentHelper.keyFormat(action.getId()), action.getActionTooltipWithOverride(stack)).withStyle(ChatFormatting.BLUE)));
+						tooltip.add(upgradeLine(UpgradeTooltipHelper.action(action, stack)));
 						actionEmptyLine = true;
 					}
 				}

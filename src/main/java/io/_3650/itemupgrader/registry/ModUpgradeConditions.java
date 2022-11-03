@@ -3,16 +3,21 @@ package io._3650.itemupgrader.registry;
 import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.registry.ItemUpgraderRegistry;
 import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
+import io._3650.itemupgrader.upgrades.conditions.BlockIDUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.BlockTagUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.CompareNumbersUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.CompoundUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.DamageSourceTypeUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.DamageSourceUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.EyesInFluidUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.HasUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.ItemCooldownUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.PredicateUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.ResultSuccessUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.TagVarBoolUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.TagVarFloatUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.TagVarIntUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.VerifyTimestampUpgradeCondition;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -30,5 +35,10 @@ public class ModUpgradeConditions {
 	public static final RegistryObject<TagVarFloatUpgradeCondition.Serializer> TAGVAR_FLOAT = CONDITIONS.register("tag_float", () -> new TagVarFloatUpgradeCondition.Serializer());
 	public static final RegistryObject<DamageSourceUpgradeCondition.Serializer> DAMAGE_SOURCE = CONDITIONS.register("damage_source", () -> new DamageSourceUpgradeCondition.Serializer());
 	public static final RegistryObject<DamageSourceTypeUpgradeCondition.Serializer> DAMAGE_SOURCE_TYPE = CONDITIONS.register("damage_source_type", () -> new DamageSourceTypeUpgradeCondition.Serializer());
+	public static final RegistryObject<BlockIDUpgradeCondition.Serializer> BLOCK_ID = CONDITIONS.register("block", () -> new BlockIDUpgradeCondition.Serializer());
+	public static final RegistryObject<BlockTagUpgradeCondition.Serializer> BLOCK_TAG = CONDITIONS.register("block_tag", () -> new BlockTagUpgradeCondition.Serializer());
+	public static final RegistryObject<VerifyTimestampUpgradeCondition.Serializer> VERIFY_TIMESTAMP = CONDITIONS.register("verify_timestamp", () -> new VerifyTimestampUpgradeCondition.Serializer());
+	public static final RegistryObject<ResultSuccessUpgradeCondition.Serializer> RESULT_SUCCESS = CONDITIONS.register("success", () -> new ResultSuccessUpgradeCondition.Serializer());
+	public static final RegistryObject<CompoundUpgradeCondition.Serializer> COMPOUND = CONDITIONS.register("compound", () -> new CompoundUpgradeCondition.Serializer());
 	
 }

@@ -14,14 +14,14 @@
 	"description": 1,
 	"upgrade": [
 		{
-			"action": "itemupgrader:living_tick",
+			"action": "living_tick",
 			"condition": {
-				"type": "itemupgrader:eyes_in_fluid",
+				"type": "eyes_in_fluid",
 				"fluid": "water",
 				"inverted": true
 			},
 			"result": {
-				"type": "itemupgrader:effect",
+				"type": "effect",
 				"effect": "minecraft:water_breathing",
 				"duration": 200,
 				"show_particles": false

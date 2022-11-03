@@ -34,7 +34,7 @@ public class UpdatePositionUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		Entity entity = data.getEntry(this.entityEntry);
 		Vec3 pos;
 		switch (this.source) {
@@ -45,6 +45,7 @@ public class UpdatePositionUpgradeResult extends UpgradeResult {
 			pos = entity.getEyePosition();
 		}
 		data.forceModifyEntry(this.posEntry, pos);
+		return true;
 	}
 	
 	private final Serializer instance = new Serializer();

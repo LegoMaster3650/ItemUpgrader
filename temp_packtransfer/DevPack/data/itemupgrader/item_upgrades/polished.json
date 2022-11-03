@@ -1,0 +1,27 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:looting_enchantable"
+		}
+	],
+	"color": "#e3cd40",
+	"slots": ["mainhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "loot_enchantment",
+			"enchantment": "minecraft:looting",
+			"amount": 1
+		},
+		{
+			"action": "attribute",
+			"attribute": "generic.attack_speed",
+			"operation": "add",
+			"amount": 0.2
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

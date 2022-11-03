@@ -1,6 +1,7 @@
 package io._3650.itemupgrader.api.type;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
@@ -34,6 +35,17 @@ public abstract class UpgradeCondition extends IUpgradeType {
 	 */
 	public UpgradeEntrySet getRequiredData() {
 		return this.requiredData;
+	}
+	
+	@Override
+	protected String descriptorIdBase() {
+		return "upgradeCondition";
+	}
+	
+	@Nullable
+	@Override
+	protected String descriptorIdSuffix() {
+		return this.inverted ? "inverted" : null;
 	}
 	
 	/**

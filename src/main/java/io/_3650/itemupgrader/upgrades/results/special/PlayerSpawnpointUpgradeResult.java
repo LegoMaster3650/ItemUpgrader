@@ -11,12 +11,10 @@ import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeResult;
 import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.mixin.ServerPlayerInvoker;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.TicketType;
@@ -27,7 +25,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -38,12 +35,11 @@ public class PlayerSpawnpointUpgradeResult extends UpgradeResult {
 		super(internals, UpgradeEntrySet.create(builder -> builder.require(UpgradeEntry.LIVING)));
 	}
 	
+	//SPECIAL RETURN: Did cross-dimensional teleport?
 	@Override
-	public void execute(UpgradeEventData data) {
-		if (!(data.getEntry(UpgradeEntry.LIVING) instanceof ServerPlayer player)) return;
-		if (player.level.isClientSide) return;
-		
-		ResourceKey<Level> oldDim = player.level.dimension();
+	public boolean execute(UpgradeEventData data) {
+		if (!(data.getEntry(UpgradeEntry.LIVING) instanceof ServerPlayer player)) return false;
+		if (player.level.isClientSide) return false;
 		
 		BlockPos blockPos = player.getRespawnPosition();
 		float f = player.getRespawnAngle();
@@ -91,15 +87,13 @@ public class PlayerSpawnpointUpgradeResult extends UpgradeResult {
 		player.fallDistance = 0;
 		teleportLevel.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(teleportPosition.x, teleportPosition.y, teleportPosition.z)), 1, player.getId());
 		
-		if (player.getCommandSenderWorld() == level1) {
+		if (player.level == level1) {
 			player.teleportTo(player.getX(), player.getY(), player.getZ());
+			return false;
 		} else {
 			player.teleportTo(teleportLevel, player.getX(), player.getY(), player.getZ(), player.getViewXRot(1), 0);
 			teleportLevel.playSound(null, player.blockPosition(), SoundEvents.PORTAL_TRAVEL, SoundSource.PLAYERS, 0.3F, 1.0F);
-			if (oldDim != null) {
-				ResourceKey<Level> newDim = player.level.dimension();
-				if (newDim != null && newDim != oldDim) CriteriaTriggers.CHANGED_DIMENSION.trigger(player, oldDim, newDim);
-			}
+			return true;
 		}
 	}
 	

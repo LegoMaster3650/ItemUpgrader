@@ -9,7 +9,7 @@ import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeResult;
 import io._3650.itemupgrader.api.util.ComponentHelper;
-import io._3650.itemupgrader.client.ClientSoundHelper;
+import io._3650.itemupgrader.client.ClientStuff;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -45,10 +45,11 @@ public class PlaySoundUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
-		if (!(data.getEntry(UpgradeEntry.LEVEL) instanceof ServerLevel level)) return;
+	public boolean execute(UpgradeEventData data) {
+		if (!(data.getEntry(UpgradeEntry.LEVEL) instanceof ServerLevel level)) return false;
 		Vec3 pos = data.getEntry(this.posEntry);
 		level.playSound(null, pos.x(), pos.y(), pos.z(), this.sound, this.source, this.volume, this.pitch);
+		return true;
 	}
 	
 	private final Serializer instance = new Serializer();
@@ -63,7 +64,7 @@ public class PlaySoundUpgradeResult extends UpgradeResult {
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
 		if (this.subtitleCache == null) {
-			Component subtitleComponent = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> ClientSoundHelper.getSubtitle(this.soundId));
+			Component subtitleComponent = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> ClientStuff.getSubtitle(this.soundId));
 			if (/* subtitleComponent != null && */subtitleComponent instanceof MutableComponent component) this.subtitleCache = component;
 			else this.subtitleCache = new TranslatableComponent("subtitles." + this.soundId.getPath());
 		}

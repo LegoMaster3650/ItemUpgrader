@@ -6,21 +6,33 @@ import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.upgrades.results.AttributeUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.BlockParticleUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.CancelUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.CompoundUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.ConditionalUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.ConsumeUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.DamageUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.DurabilityDamageUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.EffectUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.ExplosionUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.GiveItemUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.ItemCooldownUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.LoadPositionUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.PlaySoundUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.RandomTickUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.RemoveItemUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.RunCommandUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.SavePositionUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.SaveTimestampUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.TagVarBoolUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.TagVarFloatUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.TagVarIntUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.UpgradeRemoveUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.modify.UpdatePositionUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.modify.UpdateSlotItemUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.special.FallToFoodUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.special.PlayerDeathpointUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.special.PlayerSpawnpointUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.special.TellCoordsUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.special.TellTimeUpgradeResult;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -43,10 +55,23 @@ public class ModUpgradeResults {
 	public static final RegistryObject<DamageUpgradeResult.Serializer> DAMAGE = RESULTS.register("damage", () -> new DamageUpgradeResult.Serializer());
 	public static final RegistryObject<PlaySoundUpgradeResult.Serializer> PLAY_SOUND = RESULTS.register("sound", () -> new PlaySoundUpgradeResult.Serializer());
 	public static final RegistryObject<ExplosionUpgradeResult.Serializer> EXPLOSION = RESULTS.register("explosion", () -> new ExplosionUpgradeResult.Serializer());
+	public static final RegistryObject<DurabilityDamageUpgradeResult.Serializer> DURABILITY = RESULTS.register("durability", () -> new DurabilityDamageUpgradeResult.Serializer());
+	public static final RegistryObject<GiveItemUpgradeResult.Serializer> GIVE_ITEM = RESULTS.register("give_item", () -> new GiveItemUpgradeResult.Serializer());
+	public static final RegistryObject<RemoveItemUpgradeResult.Serializer> REMOVE_ITEM = RESULTS.register("remove_item", () -> new RemoveItemUpgradeResult.Serializer());
+	public static final RegistryObject<UpgradeRemoveUpgradeResult.Serializer> REMOVE_UPGRADE = RESULTS.register("remove_upgrade", () -> new UpgradeRemoveUpgradeResult.Serializer());
+	public static final RegistryObject<RandomTickUpgradeResult.Serializer> RANDOM_TICK = RESULTS.register("random_tick", () -> new RandomTickUpgradeResult.Serializer());
+	public static final RegistryObject<SaveTimestampUpgradeResult.Serializer> SAVE_TIMESTAMP = RESULTS.register("save_timestamp", () -> new SaveTimestampUpgradeResult.Serializer());
+	public static final RegistryObject<ConditionalUpgradeResult.Serializer> CONDITIONAL = RESULTS.register("conditional", () -> new ConditionalUpgradeResult.Serializer());
+	public static final RegistryObject<CompoundUpgradeResult.Serializer> COMPOUND = RESULTS.register("compound", () -> new CompoundUpgradeResult.Serializer());
 	
 	public static final RegistryObject<UpdatePositionUpgradeResult.Serializer> UPDATE_POSITION = RESULTS.register("update_position", () -> new UpdatePositionUpgradeResult.Serializer());
+	public static final RegistryObject<UpdateSlotItemUpgradeResult.Serializer> UPDATE_ITEM = RESULTS.register("update_item", () -> new UpdateSlotItemUpgradeResult.Serializer());
 	
 	public static final RegistryObject<FallToFoodUpgradeResult.Serializer> SPECIAL_FALL_TO_FOOD = RESULTS.register("internal_fall_to_food", () -> new FallToFoodUpgradeResult.Serializer());
 	public static final RegistryObject<PlayerSpawnpointUpgradeResult.Serializer> SPECIAL_SPAWNPOINT = RESULTS.register("internal_spawnpoint", () -> new PlayerSpawnpointUpgradeResult.Serializer());
+	public static final RegistryObject<PlayerDeathpointUpgradeResult.Serializer> SPECIAL_DEATHPOINT = RESULTS.register("internal_deathpoint", () -> new PlayerDeathpointUpgradeResult.Serializer());
+	public static final RegistryObject<TellCoordsUpgradeResult.Serializer> SPECIAL_TELL_COORDS = RESULTS.register("internal_tell_coords", () -> new TellCoordsUpgradeResult.Serializer());
+	public static final RegistryObject<TellTimeUpgradeResult.Serializer> SPECIAL_TELL_TIME = RESULTS.register("internal_tell_time", () -> new TellTimeUpgradeResult.Serializer());
+	
 	
 }

@@ -45,9 +45,10 @@ public class LoadPositionUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		ItemStack stack = data.getEntry(this.itemEntry);
-		if (!(data.getEntry(this.playerEntry) instanceof ServerPlayer player)) return;
+		if (!(data.getEntry(this.playerEntry) instanceof ServerPlayer player)) return false;
+		boolean crossDim = false;
 		if (stack.hasTag()) {
 			CompoundTag tag = stack.getTag();
 			if (tag.contains(this.tagName, CompoundTag.TAG_COMPOUND)) {
@@ -78,6 +79,7 @@ public class LoadPositionUpgradeResult extends UpgradeResult {
 					if (dimensionValid) { //second pass - actual logic
 						ServerLevel level = player.server.getLevel(dimension);
 						player.teleportTo(level, x, y, z, 0, 0.5F);
+						crossDim = true;
 					} else {
 						player.teleportTo(x, y, z);
 					}
@@ -88,6 +90,7 @@ public class LoadPositionUpgradeResult extends UpgradeResult {
 				}
 			}
 		}
+		return crossDim;
 	}
 	
 	private final Serializer instance = new Serializer();

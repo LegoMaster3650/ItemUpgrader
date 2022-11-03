@@ -18,8 +18,10 @@ public class CancelUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
+		if (!data.isCancellable()) return false;
 		data.cancel();
+		return true;
 	}
 	
 	private final Serializer instance = new Serializer();

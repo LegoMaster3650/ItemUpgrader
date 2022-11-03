@@ -10,6 +10,7 @@ import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeResult;
+import io._3650.itemupgrader.api.util.BoolHolder;
 import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.api.util.UpgradeJsonHelper;
 import net.minecraft.commands.CommandSource;
@@ -60,13 +61,15 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
+		BoolHolder success = new BoolHolder(false);
 		if (data.getOptional(UpgradeEntry.SIDE).orElse(LogicalSide.CLIENT) == LogicalSide.SERVER) data.getOptional(UpgradeEntry.LEVEL).ifPresent(unknownLevel -> {
-			if (unknownLevel instanceof ServerLevel level) this.executeOnLevel(data, level);
+			if (unknownLevel instanceof ServerLevel level) success.value = this.executeOnLevel(data, level);
 		});
+		return success.value;
 	}
 	
-	public void executeOnLevel(UpgradeEventData data, ServerLevel level) {
+	public boolean executeOnLevel(UpgradeEventData data, ServerLevel level) {
 		Entity entity = data.getEntryOrNull(this.entityEntry);
 		Vec3 pos = data.getEntry(this.posEntry).add(this.posOffset);
 		CommandSourceStack sourceStack;
@@ -90,7 +93,7 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 				entity.getDisplayName(),
 				level.getServer(),
 				entity);
-		level.getServer().getCommands().performCommand(sourceStack, this.commandFormat);
+		return level.getServer().getCommands().performCommand(sourceStack, this.commandFormat) > 0;
 	}
 	
 	private final Serializer instance = new Serializer();

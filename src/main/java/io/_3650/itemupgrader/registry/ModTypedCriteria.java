@@ -50,7 +50,10 @@ public class ModTypedCriteria {
 	public static final RegistryObject<TypedCriteria> BOOTS = TYPED_CRITERIA.register("boots", () -> new TypedCriteria(item -> armorCheck(item, EquipmentSlot.FEET)));
 	
 	//Misc.
-	public static final RegistryObject<TypedCriteria> FORTUNE_ENCHANTABLE = TYPED_CRITERIA.register("fortune", () -> new TypedCriteria(item -> Enchantments.BLOCK_FORTUNE.canEnchant(new ItemStack(item))));
+	public static final RegistryObject<TypedCriteria> EFFICIENCY_ENCHANTABLE = TYPED_CRITERIA.register("efficiency_enchantable", () -> new TypedCriteria(item -> Enchantments.BLOCK_EFFICIENCY.canEnchant(new ItemStack(item))));
+	public static final RegistryObject<TypedCriteria> FORTUNE_ENCHANTABLE = TYPED_CRITERIA.register("fortune_enchantable", () -> new TypedCriteria(item -> Enchantments.BLOCK_FORTUNE.canEnchant(new ItemStack(item))));
+	public static final RegistryObject<TypedCriteria> SHARPNESS_ENCHANTABLE = TYPED_CRITERIA.register("sharpness_enchantable", () -> new TypedCriteria(item -> Enchantments.SHARPNESS.canEnchant(new ItemStack(item))));
+	public static final RegistryObject<TypedCriteria> LOOTING_ENCHANTABLE = TYPED_CRITERIA.register("looting_enchantable", () -> new TypedCriteria(item -> Enchantments.MOB_LOOTING.canEnchant(new ItemStack(item))));
 	
 	//Utility functions
 	private static boolean armorCheck(Item item, EquipmentSlot slot) {

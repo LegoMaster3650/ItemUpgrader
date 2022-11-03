@@ -33,11 +33,17 @@ public abstract class UpgradeResult extends IUpgradeType {
 		return this.requiredData;
 	}
 	
+	@Override
+	protected String descriptorIdBase() {
+		return "upgradeResult";
+	}
+	
 	/**
 	 * Runs this condition with the provided data which is verified against the required entry set
 	 * @param data The {@linkplain UpgradeEventData} containing the current action data
+	 * @return Whether or not the given result was successful (or any sort of boolean feedback)
 	 */
-	public abstract void execute(UpgradeEventData data);
+	public abstract boolean execute(UpgradeEventData data);
 	
 	/**
 	 * Use this to return your class's serializer instance.<br>

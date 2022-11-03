@@ -8,18 +8,16 @@ import java.util.function.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 
-import io._3650.itemupgrader.ItemUpgrader;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
-import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.util.ComponentHelper;
-import io._3650.itemupgrader.upgrades.ItemUpgradeManager;
+import io._3650.itemupgrader.api.util.UpgradeSerializer;
+import io._3650.itemupgrader.api.util.UpgradeTooltipHelper;
+import io._3650.itemupgrader.api.util.UpgradeJsonHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
@@ -33,11 +31,13 @@ import net.minecraft.world.item.ItemStack;
 public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 	
 	private final ImmutableList<UpgradeResult> results;
+	private final ImmutableList<UpgradeResult> elseResults;
 	private final Serializer serializer;
 	
-	public SimpleUpgradeAction(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, List<UpgradeCondition> conditions, List<UpgradeResult> results, Serializer serializer) {
+	public SimpleUpgradeAction(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, List<UpgradeCondition> conditions, List<UpgradeResult> results, List<UpgradeResult> elseResults, Serializer serializer) {
 		super(internals, validSlots, conditions);
 		this.results = ImmutableList.copyOf(results);
+		this.elseResults = ImmutableList.copyOf(elseResults);
 		this.serializer = serializer;
 	}
 	
@@ -46,27 +46,51 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 	}
 	
 	@Override
-	public MutableComponent getResultTooltip(ItemStack stack) {
-		List<MutableComponent> resultComponents = new ArrayList<>(this.results.size());
-		for (UpgradeResult result : this.results) {
+	public MutableComponent applyResultTooltip(MutableComponent tooltip, ItemStack stack) {
+		//regular results
+		ArrayList<MutableComponent> resultComponents = new ArrayList<>(this.results.size());
+		for (var result : this.results) {
 			if (result.isVisible()) {
-				if (result.hasTooltipOverride()) resultComponents.add(new TranslatableComponent(result.getTooltipOverride()));
-				else resultComponents.add(new TranslatableComponent("upgradeResult." + ComponentHelper.keyFormat(result.getId()), (Object[]) result.getTooltip(stack)));
+				resultComponents.add(UpgradeTooltipHelper.result(result, stack));
 			}
 		}
-		return ComponentHelper.andList(resultComponents);
+		tooltip.append(ComponentHelper.andList(resultComponents));
+		//else results
+		if (this.elseResults.size() > 0) {
+			ArrayList<MutableComponent> elseResultComponents = new ArrayList<>(this.elseResults.size());
+			for (var result : this.elseResults) {
+				if (result.isVisible()) {
+					elseResultComponents.add(UpgradeTooltipHelper.result(result, stack));
+				}
+			}
+			if (elseResultComponents.size() > 0) return tooltip.append(new TranslatableComponent("tooltip.itemupgrader.else").append(ComponentHelper.andList(elseResultComponents)));
+		}
+		//return
+		return tooltip;
 	}
 	
 	@Override
 	public void execute(UpgradeEventData data) {
 		for (UpgradeResult result : this.results) {
-			result.execute(data);
+			UpgradeEventData.InternalStuffIgnorePlease.setSuccess(data, result.execute(data));
+		}
+	}
+	
+	@Override
+	public void onFail(UpgradeEventData data) {
+		for (UpgradeResult result : this.elseResults) {
+			UpgradeEventData.InternalStuffIgnorePlease.setSuccess(data, result.execute(data));
 		}
 	}
 	
 	@Override
 	public Serializer getSerializer() {
 		return serializer;
+	}
+	
+	@Override
+	public MutableComponent[] getTooltip(ItemStack stack) {
+		return ComponentHelper.empty();
 	}
 	
 	@Override
@@ -77,7 +101,6 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 	/**
 	 * Serializer for {@linkplain SimpleUpgradeAction}
 	 * @author LegoMaster3650
-	 *
 	 */
 	public static class Serializer extends ConditionalUpgradeActionSerializer<SimpleUpgradeAction> {
 		
@@ -99,30 +122,29 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 		@Override
 		public SimpleUpgradeAction fromJson(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, JsonObject json) {
 			List<UpgradeCondition> conditions = this.conditionsFromJson(json);
-			List<UpgradeResult> results = new ArrayList<>();
+			List<UpgradeResult> results;
 			if (json.has("result")) {
-				if (GsonHelper.isArrayNode(json, "result")) {
-					GsonHelper.getAsJsonArray(json, "result").forEach(resultJson -> {
-						if (resultJson.isJsonObject()) {
-							UpgradeResult result = ItemUpgradeManager.resultFromJson(resultJson.getAsJsonObject());
-							this.safeAddResult(results, result);
-						}
-					});
-				} else {
-					UpgradeResult result = ItemUpgradeManager.resultFromJson(GsonHelper.getAsJsonObject(json, "result"));
-					this.safeAddResult(results, result);
-				}
-			}
-			return new SimpleUpgradeAction(internals, validSlots, conditions, results, this);
+				results = UpgradeJsonHelper.collectObjects(json.get("result"), resultJson -> {
+					UpgradeResult result = UpgradeSerializer.result(resultJson);
+					if (this.verifyResult(result)) return result;
+					else return null;
+				});
+			} else results = new ArrayList<>(0);
+			List<UpgradeResult> elseResults;
+			if (json.has("else")) {
+				elseResults = UpgradeJsonHelper.collectObjects(json.get("else"), resultJson -> {
+					UpgradeResult result = UpgradeSerializer.result(resultJson);
+					if (this.verifyResult(result)) return result;
+					else return null;
+				});
+			} else elseResults = new ArrayList<>(0);
+			return new SimpleUpgradeAction(internals, validSlots, conditions, results, elseResults, this);
 		}
 		
-		private void safeAddResult(List<UpgradeResult> results, UpgradeResult result) {
+		private boolean verifyResult(UpgradeResult result) {
 			Set<UpgradeEntry<?>> test = result.getRequiredData().verifyDifference(this.getProvidedData());
-			if (test.isEmpty()) {
-				results.add(result);
-			} else {
-				throw new IllegalArgumentException("Missing required entries for result:" + result.getId() + " - " + test);
-			}
+			if (test.isEmpty()) return true;
+			else throw new IllegalArgumentException("Missing required entries for result:" + result.getId() + " - " + test);
 		}
 		
 		@Override
@@ -132,25 +154,29 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 			//results
 			buf.writeInt(action.results.size());
 			for (var result : action.results) {
-				buf.writeResourceLocation(result.getId());
-				result.getInternals().to(buf);
-				result.hackyToNetworkReadJavadoc(buf);
+				UpgradeSerializer.resultToNetwork(result, buf);
+			}
+			buf.writeInt(action.elseResults.size());
+			for (var result : action.elseResults) {
+				UpgradeSerializer.resultToNetwork(result, buf);
 			}
 		}
 		
 		public SimpleUpgradeAction fromNetwork(IUpgradeInternals internals, Set<EquipmentSlot> validSlots, FriendlyByteBuf buf) {
 			//conditions
-			List<UpgradeCondition> netConditions = this.conditionsFromNetwork(buf);
+			List<UpgradeCondition> conditions = this.conditionsFromNetwork(buf);
 			//results
-			int netResultsSize = buf.readInt();
-			List<UpgradeResult> netResults = new ArrayList<>(netResultsSize);
-			for (int i = 0; i < netResultsSize; i++) {
-				ResourceLocation resultId = buf.readResourceLocation();
-				IUpgradeInternals resultInternals = IUpgradeInternals.of(resultId, buf);
-				UpgradeResultSerializer<?> serializer = ItemUpgrader.RESULT_REGISTRY.get().getValue(resultId);
-				netResults.add(serializer.fromNetwork(resultInternals, buf));
+			int resultsSize = buf.readInt();
+			List<UpgradeResult> results = new ArrayList<>(resultsSize);
+			for (int i = 0; i < resultsSize; i++) {
+				results.add(UpgradeSerializer.resultFromNetwork(buf));
 			}
-			return new SimpleUpgradeAction(internals, validSlots, netConditions, netResults, this);
+			int elseResultsSize = buf.readInt();
+			List<UpgradeResult> elseResults = new ArrayList<>(elseResultsSize);
+			for (int i = 0; i < elseResultsSize; i++) {
+				elseResults.add(UpgradeSerializer.resultFromNetwork(buf));
+			}
+			return new SimpleUpgradeAction(internals, validSlots, conditions, results, elseResults, this);
 		}
 		
 	}

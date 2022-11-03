@@ -135,12 +135,10 @@ public class UpgradeEntrySet {
 		
 		/**Reverts the given entry set back to a builder*/
 		private Builder(UpgradeEntrySet preset) {
-			this.required.addAll(preset.required);
-			this.provided.addAll(preset.provided);
-			this.modified.addAll(preset.modified);
+			this.combine(preset);
 		}
 		/**Adds all the data from the given entry to this one*/
-		private void combine(UpgradeEntrySet preset) {
+		public void combine(UpgradeEntrySet preset) {
 			this.required.addAll(preset.required);
 			this.provided.addAll(preset.provided);
 			this.modified.addAll(preset.modified);

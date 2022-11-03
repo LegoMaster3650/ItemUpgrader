@@ -35,11 +35,12 @@ public class TagVarBoolUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		ItemStack stack = data.getEntry(this.itemEntry);
 		CompoundTag tag = stack.getOrCreateTag();
 		tag.putBoolean(this.tagName, this.value);
 		stack.setTag(tag);
+		return true;
 	}
 	
 	private final Serializer instance = new Serializer();

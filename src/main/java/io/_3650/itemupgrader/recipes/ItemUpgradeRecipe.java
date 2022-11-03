@@ -28,12 +28,13 @@ public class ItemUpgradeRecipe extends UpgradeRecipe {
 		super(id, Ingredient.EMPTY, catalyst, ItemStack.EMPTY);
 		this.catalyst = catalyst;
 		this.upgradeId = upgradeId;
-		this.upgrade = this.getUpgrade();
+		this.getUpgrade(); //auto sets upgrade
 	}
 	
 	@Override
 	public boolean matches(Container inv, Level level) {
 		if (this.getUpgrade() == null) return false;
+		if (inv.getItem(0).getCount() > 1) return false; //only allow upgrading one item at a time
 		return this.getUpgrade().isValidItem(inv.getItem(0)) && this.catalyst.test(inv.getItem(1));
 	}
 	

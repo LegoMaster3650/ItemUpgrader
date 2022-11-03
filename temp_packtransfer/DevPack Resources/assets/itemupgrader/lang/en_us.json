@@ -1,11 +1,17 @@
 {
-	"upgrade.itemupgrader.obsidian_shield": "Obsidian Shield",
-	"upgrade.itemupgrader.obsidian_shield.description": "Protects the Wielder from Flames temporarily.",
-	"upgrade.itemupgrader.obsidian_shield.icon": "☠",
-	
 	"upgrade.itemupgrader.turtle_helmet": "Turtle Shell",
 	"upgrade.itemupgrader.turtle_helmet.description": "Wield the Power of the Turtle!",
 	"upgrade.itemupgrader.turtle_helmet.icon": "§l⌂",
+	
+	
+	
+	"chestplate.goes.here": "delete this",
+	
+	
+	
+	"leggings.goes.here": "delete this",
+	
+	
 	
 	"upgrade.itemupgrader.dolphins_gift": "Dolphin's Gift",
 	"upgrade.itemupgrader.dolphins_gift.description.1": "Grants the gift of movement to those who swim like the dolphin.",
@@ -19,11 +25,50 @@
 	"upgrade.itemupgrader.nimble_landing.description.2": "Doesn't work when below 3 whole hunger bars.",
 	"upgrade.itemupgrader.nimble_landing.icon": "§l⊻",
 	
+	"upgrade.itemupgrader.speedster": "Speedster",
+	"upgrade.itemupgrader.speedster.description": "Run slightly faster!",
+	"upgrade.itemupgrader.speedster.icon": "§l⚡",
+	
+	
+	
+	"upgrade.itemupgrader.obsidian_shield": "Obsidian Shield",
+	"upgrade.itemupgrader.obsidian_shield.description": "Protects the Wielder from Flames temporarily.",
+	"upgrade.itemupgrader.obsidian_shield.icon": "☠",
+	
+	
+	
 	"upgrade.itemupgrader.dual_wield": "Dual Wield",
 	"upgrade.itemupgrader.dual_wield.description": "Attack significantly faster, but at what cost?",
 	"upgrade.itemupgrader.dual_wield.icon": "🗡🗡",
 	
 	"tooltip.itemupgrader.dual_wield.flag": "upgrade is in both hands",
+	"tooltip.itemupgrader.dual_wield.has_bonus": "attack speed bonus is applied",
+	
+	"upgrade.itemupgrader.sharpened": "Sharpened",
+	"upgrade.itemupgrader.sharpened.description": "Slice through your foes with a sharpened blade.",
+	"upgrade.itemupgrader.sharpened.icon": "Δ",
+	
+	"upgrade.itemupgrader.polished": "Polished",
+	"upgrade.itemupgrader.polished.description": "A polished blade cuts faster and extracts more loot.",
+	"upgrade.itemupgrader.polished.icon": "♢",
+	
+	
+	
+	"upgrade.itemupgrader.efficient": "Efficient",
+	"upgrade.itemupgrader.efficient.description": "Dig through blocks with an increased mining speed.",
+	"upgrade.itemupgrader.efficient.icon": "⛏",
+	
+	"upgrade.itemupgrader.fortunate": "Fortunate",
+	"upgrade.itemupgrader.fortunate.description": "Grants your tool the blessing of the mine.",
+	"upgrade.itemupgrader.fortunate.icon": "♧",
+	
+	"upgrade.itemupgrader.dwarven": "Dwarven",
+	"upgrade.itemupgrader.dwarven.description": "Burrow underground, smashing through stone and deepslate.",
+	"upgrade.itemupgrader.dwarven.icon": "§l↓",
+	"tooltip.itemupgrader.dwarven.stone": "block is a stone type",
+	"tooltip.itemupgrader.dwarven.deep": "block is any natural deepslate",
+	
+	
 	
 	"upgrade.itemupgrader.void_totem": "Void Totem",
 	"upgrade.itemupgrader.void_totem.description": "Saves you from dying in the void, but only once.",
@@ -62,9 +107,29 @@
 	"upgrade.itemupgrader.wither_totem.description.2": "Gain the wither's shield for a short time to resist death further.",
 	"upgrade.itemupgrader.wither_totem.icon": "☠",
 	
-	"upgrade.itemupgrader.fortunate": "Fortunate",
-	"upgrade.itemupgrader.fortunate.description": "Grants your tool the blessing of the mine.",
-	"upgrade.itemupgrader.fortunate.icon": "⛏",
+	
+	
+	"upgrade.itemupgrader.recall": "Recall",
+	"upgrade.itemupgrader.recall.description": "Teleports you back to your spawn point.",
+	"upgrade.itemupgrader.recall.icon": "◆",
+	
+	"upgrade.itemupgrader.locator": "Locator",
+	"upgrade.itemupgrader.locator.description": "Tells you your current coordinates.",
+	"upgrade.itemupgrader.locator.icon": "◎",
+	
+	"upgrade.itemupgrader.wayfinder": "Wayfinder",
+	"upgrade.itemupgrader.wayfinder.description": "Teleports you back to your death location.",
+	"upgrade.itemupgrader.wayfinder.icon": "❤",
+	
+	
+	"upgrade.itemupgrader.time_teller": "Time Teller",
+	"upgrade.itemupgrader.time_teller.description": "Tells you the current day and time.",
+	"upgrade.itemupgrader.time_teller.icon": "☀",
+	
+	"upgrade.itemupgrader.accelerator": "Accelerator",
+	"upgrade.itemupgrader.accelerator.description": "Allows you to mess with time itself.",
+	"upgrade.itemupgrader.accelerator.icon": "§l↑",
+	
 	
 	"predicate.itemupgrader.not_burning": "not burning",
 	"predicate.itemupgrader.is_sneaking": "sneaking"

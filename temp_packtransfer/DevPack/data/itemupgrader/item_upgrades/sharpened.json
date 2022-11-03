@@ -1,0 +1,22 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:sharpness_enchantable"
+		}
+	],
+	"color": "#c94458",
+	"slots": ["mainhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "attribute",
+			"attribute": "generic.attack_damage",
+			"operation": "add",
+			"amount": 1.0
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

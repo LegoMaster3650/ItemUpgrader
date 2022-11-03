@@ -39,11 +39,13 @@ public class UpgradeEventData {
 	private final UpgradeEntrySet entrySet;
 	private final Map<UpgradeEntry<?>, Object> entries;
 	private final Set<UpgradeEntry<?>> modifiableEntries;
+	private final ItemStack ownerItem;
 	
-	private UpgradeEventData(UpgradeEntrySet entrySet, Map<UpgradeEntry<?>, Object> entries, Set<UpgradeEntry<?>> modifiableEntries) {
+	private UpgradeEventData(UpgradeEntrySet entrySet, Map<UpgradeEntry<?>, Object> entries, Set<UpgradeEntry<?>> modifiableEntries, ItemStack ownerItem) {
 		this.entrySet = entrySet;
 		this.entries = entries;
 		this.modifiableEntries = ImmutableSet.copyOf(modifiableEntries);
+		this.ownerItem = ownerItem;
 	}
 	
 	/**
@@ -52,6 +54,20 @@ public class UpgradeEventData {
 	 */
 	public UpgradeEntrySet getEntrySet() {
 		return this.entrySet;
+	}
+	
+	/**
+	 * Gets the item that triggered this event run
+	 * @return The {@linkplain ItemStack} that triggered this event
+	 */
+	public ItemStack getOwnerItem() {
+		return this.ownerItem;
+	}
+	
+	private boolean resultSuccess = false;
+	
+	public boolean getLastResultSuccess() {
+		return this.resultSuccess;
 	}
 	
 	/**
@@ -420,12 +436,26 @@ public class UpgradeEventData {
 		}
 		
 		/**
+		 * Builds the builder against the given entry set, erroring if the entry set's required parameters aren't present<br>
+		 * Automatically determines the item to use from the item entry, erroring if not present
+		 * @param entrySet An {@linkplain UpgradeEntrySet} of the required parameters for this entry
+		 * @return The resulting {@linkplain UpgradeEventData} if no errors occur
+		 * @throws NoSuchElementException If no {@linkplain UpgradeEntry#ITEM ITEM} entry was present
+		 * @throws IllegalStateException If one or more required entries in the entry set are not present
+		 */
+		public UpgradeEventData build(UpgradeEntrySet entrySet) throws NoSuchElementException, IllegalStateException {
+			ItemStack ownerItem = Optional.ofNullable((ItemStack) this.entries.get(UpgradeEntry.ITEM)).orElseThrow(() -> new NoSuchElementException("Missing Item Entry"));
+			return build(entrySet, ownerItem);
+		}
+		
+		/**
 		 * Builds the builder against the given entry set, erroring if the entry set's required parameters aren't present
 		 * @param entrySet An {@linkplain UpgradeEntrySet} of the required parameters for this entry
+		 * @param ownerItem The {@linkplain ItemStack} that caused this event to run
 		 * @return The resulting {@linkplain UpgradeEventData} if no errors occur
 		 * @throws IllegalStateException If one or more required entries in the entry set are not present
 		 */
-		public UpgradeEventData build(UpgradeEntrySet entrySet) throws IllegalStateException {
+		public UpgradeEventData build(UpgradeEntrySet entrySet, ItemStack ownerItem) throws IllegalStateException {
 			SetView<UpgradeEntry<?>> test = Sets.difference(entrySet.getProvided(), this.entries.keySet());
 			if (!test.isEmpty()) {
 				throw new IllegalStateException("Missing promised provided entries: " + test.toString());
@@ -434,7 +464,7 @@ public class UpgradeEventData {
 				if (!modTest.isEmpty()) {
 					throw new IllegalStateException("Entries are not modifiable as promised: " + test.toString());
 				} else {
-					return new UpgradeEventData(entrySet, this.entries, this.modifiableEntries);
+					return new UpgradeEventData(entrySet, this.entries, this.modifiableEntries, ownerItem);
 				}
 			}
 		}
@@ -447,6 +477,14 @@ public class UpgradeEventData {
 	 */
 	public static Builder builder() {
 		return new Builder();
+	}
+	
+	public static final class InternalStuffIgnorePlease {
+		
+		public static void setSuccess(UpgradeEventData data, boolean value) {
+			data.resultSuccess = value;
+		}
+		
 	}
 	
 }

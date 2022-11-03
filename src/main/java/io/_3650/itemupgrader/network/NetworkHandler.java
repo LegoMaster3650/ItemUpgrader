@@ -21,6 +21,8 @@ public class NetworkHandler {
 		INSTANCE.registerMessage(id++, UpdateItemUpgradesPacket.class, UpdateItemUpgradesPacket::encode, UpdateItemUpgradesPacket::decode, UpdateItemUpgradesPacket::handle);
 		INSTANCE.registerMessage(id++, PlayerLeftClickEmptyPacket.class, PlayerLeftClickEmptyPacket::encode, PlayerLeftClickEmptyPacket::decode, PlayerLeftClickEmptyPacket::handle);
 		INSTANCE.registerMessage(id++, PlayerRightClickEmptyPacket.class, PlayerRightClickEmptyPacket::encode, PlayerRightClickEmptyPacket::decode, PlayerRightClickEmptyPacket::handle);
+		INSTANCE.registerMessage(id++, TellPlayerCoordsPacket.class, TellPlayerCoordsPacket::encode, TellPlayerCoordsPacket::decode, TellPlayerCoordsPacket::handle);
+		INSTANCE.registerMessage(id++, TellPlayerTimePacket.class, TellPlayerTimePacket::encode, TellPlayerTimePacket::decode, TellPlayerTimePacket::handle);
 	}
 	
 	public static <MSG> void sendToPlayer(ServerPlayer player, MSG msg) {

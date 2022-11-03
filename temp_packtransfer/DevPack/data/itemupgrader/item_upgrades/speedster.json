@@ -1,0 +1,20 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:boots"
+	},
+	"color": "#dba0a0",
+	"slots": ["feet"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "attribute",
+			"attribute": "generic.movement_speed",
+			"operation": "multiply_base",
+			"amount": 0.3
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

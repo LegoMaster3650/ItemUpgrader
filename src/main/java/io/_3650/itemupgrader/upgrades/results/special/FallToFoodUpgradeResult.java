@@ -28,12 +28,12 @@ public class FallToFoodUpgradeResult extends UpgradeResult {
 	private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		LivingEntity living = data.getEntry(UpgradeEntry.LIVING);
 		if (living instanceof Player player) {
 			FoodData food = player.getFoodData();
 			float dmg = ((LivingEntityInvoker)player).callCalculateFallDamage(data.getEntry(UpgradeEntry.FALL_DIST), data.getEntry(UpgradeEntry.DAMAGE_MULT));
-			if (dmg <= 0.0F) return;
+			if (dmg <= 0.0F) return false;
 			else dmg *= 2.0F;
 			LOGGER.debug("dist "+data.getEntry(UpgradeEntry.FALL_DIST));
 			LOGGER.debug("base "+dmg);
@@ -53,8 +53,10 @@ public class FallToFoodUpgradeResult extends UpgradeResult {
 //				}
 				food.addExhaustion(dmg);
 				data.setModifiableEntry(UpgradeEntry.FALL_DIST, 0.0F);
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	private final Serializer instance = new Serializer();

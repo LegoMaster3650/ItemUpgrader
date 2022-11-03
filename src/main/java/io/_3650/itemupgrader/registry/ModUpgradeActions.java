@@ -8,8 +8,8 @@ import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import io._3650.itemupgrader.api.type.SimpleUpgradeAction;
 import io._3650.itemupgrader.api.type.UpgradeAction;
 import io._3650.itemupgrader.upgrades.actions.AttributeUpgradeAction;
+import io._3650.itemupgrader.upgrades.actions.BreakSpeedUpgradeAction;
 import io._3650.itemupgrader.upgrades.actions.LootEnchantUpgradeAction;
-import io._3650.itemupgrader.upgrades.data.ModUpgradeEntrySet;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -17,17 +17,15 @@ public class ModUpgradeActions {
 	
 	public static final DeferredRegister<UpgradeActionSerializer<? extends UpgradeAction>> ACTIONS = DeferredRegister.create(ItemUpgraderRegistry.ACTIONS, ItemUpgrader.MOD_ID);
 	
-	// Upgrade Actions
-	public static final RegistryObject<SimpleUpgradeAction.Serializer> UPGRADE_APPLY_PRE = ACTIONS.register("upgrade_apply_pre", SimpleUpgradeAction.of(UpgradeEntrySet.ITEM_UPGRADE_ID));
-	public static final RegistryObject<SimpleUpgradeAction.Serializer> UPGRADE_APPLY_POST = ACTIONS.register("upgrade_apply_post", SimpleUpgradeAction.of(UpgradeEntrySet.ITEM_UPGRADE_ID));
-	public static final RegistryObject<SimpleUpgradeAction.Serializer> UPGRADE_REMOVE = ACTIONS.register("upgrade_remove", SimpleUpgradeAction.of(UpgradeEntrySet.ITEM_PREV_UPGRADE_ID));
-	
 	// Custom Actions
 	public static final RegistryObject<AttributeUpgradeAction.Serializer> ATTRIBUTE = ACTIONS.register("attribute", () -> new AttributeUpgradeAction.Serializer());
 	public static final RegistryObject<LootEnchantUpgradeAction.Serializer> LOOT_ENCHANTMENT = ACTIONS.register("loot_enchantment", () -> new LootEnchantUpgradeAction.Serializer());
+	public static final RegistryObject<BreakSpeedUpgradeAction.Serializer> BREAKING_SPEED = ACTIONS.register("mining_speed", () -> new BreakSpeedUpgradeAction.Serializer());
 	
-	// Simple Actions
-	public static final RegistryObject<SimpleUpgradeAction.Serializer> ATTRIBUTE_COMPLEX = ACTIONS.register("attribute_complex", SimpleUpgradeAction.of(ModUpgradeEntrySet.ATTRIBUTES));
+	// Simple
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> UPGRADE_APPLY_PRE = ACTIONS.register("upgrade_apply_pre", SimpleUpgradeAction.of(UpgradeEntrySet.ITEM_UPGRADE_ID));
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> UPGRADE_APPLY_POST = ACTIONS.register("upgrade_apply_post", SimpleUpgradeAction.of(UpgradeEntrySet.ITEM_UPGRADE_ID));
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> UPGRADE_REMOVE = ACTIONS.register("upgrade_remove", SimpleUpgradeAction.of(UpgradeEntrySet.ITEM_PREV_UPGRADE_ID));
 	
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_TICK = ACTIONS.register("living_tick", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_SLOT_ITEM));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> PLAYER_TICK_PRE = ACTIONS.register("player_tick_pre", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));

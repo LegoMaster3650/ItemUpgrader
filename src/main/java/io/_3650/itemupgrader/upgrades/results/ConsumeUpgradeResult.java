@@ -19,8 +19,10 @@ public class ConsumeUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
+		if (!data.hasModifiableEntry(UpgradeEntry.CONSUMED)) return false;
 		data.setModifiableEntry(UpgradeEntry.CONSUMED, true);
+		return true;
 	}
 	
 	private final Serializer instance = new Serializer();

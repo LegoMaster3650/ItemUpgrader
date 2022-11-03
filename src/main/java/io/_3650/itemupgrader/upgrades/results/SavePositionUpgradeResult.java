@@ -36,7 +36,7 @@ public class SavePositionUpgradeResult extends UpgradeResult {
 	}
 	
 	@Override
-	public void execute(UpgradeEventData data) {
+	public boolean execute(UpgradeEventData data) {
 		ItemStack stack = data.getEntry(this.itemEntry);
 		CompoundTag tag = stack.getOrCreateTag();
 		Vec3 pos = data.getEntry(this.posEntry);
@@ -47,6 +47,7 @@ public class SavePositionUpgradeResult extends UpgradeResult {
 		if (this.dimension) data.getOptional(UpgradeEntry.LEVEL).ifPresent(level -> posTag.putString("dim", level.dimension().location().toString()));
 		tag.put(this.tagName, posTag);
 		stack.setTag(tag);
+		return true;
 	}
 	
 	private final Serializer instance = new Serializer();

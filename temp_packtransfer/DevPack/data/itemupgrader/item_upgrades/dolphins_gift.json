@@ -8,39 +8,39 @@
 	"description": 2,
 	"upgrade": [
 		{
-			"action": "itemupgrader:living_tick",
+			"action": "living_tick",
 			"visible": false,
 			"condition": [
 				{
-					"type": "itemupgrader:tag_boolean",
+					"type": "tag_boolean",
 					"tag": "dolphinFlag",
 					"value": false
 				},
 				{
-					"type": "itemupgrader:eyes_in_fluid",
+					"type": "eyes_in_fluid",
 					"fluid": "water",
 					"inverted": true
 				}
 			],
 			"result": [
 				{
-					"type": "itemupgrader:tag_boolean",
+					"type": "tag_boolean",
 					"tag": "dolphinFlag",
 					"value": true
 				}
 			]
 		},
 		{
-			"action": "itemupgrader:living_tick",
+			"action": "living_tick",
 			"condition": [
 				{
-					"type": "itemupgrader:tag_boolean",
+					"type": "tag_boolean",
 					"tooltip_override": "tooltip.itemupgrader.dolphins_gift.entering_water",
 					"tag": "dolphinFlag",
 					"value": true
 				},
 				{
-					"type": "itemupgrader:eyes_in_fluid",
+					"type": "eyes_in_fluid",
 					"visible": false,
 					"fluid": "water",
 					"inverted": false
@@ -48,14 +48,14 @@
 			],
 			"result": [
 				{
-					"type": "itemupgrader:effect",
+					"type": "effect",
 					"effect": "minecraft:dolphins_grace",
 					"duration": 80,
 					"amplifier": 0,
 					"show_particles": false
 				},
 				{
-					"type": "itemupgrader:tag_boolean",
+					"type": "tag_boolean",
 					"visible": false,
 					"tag": "dolphinFlag",
 					"value": false
