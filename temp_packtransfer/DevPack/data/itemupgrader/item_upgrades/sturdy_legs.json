@@ -1,0 +1,21 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:leggings"
+		}
+	],
+	"color": "#736a6a",
+	"slots": ["legs"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "attribute",
+			"attribute": "generic.knockback_resistance",
+			"amount": 1.0
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

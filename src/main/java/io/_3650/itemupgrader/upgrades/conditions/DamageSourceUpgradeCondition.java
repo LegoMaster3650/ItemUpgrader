@@ -1,5 +1,7 @@
 package io._3650.itemupgrader.upgrades.conditions;
 
+import java.util.ArrayList;
+
 import com.google.gson.JsonObject;
 
 import io._3650.itemupgrader.api.data.EntryCategory;
@@ -11,6 +13,7 @@ import io._3650.itemupgrader.api.type.UpgradeCondition;
 import io._3650.itemupgrader.api.util.ComponentHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.ItemStack;
@@ -98,9 +101,28 @@ public class DamageSourceUpgradeCondition extends UpgradeCondition {
 		return instance;
 	}
 	
+	private MutableComponent tooltipCache = null;
+	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		return ComponentHelper.empty();
+		if (this.tooltipCache == null) {
+			ArrayList<MutableComponent> tooltipList = new ArrayList<>();
+			if (this.hasEntity) tooltipList.add(new TranslatableComponent("damageSourceProperty.hasEntity"));
+			if (this.hasDirectEntity) tooltipList.add(new TranslatableComponent("damageSourceProperty.hasDirectEntity"));
+			if (this.isBypassArmor) tooltipList.add(new TranslatableComponent("damageSourceProperty.isBypassArmor"));
+			if (this.isBypassInvul) tooltipList.add(new TranslatableComponent("damageSourceProperty.isBypassInvul"));
+			if (this.isBypassMagic) tooltipList.add(new TranslatableComponent("damageSourceProperty.isBypassMagic"));
+			if (this.isCreativePlayer) tooltipList.add(new TranslatableComponent("damageSourceProperty.isCreativePlayer"));
+			if (this.isDamageHelmet) tooltipList.add(new TranslatableComponent("damageSourceProperty.isDamageHelmet"));
+			if (this.isExplosion) tooltipList.add(new TranslatableComponent("damageSourceProperty.isExplosion"));
+			if (this.isFall) tooltipList.add(new TranslatableComponent("damageSourceProperty.isFall"));
+			if (this.isFire) tooltipList.add(new TranslatableComponent("damageSourceProperty.isFire"));
+			if (this.isMagic) tooltipList.add(new TranslatableComponent("damageSourceProperty.isMagic"));
+			if (this.isNoAggro) tooltipList.add(new TranslatableComponent("damageSourceProperty.isNoAggro"));
+			if (this.isProjectile) tooltipList.add(new TranslatableComponent("damageSourceProperty.isProjectile"));
+			this.tooltipCache = ComponentHelper.andList(tooltipList);
+		}
+		return ComponentHelper.arrayify(this.tooltipCache);
 	}
 	
 	@Override
@@ -113,19 +135,19 @@ public class DamageSourceUpgradeCondition extends UpgradeCondition {
 		@Override
 		public DamageSourceUpgradeCondition fromJson(IUpgradeInternals internals, boolean inverted, JsonObject json) {
 			UpgradeEntry<DamageSource> sourceEntry = EntryCategory.DAMAGE_SOURCE.fromJson(json);
-			boolean hasEntity = GsonHelper.getAsBoolean(json, "hasEntity");
-			boolean hasDirectEntity = GsonHelper.getAsBoolean(json, "hasDirectEntity");
-			boolean isBypassArmor = GsonHelper.getAsBoolean(json, "isBypassArmor");
-			boolean isBypassInvul = GsonHelper.getAsBoolean(json, "isBypassInvul");
-			boolean isBypassMagic = GsonHelper.getAsBoolean(json, "isBypassMagic");
-			boolean isCreativePlayer = GsonHelper.getAsBoolean(json, "isCreativePlayer");
-			boolean isDamageHelmet = GsonHelper.getAsBoolean(json, "isDamageHelmet");
-			boolean isExplosion = GsonHelper.getAsBoolean(json, "isExplosion");
-			boolean isFall = GsonHelper.getAsBoolean(json, "isFall");
-			boolean isFire = GsonHelper.getAsBoolean(json, "isFire");
-			boolean isMagic = GsonHelper.getAsBoolean(json, "isMagic");
-			boolean isNoAggro = GsonHelper.getAsBoolean(json, "isNoAggro");
-			boolean isProjectile = GsonHelper.getAsBoolean(json, "isProjectile");
+			boolean hasEntity = GsonHelper.getAsBoolean(json, "hasEntity", false);
+			boolean hasDirectEntity = GsonHelper.getAsBoolean(json, "hasDirectEntity", false);
+			boolean isBypassArmor = GsonHelper.getAsBoolean(json, "isBypassArmor", false);
+			boolean isBypassInvul = GsonHelper.getAsBoolean(json, "isBypassInvul", false);
+			boolean isBypassMagic = GsonHelper.getAsBoolean(json, "isBypassMagic", false);
+			boolean isCreativePlayer = GsonHelper.getAsBoolean(json, "isCreativePlayer", false);
+			boolean isDamageHelmet = GsonHelper.getAsBoolean(json, "isDamageHelmet", false);
+			boolean isExplosion = GsonHelper.getAsBoolean(json, "isExplosion", false);
+			boolean isFall = GsonHelper.getAsBoolean(json, "isFall", false);
+			boolean isFire = GsonHelper.getAsBoolean(json, "isFire", false);
+			boolean isMagic = GsonHelper.getAsBoolean(json, "isMagic", false);
+			boolean isNoAggro = GsonHelper.getAsBoolean(json, "isNoAggro", false);
+			boolean isProjectile = GsonHelper.getAsBoolean(json, "isProjectile", false);
 			return new DamageSourceUpgradeCondition(internals, inverted, sourceEntry,
 					hasEntity, hasDirectEntity, isBypassArmor, isBypassInvul,
 					isBypassMagic, isCreativePlayer, isDamageHelmet, isExplosion,

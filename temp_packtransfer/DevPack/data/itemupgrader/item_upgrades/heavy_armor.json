@@ -1,0 +1,40 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:chestplate"
+		}
+	],
+	"color": "#1d5f8f",
+	"slots": ["chest"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "attribute",
+			"attribute": "generic.knockback_resistance",
+			"operation": "add",
+			"amount": 0.2
+		},
+		{
+			"action": "attribute",
+			"attribute": "generic.armor",
+			"operation": "add",
+			"amount": 2
+		},
+		{
+			"action": "attribute",
+			"attribute": "generic.armor_toughness",
+			"operation": "add",
+			"amount": 2
+		},
+		{
+			"action": "attribute",
+			"attribute": "generic.movement_speed",
+			"operation": "multiply_base",
+			"amount": -0.2
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

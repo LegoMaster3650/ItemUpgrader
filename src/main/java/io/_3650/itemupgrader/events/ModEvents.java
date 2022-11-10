@@ -180,6 +180,7 @@ public class ModEvents {
 		if (data.getBoolEntry(UpgradeEntry.CONSUMED)) {
 			event.setCancellationResult(InteractionResult.CONSUME);
 			event.setCanceled(true);
+			return;
 		}
 		if (data.isCancelled()) {
 			event.setCanceled(true);
@@ -192,6 +193,7 @@ public class ModEvents {
 					.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 					.entry(UpgradeEntry.BLOCK_STATE, state)
 					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
+					.entry(UpgradeEntry.USED_ITEM, event.getItemStack())
 					.modifiableEntry(UpgradeEntry.CONSUMED, false));
 			if (data1.getBoolEntry(UpgradeEntry.CONSUMED)) {
 				event.setCancellationResult(InteractionResult.CONSUME);
@@ -207,7 +209,7 @@ public class ModEvents {
 		Player player = event.getPlayer();
 		if (player.level.isClientSide) return;
 		EquipmentSlot slot = slotFromHand(event.getHand());
-		UpgradeEventData data = rightClickBaseData(slot, player, event.getItemStack().isEmpty());
+		UpgradeEventData data = rightClickBaseData(slot, player, event.getItemStack(), event.getItemStack().isEmpty());
 		if (data != null && data.isCancelled()) event.setCanceled(true);
 	}
 	
@@ -217,20 +219,20 @@ public class ModEvents {
 	}
 	
 	public static void rightClickBase(EquipmentSlot slot, Player player, ItemStack stack) {
-		if (!stack.isEmpty()) ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK, new UpgradeEventData.Builder(player, slot), stack);
+		if (!stack.isEmpty()) ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK, new UpgradeEventData.Builder(player, slot));
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
-			ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1));
+			ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1).entry(UpgradeEntry.USED_ITEM, stack));
 		}
 	}
 	
 	@Nullable
-	public static UpgradeEventData rightClickBaseData(EquipmentSlot slot, Player player, boolean emptyStack) {
+	public static UpgradeEventData rightClickBaseData(EquipmentSlot slot, Player player, ItemStack stack, boolean emptyStack) {
 		UpgradeEventData data = null;
 		if (!emptyStack) data = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK, new UpgradeEventData.Builder(player, slot).cancellable());
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
-			ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1));
+			ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1).entry(UpgradeEntry.USED_ITEM, stack));
 		}
 		return data;
 	}
@@ -261,6 +263,7 @@ public class ModEvents {
 					.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 					.entry(UpgradeEntry.BLOCK_STATE, state)
 					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
+					.entry(UpgradeEntry.USED_ITEM, event.getItemStack())
 					.modifiableEntry(UpgradeEntry.CONSUMED, false));
 			if (data1.getBoolEntry(UpgradeEntry.CONSUMED)) return;
 			
@@ -277,7 +280,7 @@ public class ModEvents {
 		if (!stack.isEmpty()) ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK, new UpgradeEventData.Builder(player, slot), stack);
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
-			ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1));
+			ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1).entry(UpgradeEntry.USED_ITEM, stack));
 		}
 	}
 	

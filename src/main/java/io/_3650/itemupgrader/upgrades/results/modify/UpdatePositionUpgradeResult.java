@@ -8,7 +8,6 @@ import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeResult;
-import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.upgrades.data.PositionSource;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
@@ -57,7 +56,7 @@ public class UpdatePositionUpgradeResult extends UpgradeResult {
 	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		return new MutableComponent[] {new TranslatableComponent(ComponentHelper.entryFormat(this.posEntry))};
+		return new MutableComponent[] {new TranslatableComponent(this.posEntry.getDescriptionId())};
 	}
 	
 	@Override

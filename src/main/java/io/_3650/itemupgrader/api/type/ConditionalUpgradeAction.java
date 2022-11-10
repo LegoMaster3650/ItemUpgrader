@@ -50,7 +50,7 @@ public abstract class ConditionalUpgradeAction extends UpgradeAction {
 	 * @see #execute(UpgradeEventData)
 	 */
 	@Override
-	public final void run(UpgradeEventData data) {
+	public void run(UpgradeEventData data) {
 		boolean pass = true;
 		for (UpgradeCondition condition : this.conditions) {
 			pass = pass && (condition.test(data) ^ condition.isInverted()); //I love XOR so much its like a funky conditional NOT

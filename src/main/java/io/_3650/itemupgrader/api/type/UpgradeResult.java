@@ -6,6 +6,7 @@ import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
+import net.minecraft.ChatFormatting;
 
 /**
  * Base class for Upgrade Results (The actions performed when all conditions pass in a simple upgrade action)
@@ -36,6 +37,14 @@ public abstract class UpgradeResult extends IUpgradeType {
 	@Override
 	protected String descriptorIdBase() {
 		return "upgradeResult";
+	}
+	
+	/**
+	 * Gets what color this result will display as in tooltips
+	 * @return The {@linkplain ChatFormatting} to color the result
+	 */
+	public ChatFormatting getColor() {
+		return ChatFormatting.BLUE;
 	}
 	
 	/**

@@ -9,6 +9,7 @@ import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
 import io._3650.itemupgrader.api.type.UpgradeCondition;
 import io._3650.itemupgrader.api.util.ComponentHelper;
+import io._3650.itemupgrader.upgrades.data.NumberType;
 import io._3650.itemupgrader.upgrades.data.OperationValue;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 	
-	private final CompareTarget target;
+	private final NumberType target;
 	private final OperationValue op;
 	private final UpgradeEntry<Integer> intEntry;
 	private final UpgradeEntry<Float> floatEntry;
@@ -29,7 +30,7 @@ public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 	public CompareNumbersUpgradeCondition(
 			IUpgradeInternals internals,
 			boolean inverted,
-			CompareTarget target,
+			NumberType target,
 			OperationValue op,
 			UpgradeEntry<Integer> intEntry,
 			UpgradeEntry<Float> floatEntry,
@@ -111,9 +112,9 @@ public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 		default:
 			return ComponentHelper.arrayify(new TranslatableComponent("tooltip.itemupgrader.error"));
 		case INTEGER:
-			return new MutableComponent[] {new TranslatableComponent(ComponentHelper.entryFormat(this.intEntry)), new TextComponent(this.op.getName()), new TextComponent("" + this.intValue)};
+			return new MutableComponent[] {new TranslatableComponent(this.intEntry.getDescriptionId()), new TextComponent(this.op.getName()), new TextComponent("" + this.intValue)};
 		case FLOAT:
-			return new MutableComponent[] {new TranslatableComponent(ComponentHelper.entryFormat(this.floatEntry)), new TextComponent(this.op.getName()), new TextComponent("" + this.floatValue)};
+			return new MutableComponent[] {new TranslatableComponent(this.floatEntry.getDescriptionId()), new TextComponent(this.op.getName()), new TextComponent("" + this.floatValue)};
 		}
 	}
 	
@@ -126,7 +127,7 @@ public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 		
 		@Override
 		public CompareNumbersUpgradeCondition fromJson(IUpgradeInternals internals, boolean inverted, JsonObject json) {
-			CompareTarget target = CompareTarget.INTEGER;
+			NumberType target = NumberType.INTEGER;
 			OperationValue op = OperationValue.byName(GsonHelper.getAsString(json, "operation", OperationValue.EQ.getName()));
 			UpgradeEntry<Integer> intEntry;
 			UpgradeEntry<Float> floatEntry;
@@ -134,7 +135,7 @@ public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 			float floatValue;
 			if (EntryCategory.FLOAT_VALUE.jsonHasValue(json, "target")) {
 				//use if float value is present
-				target = CompareTarget.FLOAT;
+				target = NumberType.FLOAT;
 				intEntry = EntryCategory.INT_VALUE.getDefaultValue();
 				floatEntry = EntryCategory.FLOAT_VALUE.fromJson(json, "target");
 				intValue = 0;
@@ -161,7 +162,7 @@ public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 		
 		@Override
 		public CompareNumbersUpgradeCondition fromNetwork(IUpgradeInternals internals, boolean inverted, FriendlyByteBuf buf) {
-			CompareTarget target = buf.readEnum(CompareTarget.class);
+			NumberType target = buf.readEnum(NumberType.class);
 			OperationValue op = buf.readEnum(OperationValue.class);
 			UpgradeEntry<Integer> intEntry = EntryCategory.INT_VALUE.fromNetwork(buf);
 			UpgradeEntry<Float> floatEntry = EntryCategory.FLOAT_VALUE.fromNetwork(buf);
@@ -170,11 +171,6 @@ public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 			return new CompareNumbersUpgradeCondition(internals, inverted, target, op, intEntry, floatEntry, intValue, floatValue);
 		}
 		
-	}
-	
-	private static enum CompareTarget {
-		INTEGER,
-		FLOAT;
 	}
 	
 }

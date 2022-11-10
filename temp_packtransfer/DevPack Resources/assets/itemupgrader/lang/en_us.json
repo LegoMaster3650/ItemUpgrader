@@ -1,15 +1,32 @@
 {
-	"upgrade.itemupgrader.turtle_helmet": "Turtle Shell",
-	"upgrade.itemupgrader.turtle_helmet.description": "Wield the Power of the Turtle!",
-	"upgrade.itemupgrader.turtle_helmet.icon": "§l⌂",
+	"upgrade.itemupgrader.turtle_shell": "Turtle Shell",
+	"upgrade.itemupgrader.turtle_shell.description": "Wield the Power of the Turtle!",
+	"upgrade.itemupgrader.turtle_shell.icon": "§l⌂",
+	
+	"upgrade.itemupgrader.lingering_vision": "Lingering Vision",
+	"upgrade.itemupgrader.lingering_vision.description": "Your eyes retain their vision from the light within the dark.",
+	"upgrade.itemupgrader.lingering_vision.icon": "§l⏼",
+	
+	"upgrade.itemupgrader.head_shield": "Head Shield",
+	"upgrade.itemupgrader.head_shield.description": "Protect your head from kinetic impact!",
+	"upgrade.itemupgrader.head_shield.icon": "§l🛡",
 	
 	
 	
-	"chestplate.goes.here": "delete this",
+	"upgrade.itemupgrader.heavy_armor": "Heavy Armor",
+	"upgrade.itemupgrader.heavy_armor.description": "Resist incoming attacks at the cost of your speed.",
+	"upgrade.itemupgrader.heavy_armor.icon": "§l🛡",
+	
+	"upgrade.itemupgrader.reality_anchor": "Reality Anchor",
+	"upgrade.itemupgrader.reality_anchor.description": "Defend against otherworldly armor-piercing magical attacks!",
+	"upgrade.itemupgrader.reality_anchor.icon": "⛨",
 	
 	
 	
-	"leggings.goes.here": "delete this",
+	"upgrade.itemupgrader.sturdy_legs": "Sturdy Legs",
+	"upgrade.itemupgrader.sturdy_legs.description.1": "Hold your ground against any threat!",
+	"upgrade.itemupgrader.sturdy_legs.description.2": "Warning: Lack of knockback may have unintended consequences",
+	"upgrade.itemupgrader.sturdy_legs.icon": "§l🛡",
 	
 	
 	
@@ -46,7 +63,7 @@
 	
 	"upgrade.itemupgrader.sharpened": "Sharpened",
 	"upgrade.itemupgrader.sharpened.description": "Slice through your foes with a sharpened blade.",
-	"upgrade.itemupgrader.sharpened.icon": "Δ",
+	"upgrade.itemupgrader.sharpened.icon": "△",
 	
 	"upgrade.itemupgrader.polished": "Polished",
 	"upgrade.itemupgrader.polished.description": "A polished blade cuts faster and extracts more loot.",
@@ -132,5 +149,6 @@
 	
 	
 	"predicate.itemupgrader.not_burning": "not burning",
-	"predicate.itemupgrader.is_sneaking": "sneaking"
+	"predicate.itemupgrader.is_sneaking": "sneaking",
+	"predicate.itemupgrader.high_light": "light level is above 10"
 }

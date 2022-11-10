@@ -8,7 +8,15 @@
 	"upgrade": [
 		{
 			"action": "totem_post",
+			"player_override": {"source": "living"},
+			"condition": {
+				"type": "cooldown"
+			},
 			"result": [
+				{
+					"type": "cooldown",
+					"cooldown": 2400
+				},
 				{
 					"type": "effect",
 					"effect": "minecraft:strength",

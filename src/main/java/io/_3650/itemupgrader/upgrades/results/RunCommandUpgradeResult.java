@@ -104,7 +104,7 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		return ComponentHelper.arrayify(new TranslatableComponent("upgradeCommand." + ComponentHelper.keyFormat(this.getId())));
+		return ComponentHelper.arrayify(new TranslatableComponent("upgradeCommand." + this.getDescriptionId()));
 	}
 	
 	@Override

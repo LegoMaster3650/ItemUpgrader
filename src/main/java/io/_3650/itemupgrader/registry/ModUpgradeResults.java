@@ -26,6 +26,8 @@ import io._3650.itemupgrader.upgrades.results.TagVarBoolUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.TagVarFloatUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.TagVarIntUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.UpgradeRemoveUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.modify.MultiplyEntryUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.modify.ResetDefaultItemUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.modify.UpdatePositionUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.modify.UpdateSlotItemUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.special.FallToFoodUpgradeResult;
@@ -66,6 +68,8 @@ public class ModUpgradeResults {
 	
 	public static final RegistryObject<UpdatePositionUpgradeResult.Serializer> UPDATE_POSITION = RESULTS.register("update_position", () -> new UpdatePositionUpgradeResult.Serializer());
 	public static final RegistryObject<UpdateSlotItemUpgradeResult.Serializer> UPDATE_ITEM = RESULTS.register("update_item", () -> new UpdateSlotItemUpgradeResult.Serializer());
+	public static final RegistryObject<ResetDefaultItemUpgradeResult.Serializer> RESET_ITEM = RESULTS.register("reset_item", () -> new ResetDefaultItemUpgradeResult.Serializer());
+	public static final RegistryObject<MultiplyEntryUpgradeResult.Serializer> MULTIPLY_ENTRY = RESULTS.register("multiply_entry", () -> new MultiplyEntryUpgradeResult.Serializer());
 	
 	public static final RegistryObject<FallToFoodUpgradeResult.Serializer> SPECIAL_FALL_TO_FOOD = RESULTS.register("internal_fall_to_food", () -> new FallToFoodUpgradeResult.Serializer());
 	public static final RegistryObject<PlayerSpawnpointUpgradeResult.Serializer> SPECIAL_SPAWNPOINT = RESULTS.register("internal_spawnpoint", () -> new PlayerSpawnpointUpgradeResult.Serializer());

@@ -39,8 +39,8 @@ public class UpgradeTooltipHelper {
 	 * @return The generated {@linkplain MutableComponent}
 	 */
 	public static MutableComponent result(UpgradeResult result, ItemStack stack) {
-		if (result.hasTooltipOverride()) return new TranslatableComponent(result.getTooltipOverride(), (Object[]) result.getTooltip(stack)).withStyle(ChatFormatting.BLUE);
-		else return new TranslatableComponent(result.getDescriptionId(), (Object[]) result.getTooltip(stack)).withStyle(ChatFormatting.BLUE);
+		if (result.hasTooltipOverride()) return new TranslatableComponent(result.getTooltipOverride(), (Object[]) result.getTooltip(stack)).withStyle(result.getColor());
+		else return new TranslatableComponent(result.getDescriptionId(), (Object[]) result.getTooltip(stack)).withStyle(result.getColor());
 	}
 	
 }

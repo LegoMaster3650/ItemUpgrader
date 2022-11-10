@@ -1,0 +1,38 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:helmet"
+	},
+	"color": "#2f7980",
+	"slots": ["head"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "hurt",
+			"condition": {
+				"type": "or",
+				"conditions": [
+					{
+						"type": "damage_source_type",
+						"source": "flyIntoWall"
+					},
+					{
+						"type": "damage_source",
+						"isDamageHelmet": true
+					}
+				]
+			},
+			"result": [
+				{
+					"type": "multiply_entry",
+					"entry": "damage",
+					"amount": -0.8,
+					"positive": false
+				}
+			]
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

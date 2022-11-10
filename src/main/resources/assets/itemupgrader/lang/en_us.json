@@ -34,6 +34,104 @@
 	"tooltip.itemupgrader.else": ", Or Else ",
 	
 	
+	
+	"upgradeEntry.itemupgrader.side": "Logical Side",
+	"upgradeEntry.itemupgrader.slot": "Slot",
+	"upgradeEntry.itemupgrader.item": "Item",
+	"upgradeEntry.itemupgrader.previous_item": "Previous Item",
+	"upgradeEntry.itemupgrader.used_item": "Used Item",
+	"upgradeEntry.itemupgrader.entity": "Entity",
+	"upgradeEntry.itemupgrader.position": "Position",
+	"upgradeEntry.itemupgrader.level": "Level",
+	"upgradeEntry.itemupgrader.damager_entity": "Damager",
+	"upgradeEntry.itemupgrader.direct_damager": "Direct Damager",
+	"upgradeEntry.itemupgrader.damage_source": "Damage Source",
+	"upgradeEntry.itemupgrader.damage": "Damage",
+	"upgradeEntry.itemupgrader.damage_multiplier": "Damage Multiplier",
+	"upgradeEntry.itemupgrader.fall_distance": "Fall Distance",
+	"upgradeEntry.itemupgrader.block_state": "Block State",
+	"upgradeEntry.itemupgrader.block_entity": "Block Entity",
+	"upgradeEntry.itemupgrader.block_position": "Block Position",
+	"upgradeEntry.itemupgrader.block_face": "Block Face",
+	"upgradeEntry.itemupgrader.living": "Living Entity",
+	"upgradeEntry.itemupgrader.player": "Player",
+	"upgradeEntry.itemupgrader.target_entity": "Target Entity",
+	"upgradeEntry.itemupgrader.target_entity_position": "Target Entity Position",
+	"upgradeEntry.itemupgrader.interaction_position": "Interaction Position",
+	"upgradeEntry.itemupgrader.upgrade_id": "Upgrade ID",
+	"upgradeEntry.itemupgrader.prev_upgrade_id": "Previous Upgrade ID",
+	"upgradeEntry.itemupgrader.int": "Generic Integer",
+	"upgradeEntry.itemupgrader.float": "Generic Float",
+	"upgradeEntry.itemupgrader.enchantment": "Enchantment",
+	"upgradeEntry.itemupgrader.enchantment_level": "Enchantment Level",
+	
+	"upgradeEntry.itemupgrader.cancelled": "Cancelled",
+	"upgradeEntry.itemupgrader.consumed": "Consumed",
+	
+	"upgradeEntry.itemupgrader.attributes": "Attributes",
+	"upgradeEntry.itemupgrader.attribute_additions": "Attribute Additions",
+	"upgradeEntry.itemupgrader.attribute_replacements": "Attribute Replacements",
+	"upgradeEntry.itemupgrader.breaking_speed": "Breaking Speed",
+	
+	
+	
+	"damageSourceProperty.hasEntity": "has entity",
+	"damageSourceProperty.hasDirectEntity": "has direct entity",
+	"damageSourceProperty.isBypassArmor": "bypasses armor",
+	"damageSourceProperty.isBypassInvul": "bypasses invulnerability",
+	"damageSourceProperty.isBypassMagic": "bypasses magic defense",
+	"damageSourceProperty.isCreativePlayer": "is creative player",
+	"damageSourceProperty.isDamageHelmet": "damages helmet",
+	"damageSourceProperty.isExplosion": "is explosion",
+	"damageSourceProperty.isFall": "is fall",
+	"damageSourceProperty.isFire": "is fire",
+	"damageSourceProperty.isMagic": "is magic",
+	"damageSourceProperty.isNoAggro": "doesn't aggro",
+	"damageSourceProperty.isProjectile": "is projectile",
+	
+	
+	
+	"damageSource.inFire": "In Fire",
+	"damageSource.lightningBolt": "Lightning Bolt",
+	"damageSource.onFire": "On Fire",
+	"damageSource.lava": "Lava",
+	"damageSource.hotFloor": "Hot Floor",
+	"damageSource.inWall": "In Wall",
+	"damageSource.cramming": "Cramming",
+	"damageSource.drown": "Drown",
+	"damageSource.starve": "Starve",
+	"damageSource.cactus": "Cactus",
+	"damageSource.fall": "Fall",
+	"damageSource.flyIntoWall": "Fly Into Wall",
+	"damageSource.outOfWorld": "Out Of World",
+	"damageSource.generic": "Generic",
+	"damageSource.magic": "Magic",
+	"damageSource.wither": "Wither",
+	"damageSource.anvil": "Anvil",
+	"damageSource.fallingBlock": "Falling Block",
+	"damageSource.dragonBreath": "Dragon Breath",
+	"damageSource.dryout": "Dryout",
+	"damageSource.sweetBerryBush": "Sweet Berry Bush",
+	"damageSource.freeze": "Freeze",
+	"damageSource.fallingStalactite": "Falling Stalactite",
+	"damageSource.stalagmite": "Stalagmite",
+	"damageSource.sting": "Sting",
+	"damageSource.mob": "Mob",
+	"damageSource.player": "Player",
+	"damageSource.arrow": "Arrow",
+	"damageSource.trident": "Trident",
+	"damageSource.fireworks": "Fireworks",
+	"damageSource.fireball": "Fireball",
+	"damageSource.witherSkull": "Wither Skull",
+	"damageSource.thrown": "Thrown",
+	"damageSource.indirectMagic": "Indirect Magic",
+	"damageSource.thorns": "Thorns",
+	"damageSource.explosion": "Explosion",
+	"damageSource.itemupgrader": "Item Upgrader",
+	"damageSource.badRespawnPoint": "Bad Respawn Point",
+
+	
+	
 	"upgradeAction.itemupgrader.attribute": "",
 	
 	"upgradeAction.itemupgrader.loot_enchantment": "",
@@ -74,6 +172,11 @@
 	"upgradeAction.itemupgrader.totem_post": "After totem use: ",
 	
 	
+	
+	"upgradeCondition.itemupgrader.and": "%s",
+	"upgradeCondition.itemupgrader.or": "%s",
+	"upgradeCondition.itemupgrader.xor": "%s or %s, but not both",
+	
 	"upgradeCondition.itemupgrader.predicate": "%s",
 	"upgradeCondition.itemupgrader.compare": "%s %s %s",
 	"upgradeCondition.itemupgrader.eyes_in_fluid": "eyes are under %s",
@@ -86,8 +189,8 @@
 	"upgradeCondition.itemupgrader.tag_boolean.inverted": "tag %s is not %s",
 	"upgradeCondition.itemupgrader.tag_int": "tag %s %s %s",
 	"upgradeCondition.itemupgrader.tag_float": "tag %s %s %s",
-	"upgradeCondition.itemupgrader.damage_source": "damage source matches",
-	"upgradeCondition.itemupgrader.damage_source.inverted": "damage source matches",
+	"upgradeCondition.itemupgrader.damage_source": "damage source %s",
+	"upgradeCondition.itemupgrader.damage_source.inverted": "damage source matches %s",
 	"upgradeCondition.itemupgrader.damage_source_type": "damage source is %s",
 	"upgradeCondition.itemupgrader.damage_source_type.inverted": "damage source is not %s",
 	"upgradeCondition.itemupgrader.block": "block is %s",
@@ -98,7 +201,8 @@
 	"upgradeCondition.itemupgrader.verify_timestamp.inverted": "timestamp is valid",
 	"upgradeCondition.itemupgrader.success": "last result succeeded",
 	"upgradeCondition.itemupgrader.success.inverted": "last result failed",
-	"upgradeCondition.itemupgrader.compound": "%s",
+	"upgradeCondition.itemupgrader.edible": "item is edible",
+	
 	
 	
 	"upgradeResult.itemupgrader.cancel": "Cancel",
@@ -127,6 +231,11 @@
 	
 	"upgradeResult.itemupgrader.update_position": "Update position %s",
 	"upgradeResult.itemupgrader.update_item": "Update item %s in slot %s",
+	"upgradeResult.itemupgrader.reset_item": "Reset item %s to default item",
+	
+	"upgradeResult.itemupgrader.modify_damage": "%s Damage",
+	
+	"upgradeResult.itemupgrader.multiply_entry": "%s %s",
 	
 	"upgradeResult.itemupgrader.internal_fall_to_food": "Absorb fall damage as hunger",
 	"upgradeResult.itemupgrader.internal_spawnpoint": "Return to spawnpoint",

@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io._3650.itemupgrader.ItemUpgrader;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -57,6 +58,21 @@ public class UpgradeEntry<T> {
 		return this.id;
 	}
 	
+	@Nullable
+	private String descriptionId;
+	
+	/**
+	 * Gets the unlocalized descriptor id for translation
+	 * @return The unlocalized descriptor id for translation
+	 */
+	@Nonnull
+	public String getDescriptionId() {
+		if (this.descriptionId == null) {
+			this.descriptionId = Util.makeDescriptionId("upgradeEntry", this.id);
+		}
+		return this.descriptionId;
+	}
+	
 	/**
 	 * Checks if the value of this entry may be null
 	 * @return Whether the value of this entry is allowed to be null
@@ -91,8 +107,9 @@ public class UpgradeEntry<T> {
 	
 	public static final UpgradeEntry<LogicalSide> SIDE = FACTORY.create("side");
 	public static final UpgradeEntry<EquipmentSlot> SLOT = FACTORY.create("slot", true);
-	public static final UpgradeEntry<ItemStack> ITEM = FACTORY.createDefault("itemstack", EntryCategory.ITEM);
+	public static final UpgradeEntry<ItemStack> ITEM = FACTORY.createDefault("item", EntryCategory.ITEM);
 	public static final UpgradeEntry<ItemStack> PREV_ITEM = FACTORY.create("previous_item", EntryCategory.ITEM);
+	public static final UpgradeEntry<ItemStack> USED_ITEM = FACTORY.create("used_item", EntryCategory.ITEM);
 	public static final UpgradeEntry<Entity> ENTITY = FACTORY.createDefault("entity", EntryCategory.ENTITY);
 	public static final UpgradeEntry<Vec3> POSITION = FACTORY.createDefault("position", EntryCategory.POSITION);
 	public static final UpgradeEntry<Level> LEVEL = FACTORY.create("level");
@@ -106,7 +123,7 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<BlockEntity> BLOCK_ENTITY = FACTORY.create("block_entity");
 	public static final UpgradeEntry<BlockPos> BLOCK_POS = FACTORY.createDefault("block_position", EntryCategory.BLOCK_POS);
 	public static final UpgradeEntry<Direction> BLOCK_FACE = FACTORY.create("block_face", EntryCategory.DIRECTION);
-	public static final UpgradeEntry<LivingEntity> LIVING = FACTORY.createDefault("living_entity", EntryCategory.LIVING);
+	public static final UpgradeEntry<LivingEntity> LIVING = FACTORY.createDefault("living", EntryCategory.LIVING);
 	public static final UpgradeEntry<Player> PLAYER = FACTORY.createDefault("player", EntryCategory.PLAYER);
 	public static final UpgradeEntry<Entity> TARGET_ENTITY = FACTORY.create("target_entity", EntryCategory.ENTITY);
 	public static final UpgradeEntry<Vec3> TARGET_ENTITY_POS = FACTORY.create("target_entity_position", EntryCategory.POSITION);

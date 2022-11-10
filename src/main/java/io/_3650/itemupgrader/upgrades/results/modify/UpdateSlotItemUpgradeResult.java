@@ -52,7 +52,7 @@ public class UpdateSlotItemUpgradeResult extends UpgradeResult {
 	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		return new MutableComponent[] {new TranslatableComponent(ComponentHelper.entryFormat(this.itemEntry)), ComponentHelper.componentFromSlot(this.slot)};
+		return new MutableComponent[] {new TranslatableComponent(this.itemEntry.getDescriptionId()), ComponentHelper.componentFromSlot(this.slot)};
 	}
 	
 	@Override

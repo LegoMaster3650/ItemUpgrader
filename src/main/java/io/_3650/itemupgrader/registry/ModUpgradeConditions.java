@@ -6,9 +6,9 @@ import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
 import io._3650.itemupgrader.upgrades.conditions.BlockIDUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.BlockTagUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.CompareNumbersUpgradeCondition;
-import io._3650.itemupgrader.upgrades.conditions.CompoundUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.DamageSourceTypeUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.DamageSourceUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.EdibleUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.EyesInFluidUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.HasUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.ItemCooldownUpgradeCondition;
@@ -18,12 +18,19 @@ import io._3650.itemupgrader.upgrades.conditions.TagVarBoolUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.TagVarFloatUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.TagVarIntUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.VerifyTimestampUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.compound.AndUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.compound.OrUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.compound.XorUpgradeCondition;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModUpgradeConditions {
 	
 	public static final DeferredRegister<UpgradeConditionSerializer<?>> CONDITIONS = DeferredRegister.create(ItemUpgraderRegistry.CONDITIONS, ItemUpgrader.MOD_ID);
+	
+	public static final RegistryObject<AndUpgradeCondition.Serializer> AND = CONDITIONS.register("and", () -> new AndUpgradeCondition.Serializer());
+	public static final RegistryObject<OrUpgradeCondition.Serializer> OR = CONDITIONS.register("or", () -> new OrUpgradeCondition.Serializer());
+	public static final RegistryObject<XorUpgradeCondition.Serializer> XOR = CONDITIONS.register("xor", () -> new XorUpgradeCondition.Serializer());
 	
 	public static final RegistryObject<PredicateUpgradeCondition.Serializer> PREDICATE = CONDITIONS.register("predicate", () -> new PredicateUpgradeCondition.Serializer());
 	public static final RegistryObject<EyesInFluidUpgradeCondition.Serializer> EYES_IN_FLUID = CONDITIONS.register("eyes_in_fluid", () -> new EyesInFluidUpgradeCondition.Serializer());
@@ -39,6 +46,6 @@ public class ModUpgradeConditions {
 	public static final RegistryObject<BlockTagUpgradeCondition.Serializer> BLOCK_TAG = CONDITIONS.register("block_tag", () -> new BlockTagUpgradeCondition.Serializer());
 	public static final RegistryObject<VerifyTimestampUpgradeCondition.Serializer> VERIFY_TIMESTAMP = CONDITIONS.register("verify_timestamp", () -> new VerifyTimestampUpgradeCondition.Serializer());
 	public static final RegistryObject<ResultSuccessUpgradeCondition.Serializer> RESULT_SUCCESS = CONDITIONS.register("success", () -> new ResultSuccessUpgradeCondition.Serializer());
-	public static final RegistryObject<CompoundUpgradeCondition.Serializer> COMPOUND = CONDITIONS.register("compound", () -> new CompoundUpgradeCondition.Serializer());
+	public static final RegistryObject<EdibleUpgradeCondition.Serializer> EDIBLE = CONDITIONS.register("edible", () -> new EdibleUpgradeCondition.Serializer());
 	
 }

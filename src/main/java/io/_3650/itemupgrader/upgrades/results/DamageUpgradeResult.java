@@ -8,7 +8,6 @@ import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeResult;
-import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.upgrades.data.ModDamageSource;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
@@ -50,7 +49,7 @@ public class DamageUpgradeResult extends UpgradeResult {
 	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		return new MutableComponent[] {new TextComponent("" + this.damage), new TextComponent(this.damageSource), new TranslatableComponent(ComponentHelper.entryFormat(this.entityEntry))};
+		return new MutableComponent[] {new TextComponent("" + this.damage), new TextComponent(this.damageSource), new TranslatableComponent(this.entityEntry.getDescriptionId())};
 	}
 	
 	@Override

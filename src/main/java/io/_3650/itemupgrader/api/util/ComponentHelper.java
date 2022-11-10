@@ -1,8 +1,12 @@
 package io._3650.itemupgrader.api.util;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 import io._3650.itemupgrader.api.data.UpgradeEntry;
+import net.minecraft.Util;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -14,6 +18,13 @@ import net.minecraft.world.entity.EquipmentSlot;
  * @author LegoMaster3650
  */
 public class ComponentHelper {
+	
+	/**
+	 * Simple {@linkplain DecimalFormat} that turns the given number into a percentage with up to 2 decimal places
+	 */
+	public static final DecimalFormat BASIC_PERCENT = Util.make(new DecimalFormat("#.##%"), format -> {
+		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
+	});
 	
 	/**
 	 * Quickly splits and merges a ResourceLocation around a . instead of a : for text components
@@ -29,6 +40,7 @@ public class ComponentHelper {
 	 * @param entry The {@linkplain UpgradeEntry} to format
 	 * @return The given entry reformatted
 	 */
+	@Deprecated(forRemoval = true)
 	public static String entryFormat(UpgradeEntry<?> entry) {
 		return "upgradeEntry." + keyFormat(entry.getId());
 	}

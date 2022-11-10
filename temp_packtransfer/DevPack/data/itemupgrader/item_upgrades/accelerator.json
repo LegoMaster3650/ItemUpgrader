@@ -9,7 +9,7 @@
 	"description": 1,
 	"upgrade": [
 		{
-			"action": "itemupgrader:right_click_block",
+			"action": "right_click_block",
 			"condition": {
 				"type": "cooldown"
 			},

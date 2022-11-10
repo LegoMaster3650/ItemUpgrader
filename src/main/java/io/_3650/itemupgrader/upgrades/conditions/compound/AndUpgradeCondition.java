@@ -1,4 +1,4 @@
-package io._3650.itemupgrader.upgrades.conditions;
+package io._3650.itemupgrader.upgrades.conditions.compound;
 
 import java.util.ArrayList;
 
@@ -17,11 +17,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 
-public class CompoundUpgradeCondition extends UpgradeCondition {
+public class AndUpgradeCondition extends UpgradeCondition {
 	
 	private final ArrayList<UpgradeCondition> conditions;
 	
-	public CompoundUpgradeCondition(IUpgradeInternals internals, ArrayList<UpgradeCondition> conditions) {
+	public AndUpgradeCondition(IUpgradeInternals internals, ArrayList<UpgradeCondition> conditions) {
 		super(internals, false, UpgradeEntrySet.create(builder -> {
 			for (var condition : conditions) builder.combine(condition.getRequiredData());
 		}));
@@ -58,28 +58,28 @@ public class CompoundUpgradeCondition extends UpgradeCondition {
 		this.getSerializer().toNetwork(this, buf);
 	}
 	
-	public static class Serializer extends UpgradeConditionSerializer<CompoundUpgradeCondition> {
+	public static class Serializer extends UpgradeConditionSerializer<AndUpgradeCondition> {
 		
 		@Override
-		public CompoundUpgradeCondition fromJson(IUpgradeInternals internals, boolean inverted, JsonObject json) {
+		public AndUpgradeCondition fromJson(IUpgradeInternals internals, boolean inverted, JsonObject json) {
 			JsonArray jsonConditions = GsonHelper.getAsJsonArray(json, "conditions");
 			ArrayList<UpgradeCondition> conditions = new ArrayList<>(jsonConditions.size());
 			for (var jsonCondition : jsonConditions) conditions.add(UpgradeSerializer.condition(jsonCondition.getAsJsonObject()));
-			return new CompoundUpgradeCondition(internals, conditions);
+			return new AndUpgradeCondition(internals, conditions);
 		}
 		
 		@Override
-		public void toNetwork(CompoundUpgradeCondition condition, FriendlyByteBuf buf) {
+		public void toNetwork(AndUpgradeCondition condition, FriendlyByteBuf buf) {
 			buf.writeInt(condition.conditions.size());
 			for (var con : condition.conditions) UpgradeSerializer.conditionToNetwork(con, buf);
 		}
 		
 		@Override
-		public CompoundUpgradeCondition fromNetwork(IUpgradeInternals internals, boolean inverted, FriendlyByteBuf buf) {
+		public AndUpgradeCondition fromNetwork(IUpgradeInternals internals, boolean inverted, FriendlyByteBuf buf) {
 			int conditionsSize = buf.readInt();
 			ArrayList<UpgradeCondition> conditions = new ArrayList<>(conditionsSize);
 			for (var i = 0; i < conditionsSize; i++) conditions.add(UpgradeSerializer.conditionFromNetwork(buf));
-			return new CompoundUpgradeCondition(internals, conditions);
+			return new AndUpgradeCondition(internals, conditions);
 		}
 		
 	}

@@ -1,0 +1,33 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:chestplate"
+	},
+	"color": "#b649d1",
+	"slots": ["chest"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "hurt",
+			"condition": {
+				"type": "damage_source",
+				"isMagic": true
+			},
+			"result": [
+				{
+					"type": "multiply_entry",
+					"entry": "damage",
+					"amount": -0.5,
+					"positive": false
+				},
+				{
+					"type": "durability",
+					"amount": 1
+				}
+			]
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

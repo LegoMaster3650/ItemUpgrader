@@ -146,8 +146,9 @@ public class UpgradeEventData {
 	 * @param <T> The data type held by this result
 	 * @param entry The {@linkplain UpgradeEntry} type to set
 	 * @param value The data to store for this entry
+	 * @throws IllegalArgumentException if the provided entry doesn't allow null values but a null value was given anyways
 	 */
-	public <T> void setModifiableEntry(UpgradeEntry<T> entry, T value) {
+	public <T> void setModifiableEntry(UpgradeEntry<T> entry, T value) throws IllegalArgumentException {
 		if (!entry.isNullable() && value == null) throw new IllegalArgumentException("Tried to set the value of non-nullable entry " + entry + " to null");
 		if (!this.isModifiableEntry(entry)) throw new IllegalStateException("Tried to set the value of unmodifiable entry " + entry);
 		else this.entries.put(entry, value);
@@ -185,7 +186,15 @@ public class UpgradeEventData {
 		return this.getOptional(entry).orElse(false);
 	}
 	
-	public <T> UpgradeEventData forceModifyEntry(UpgradeEntry<T> entry, T value) {
+	/**
+	 * Forcefully modifies one existing entry in this event data
+	 * @param <T> The data type held by this result
+	 * @param entry The {@linkplain UpgradeEntry} type to set
+	 * @param value The data to store for this entry
+	 * @return The modified event data (this)
+	 * @throws IllegalArgumentException if the provided entry doesn't allow null values but a null value was given anyways
+	 */
+	public <T> UpgradeEventData forceModifyEntry(UpgradeEntry<T> entry, T value) throws IllegalArgumentException {
 		if (!entry.isNullable() && value == null) throw new IllegalArgumentException("Tried to set the value of non-nullable entry " + entry + " to null");
 		if (!this.entries.containsKey(entry)) throw new IllegalStateException("Tried to force-set the value of unpresent entry " + entry);
 		else this.entries.put(entry, value);
@@ -193,15 +202,21 @@ public class UpgradeEventData {
 	}
 	
 	/**
-	 * Forcefully modifies the contents of the event data using an EMPTY builder
-	 * @param builderConsumer
-	 * @return
+	 * Forcefully modifies the existing contents of the event data using an EMPTY builder
+	 * @param builderConsumer A {@linkplain Consumer} of the generated {@linkplain Builder}
+	 * @return The modified event data (this)
+	 * @throws IllegalArgumentException if the provided entry doesn't allow null values but a null value was given anyways
 	 */
-	public UpgradeEventData modify(Consumer<Builder> builderConsumer) {
+	public UpgradeEventData modify(Consumer<Builder> builderConsumer) throws IllegalArgumentException {
 		Builder builder = new Builder();
 		builderConsumer.accept(builder);
-		for (var key : builder.entries.keySet()) {
-			if (this.entries.containsKey(key)) this.entries.put(key, builder.entries.get(key));
+		for (var entry : builder.entries.keySet()) {
+			if (this.entries.containsKey(entry)) {
+				Object value = builder.entries.get(entry);
+				if (!entry.isNullable() && value == null) throw new IllegalArgumentException("Tried to set the value of non-nullable entry " + entry + " to null");
+				this.entries.put(entry, builder.entries.get(entry));
+				if (builder.modifiableEntries.contains(entry)) this.modifiableEntries.add(entry);
+			}
 		}
 		return this;
 	}
@@ -214,6 +229,7 @@ public class UpgradeEventData {
 	public static class Builder {
 		
 		private final Map<UpgradeEntry<?>, Object> entries = Maps.newIdentityHashMap();
+		private final Set<UpgradeEntry<?>> provided = Sets.newIdentityHashSet();
 		private final Set<UpgradeEntry<?>> modifiableEntries = Sets.newIdentityHashSet();
 		
 		/**
@@ -333,10 +349,14 @@ public class UpgradeEventData {
 		 * @param entry The {@linkplain UpgradeEntry} type to set
 		 * @param value The data to store for this entry
 		 * @return This builder
+		 * @throws IllegalArgumentException if the provided entry doesn't allow null values but a null value was given anyways
 		 */
-		public <T> Builder entry(UpgradeEntry<T> entry, T value) {
+		public <T> Builder entry(UpgradeEntry<T> entry, T value) throws IllegalArgumentException {
 			if (!entry.isNullable() && value == null) throw new IllegalArgumentException(entry + " has a null value but isn't nullable");
-			else this.entries.put(entry, value);
+			else {
+				this.entries.put(entry, value);
+				this.provided.add(entry);
+			}
 			return this;
 		}
 		
@@ -348,8 +368,13 @@ public class UpgradeEventData {
 		 * @return This builder
 		 */
 		public <T> Builder optionalEntry(UpgradeEntry<T> entry, T value) {
-			if (value == null) this.entries.remove(entry);
-			else this.entries.put(entry, value);
+			if (value == null) {
+				this.entries.remove(entry);
+				this.provided.remove(entry);
+			} else {
+				this.entries.put(entry, value);
+				this.provided.add(entry);
+			}
 			return this;
 		}
 		
@@ -359,11 +384,13 @@ public class UpgradeEventData {
 		 * @param entry The {@linkplain UpgradeEntry} type to set
 		 * @param defaultValue The data to store for this result
 		 * @return This builder
+		 * @throws IllegalArgumentException if the provided entry doesn't allow null values but a null value was given anyways
 		 */
-		public <T> Builder modifiableEntry(UpgradeEntry<T> entry, T defaultValue) {
+		public <T> Builder modifiableEntry(UpgradeEntry<T> entry, T defaultValue) throws IllegalArgumentException {
 			if (!entry.isNullable() && defaultValue == null) throw new IllegalArgumentException(entry + " has a null value but isn't nullable");
 			else {
 				this.entries.put(entry, defaultValue);
+				this.provided.add(entry);
 				this.modifiableEntries.add(entry);
 			}
 			return this;
@@ -378,6 +405,7 @@ public class UpgradeEventData {
 		 */
 		public <T> Builder optionalModifiableEntry(UpgradeEntry<T> entry, T defaultValue) {
 			this.entries.put(entry, defaultValue);
+			this.provided.add(entry);
 			this.modifiableEntries.add(entry);
 			return this;
 		}
@@ -456,7 +484,8 @@ public class UpgradeEventData {
 		 * @throws IllegalStateException If one or more required entries in the entry set are not present
 		 */
 		public UpgradeEventData build(UpgradeEntrySet entrySet, ItemStack ownerItem) throws IllegalStateException {
-			SetView<UpgradeEntry<?>> test = Sets.difference(entrySet.getProvided(), this.entries.keySet());
+			this.provided.addAll(entrySet.getForcedProvided());
+			SetView<UpgradeEntry<?>> test = Sets.difference(entrySet.getProvided(), this.provided);
 			if (!test.isEmpty()) {
 				throw new IllegalStateException("Missing promised provided entries: " + test.toString());
 			} else {
@@ -479,10 +508,29 @@ public class UpgradeEventData {
 		return new Builder();
 	}
 	
+	/**
+	 * This class holds more secret internal functions that are not intended to be used normally or generally break existing conventions
+	 * @author LegoMaster3650
+	 */
 	public static final class InternalStuffIgnorePlease {
 		
 		public static void setSuccess(UpgradeEventData data, boolean value) {
 			data.resultSuccess = value;
+		}
+		
+		/**
+		 * This forcibly sets an entry in the given data, even if it's not present!<br>
+		 * This is hidden away as the unexpected change will have to be reflected in the entry set in order to be usable<br>
+		 * Note: This still has
+		 * @param <T> The data type held by this result
+		 * @param data The {@linkplain UpgradeEventData} to modify
+		 * @param entry The {@linkplain UpgradeEntry} type to set
+		 * @param value The data to store for this entry
+		 * @throws IllegalArgumentException if the provided entry doesn't allow null values but a null value was given anyways
+		 */
+		public static <T> void forceAddEntry(UpgradeEventData data, UpgradeEntry<T> entry, T value) throws IllegalArgumentException {
+			if (!entry.isNullable() && value == null) throw new IllegalArgumentException("Tried to set the value of non-nullable entry " + entry + " to null");
+			data.entries.put(entry, value);
 		}
 		
 	}

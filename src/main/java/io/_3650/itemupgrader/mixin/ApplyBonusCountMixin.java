@@ -13,7 +13,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 
 @Mixin(ApplyBonusCount.class)
-public abstract class MixinApplyBonusCount {
+public abstract class ApplyBonusCountMixin {
 	
 	@Shadow
 	@Final

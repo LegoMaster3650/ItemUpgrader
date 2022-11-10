@@ -8,10 +8,20 @@
 	"upgrade": [
 		{
 			"action": "totem",
-			"result": {
-				"type": "explosion",
-				"power": 5
-			}
+			"player_override": {"source": "living"},
+			"condition": {
+				"type": "cooldown"
+			},
+			"result": [
+				{
+					"type": "explosion",
+					"power": 5
+				},
+				{
+					"type": "cooldown",
+					"cooldown": 2400
+				}
+			]
 		}
 	],
 	"conditions": [{

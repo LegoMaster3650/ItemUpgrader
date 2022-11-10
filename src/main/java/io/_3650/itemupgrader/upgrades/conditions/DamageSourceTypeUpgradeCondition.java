@@ -11,7 +11,7 @@ import io._3650.itemupgrader.api.type.UpgradeCondition;
 import io._3650.itemupgrader.api.util.ComponentHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.ItemStack;
@@ -45,7 +45,7 @@ public class DamageSourceTypeUpgradeCondition extends UpgradeCondition {
 	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		return ComponentHelper.arrayify(new TextComponent(this.sourceType));
+		return ComponentHelper.arrayify(new TranslatableComponent("damageSource." + this.sourceType));
 	}
 	
 	@Override
