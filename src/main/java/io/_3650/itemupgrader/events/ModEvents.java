@@ -33,8 +33,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -55,19 +53,7 @@ public class ModEvents {
 	 */
 	
 	@SubscribeEvent
-	public static void playerTick(PlayerTickEvent event) {
-		Player player = event.player;
-		if (player.level.isClientSide) return;
-		for (EquipmentSlot slot : EquipmentSlot.values()) {
-			UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot);
-			ItemUpgraderApi.runActions(event.phase == TickEvent.Phase.END ? ModUpgradeActions.PLAYER_TICK_POST : ModUpgradeActions.PLAYER_TICK_PRE, builder);
-		}
-	}
-	
-	@SubscribeEvent
 	public static void livingTick(LivingUpdateEvent event) {
-		LivingEntity living = event.getEntityLiving();
-		if (living.level.isClientSide) return;
 		for (EquipmentSlot slot : EquipmentSlot.values()) {
 			UpgradeEventData.Builder builder = new UpgradeEventData.Builder(event.getEntityLiving(), slot);
 			ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_TICK, builder);
@@ -129,7 +115,6 @@ public class ModEvents {
 	public static void interactEntitySpecific(PlayerInteractEvent.EntityInteractSpecific event) {
 		EquipmentSlot slot = slotFromHand(event.getHand());
 		Player player = event.getPlayer();
-		if (player.level.isClientSide) return;
 		Entity targetEntity = event.getTarget();
 		Vec3 targetPos = targetEntity.position();
 		Vec3 interactionPos = targetPos.add(event.getLocalPos());
@@ -149,7 +134,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void interactEntity(PlayerInteractEvent.EntityInteract event) {
 		Player player = event.getPlayer();
-		if (player.level.isClientSide) return;
 		EquipmentSlot slot = slotFromHand(event.getHand());
 		Entity targetEntity = event.getTarget();
 		Vec3 targetPos = targetEntity.position();
@@ -165,7 +149,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void playerUseBlock(PlayerInteractEvent.RightClickBlock event) {
 		Player player = event.getPlayer();
-		if (player.level.isClientSide) return;
 		EquipmentSlot slot = slotFromHand(event.getHand());
 		BlockPos pos = event.getPos();
 		BlockState state = event.getWorld().getBlockState(pos);
@@ -207,7 +190,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void playerUseItem(PlayerInteractEvent.RightClickItem event) {
 		Player player = event.getPlayer();
-		if (player.level.isClientSide) return;
 		EquipmentSlot slot = slotFromHand(event.getHand());
 		UpgradeEventData data = rightClickBaseData(slot, player, event.getItemStack(), event.getItemStack().isEmpty());
 		if (data != null && data.isCancelled()) event.setCanceled(true);
@@ -215,7 +197,11 @@ public class ModEvents {
 	
 	@SubscribeEvent
 	public static void playerUseEmpty(PlayerInteractEvent.RightClickEmpty event) {
-		if (event.getSide().isClient()) NetworkHandler.sendToServer(new PlayerRightClickEmptyPacket(slotFromHand(event.getHand())));
+		if (event.getSide().isClient()) {
+			EquipmentSlot slot = slotFromHand(event.getHand());
+			NetworkHandler.sendToServer(new PlayerRightClickEmptyPacket(slot));
+			rightClickBase(slot, event.getPlayer(), ItemStack.EMPTY);
+		}
 	}
 	
 	public static void rightClickBase(EquipmentSlot slot, Player player, ItemStack stack) {
@@ -245,7 +231,6 @@ public class ModEvents {
 	public static void playerClickBlock(PlayerInteractEvent.LeftClickBlock event) {
 		EquipmentSlot slot = slotFromHand(event.getHand());
 		Player player = event.getPlayer();
-		if (player.level.isClientSide) return;
 		BlockPos pos = event.getPos();
 		BlockState state = event.getWorld().getBlockState(pos);
 		UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot)
@@ -273,7 +258,13 @@ public class ModEvents {
 	
 	@SubscribeEvent
 	public static void playerClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
-		if (event.getSide().isClient()) NetworkHandler.sendToServer(new PlayerLeftClickEmptyPacket(slotFromHand(event.getHand()), event.getItemStack().isEmpty()));
+		if (event.getSide().isClient()) {
+			EquipmentSlot slot = slotFromHand(event.getHand());
+			boolean emptyStack = event.getItemStack().isEmpty();
+			NetworkHandler.sendToServer(new PlayerLeftClickEmptyPacket(slot, event.getItemStack().isEmpty()));
+			Player player = event.getPlayer();
+			leftClickBase(slot, player, emptyStack ? ItemStack.EMPTY : player.getItemBySlot(slot));
+		}
 	}
 	
 	public static void leftClickBase(EquipmentSlot slot, Player player, ItemStack stack) {
@@ -295,7 +286,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void playerAttack(AttackEntityEvent event) {
 		Player player = event.getPlayer();
-		if (player.level.isClientSide) return;
 		for (var hand : InteractionHand.values()) {
 			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.PLAYER_ATTACK, new UpgradeEventData.Builder(player, slotFromHand(hand))
 					.entry(UpgradeEntry.TARGET_ENTITY, event.getTarget())
@@ -313,7 +303,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void livingPreHurt(LivingAttackEvent event) {
 		LivingEntity living = event.getEntityLiving();
-		if (living.level.isClientSide) return;
 		DamageSource source = event.getSource();
 		float amount = event.getAmount();
 		for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -333,7 +322,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void livingHurt(LivingHurtEvent event) {
 		LivingEntity living = event.getEntityLiving();
-		if (living.level.isClientSide) return;
 		for (EquipmentSlot slot : EquipmentSlot.values()) {
 			if (living.hasItemInSlot(slot)) {
 				UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_HURT, new UpgradeEventData.Builder(living, slot)
@@ -354,7 +342,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void livingDamage(LivingDamageEvent event) {
 		LivingEntity living = event.getEntityLiving();
-		if (living.level.isClientSide) return;
 		for (EquipmentSlot slot : EquipmentSlot.values()) {
 			if (living.hasItemInSlot(slot)) {
 				UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_DAMAGE, new UpgradeEventData.Builder(living, slot)
@@ -375,7 +362,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void fallDamage(LivingFallEvent event) {
 		LivingEntity living = event.getEntityLiving();
-		if (living.level.isClientSide) return;
 		for (var slot : EquipmentSlot.values()) {
 			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_FALL, new UpgradeEventData.Builder(living, slot)
 					.modifiableEntry(UpgradeEntry.FALL_DIST, event.getDistance())
@@ -398,7 +384,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void totemTriggerEventPre(LivingTotemEvent.Pre event) {
 		LivingEntity living = event.living;
-		if (living.level.isClientSide) return;
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_TOTEM_PRE, new UpgradeEventData.Builder(living)
 				.entry(UpgradeEntry.ITEM, event.totem)
 				.entry(UpgradeEntry.SLOT, slotFromHand(event.hand))
@@ -411,7 +396,6 @@ public class ModEvents {
 	@SubscribeEvent
 	public static void totemTriggerEventPost(LivingTotemEvent.Post event) {
 		LivingEntity living = event.living;
-		if (living.level.isClientSide) return;
 		ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_TOTEM_POST, new UpgradeEventData.Builder(living)
 				.entry(UpgradeEntry.ITEM, event.totem)
 				.entry(UpgradeEntry.DAMAGE_SOURCE, event.damageSource));

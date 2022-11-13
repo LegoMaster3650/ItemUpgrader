@@ -9,6 +9,7 @@
 	"upgrade": [
 		{
 			"action": "fall",
+			"player_override": {"source": "living"},
 			"result": {
 				"type": "internal_fall_to_food"
 			}

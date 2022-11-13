@@ -1,0 +1,38 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:leggings"
+		}
+	],
+	"color": "#7242eb",
+	"slots": ["legs"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "living_tick",
+			"condition": {
+				"type": "sneaking"
+			},
+			"result": [
+				{
+					"type": "magnet",
+					"range": 10.0,
+					"items": true,
+					"xp": false,
+					"shape": "sphere"
+				},
+				{
+					"type": "magnet",
+					"range": 25.0,
+					"speed": 2.0,
+					"items": false,
+					"xp": true
+				}
+			]
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

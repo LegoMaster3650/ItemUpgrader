@@ -14,6 +14,7 @@ import io._3650.itemupgrader.upgrades.conditions.HasUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.ItemCooldownUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.PredicateUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.ResultSuccessUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.SneakingUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.TagVarBoolUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.TagVarFloatUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.TagVarIntUpgradeCondition;
@@ -47,5 +48,6 @@ public class ModUpgradeConditions {
 	public static final RegistryObject<VerifyTimestampUpgradeCondition.Serializer> VERIFY_TIMESTAMP = CONDITIONS.register("verify_timestamp", () -> new VerifyTimestampUpgradeCondition.Serializer());
 	public static final RegistryObject<ResultSuccessUpgradeCondition.Serializer> RESULT_SUCCESS = CONDITIONS.register("success", () -> new ResultSuccessUpgradeCondition.Serializer());
 	public static final RegistryObject<EdibleUpgradeCondition.Serializer> EDIBLE = CONDITIONS.register("edible", () -> new EdibleUpgradeCondition.Serializer());
+	public static final RegistryObject<SneakingUpgradeCondition.Serializer> SNEAKING = CONDITIONS.register("sneaking", () -> new SneakingUpgradeCondition.Serializer());
 	
 }

@@ -1,0 +1,11 @@
+{
+	"type":"itemupgrader:item_upgrade",
+	"catalyst": {
+		"item": "minecraft:lodestone"
+	},
+	"upgrade": "itemupgrader:magnetic",
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled",
+		"recipe_only": true
+	}]
+}

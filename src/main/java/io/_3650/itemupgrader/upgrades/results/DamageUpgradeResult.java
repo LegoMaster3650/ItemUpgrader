@@ -23,6 +23,7 @@ public class DamageUpgradeResult extends UpgradeResult {
 	private final UpgradeEntry<Entity> entityEntry;
 	private final float damage;
 	private final String damageSource;
+	private final DamageSource damageSourceType;
 	
 	public DamageUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Entity> entityEntry, float damage, String damageSource) {
 		super(internals, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
@@ -31,12 +32,14 @@ public class DamageUpgradeResult extends UpgradeResult {
 		this.entityEntry = entityEntry;
 		this.damage = damage;
 		this.damageSource = damageSource;
+		this.damageSourceType = getDamageSource(this.damageSource);
 	}
 	
 	@Override
 	public boolean execute(UpgradeEventData data) {
 		Entity entity = data.getEntry(this.entityEntry);
-		entity.hurt(getDamageSource(this.damageSource), this.damage);
+		if (entity.level.isClientSide) return false;
+		entity.hurt(this.damageSourceType, this.damage);
 		return true;
 	}
 	

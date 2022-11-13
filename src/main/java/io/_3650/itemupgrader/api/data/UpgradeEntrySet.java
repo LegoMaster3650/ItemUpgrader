@@ -398,6 +398,9 @@ public class UpgradeEntrySet {
 	public static final UpgradeEntrySet PLAYER_ENTITY_INTERACTION = PLAYER_SLOT_ITEM.with(TARGET_ENTITY);
 	/**Side, Level, [Position], [Entity], [Living], Slot, [Item], Damage, Damage Source*/
 	public static final UpgradeEntrySet LIVING_DAMAGE = LIVING_SLOT_ITEM.with(DAMAGE_EVENT);
-	
+	/**Side, Level, [Position], Entity, Item, Block Pos, Block State, Block Drops*/
+	public static final UpgradeEntrySet BLOCK_DROPS = UpgradeEntrySet.ENTITY.withAll(UpgradeEntrySet.ITEM, UpgradeEntrySet.BLOCK_POS_STATE).with(builder -> {
+		builder.require(UpgradeEntry.ENTITY).require(UpgradeEntry.BLOCK_POS).require(UpgradeEntry.BLOCK_DROPS);
+	});
 	//TEMPLATE: public static final UpgradeEntrySet 
 }

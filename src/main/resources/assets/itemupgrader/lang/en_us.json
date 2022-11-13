@@ -171,6 +171,7 @@
 	"upgradeAction.itemupgrader.totem": "On totem use: ",
 	"upgradeAction.itemupgrader.totem_post": "After totem use: ",
 	
+	"upgradeAction.itemupgrader.block_drops": "On block drops: ",
 	
 	
 	"upgradeCondition.itemupgrader.and": "%s",
@@ -202,6 +203,7 @@
 	"upgradeCondition.itemupgrader.success": "last result succeeded",
 	"upgradeCondition.itemupgrader.success.inverted": "last result failed",
 	"upgradeCondition.itemupgrader.edible": "item is edible",
+	"upgradeCondition.itemupgrader.sneaking": "sneaking",
 	
 	
 	
@@ -228,6 +230,10 @@
 	"upgradeResult.itemupgrader.save_timestamp": "Save current timestamp",
 	"upgradeResult.itemupgrader.conditional": "%s",
 	"upgradeResult.itemupgrader.compound": "%s",
+	"upgradeResult.itemupgrader.magnet": "Attract all %s within %s blocks",
+	"upgradeResult.itemupgrader.magnet.items": "Items",
+	"upgradeResult.itemupgrader.magnet.xp": "Experience",
+	"upgradeResult.itemupgrader.autosmelt": "Smelt dropped items.",
 	
 	"upgradeResult.itemupgrader.update_position": "Update position %s",
 	"upgradeResult.itemupgrader.update_item": "Update item %s in slot %s",

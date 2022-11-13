@@ -16,6 +16,7 @@ import io._3650.itemupgrader.upgrades.results.ExplosionUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.GiveItemUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.ItemCooldownUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.LoadPositionUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.MagnetUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.PlaySoundUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.RandomTickUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.RemoveItemUpgradeResult;
@@ -30,6 +31,7 @@ import io._3650.itemupgrader.upgrades.results.modify.MultiplyEntryUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.modify.ResetDefaultItemUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.modify.UpdatePositionUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.modify.UpdateSlotItemUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.special.AutoSmeltUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.special.FallToFoodUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.special.PlayerDeathpointUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.special.PlayerSpawnpointUpgradeResult;
@@ -65,6 +67,8 @@ public class ModUpgradeResults {
 	public static final RegistryObject<SaveTimestampUpgradeResult.Serializer> SAVE_TIMESTAMP = RESULTS.register("save_timestamp", () -> new SaveTimestampUpgradeResult.Serializer());
 	public static final RegistryObject<ConditionalUpgradeResult.Serializer> CONDITIONAL = RESULTS.register("conditional", () -> new ConditionalUpgradeResult.Serializer());
 	public static final RegistryObject<CompoundUpgradeResult.Serializer> COMPOUND = RESULTS.register("compound", () -> new CompoundUpgradeResult.Serializer());
+	public static final RegistryObject<MagnetUpgradeResult.Serializer> MAGNET = RESULTS.register("magnet", () -> new MagnetUpgradeResult.Serializer());
+	public static final RegistryObject<AutoSmeltUpgradeResult.Serializer> AUTOSMELT = RESULTS.register("autosmelt", () -> new AutoSmeltUpgradeResult.Serializer());
 	
 	public static final RegistryObject<UpdatePositionUpgradeResult.Serializer> UPDATE_POSITION = RESULTS.register("update_position", () -> new UpdatePositionUpgradeResult.Serializer());
 	public static final RegistryObject<UpdateSlotItemUpgradeResult.Serializer> UPDATE_ITEM = RESULTS.register("update_item", () -> new UpdateSlotItemUpgradeResult.Serializer());

@@ -1,9 +1,9 @@
 {
 	"type":"itemupgrader:item_upgrade",
 	"catalyst": {
-		"item": "minecraft:nether_star"
+		"item": "minecraft:blaze_rod"
 	},
-	"upgrade": "itemupgrader:wither_totem",
+	"upgrade": "itemupgrader:superheated",
 	"conditions": [{
 		"type": "itemupgrader:base_pack_enabled",
 		"recipe_only": true

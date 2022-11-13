@@ -22,12 +22,20 @@ public class Config {
 
 		public final BooleanValue basePackEnabled;
 		public final BooleanValue basePackRecipes;
+
+		public final BooleanValue allowMagneticSphere;
 		
 		Common(ForgeConfigSpec.Builder builder) {
 			builder.comment("Strangely buggy when in server config so this is in common config instead.").push("datapack");
 			
 			basePackEnabled = builder.comment("Is the mod's default upgrade datapack enabled?","Disable this if you only want to use custom upgrade datapacks.","[Default: true]").define("basePackEnabled", true);
 			basePackRecipes = builder.comment("Should the mod's default upgrade datapack recipes be enabled?", "Disable this to easily use your own recipes.", "[Default: true]").define("basePackRecipes", true);
+			
+			builder.pop();
+			
+			builder.push("performance");
+			
+			allowMagneticSphere = builder.comment("Allows the magnetic upgrade and any variants to search for items in a sphere rather than a cube.", "Disabling this COULD help performance.", "Requires datapack reload to take effect.", "[Default: true]").define("allowMagneticSphere", true);
 			
 			builder.pop();
 		}

@@ -93,8 +93,7 @@
 			"action": "left_click",
 			"condition": [
 				{
-					"type": "predicate",
-					"predicate": "itemupgrader:is_sneaking"
+					"type": "sneaking"
 				},
 				{
 					"type": "tag_boolean",

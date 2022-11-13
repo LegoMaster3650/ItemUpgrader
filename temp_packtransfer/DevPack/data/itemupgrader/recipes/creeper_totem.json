@@ -1,7 +1,7 @@
 {
 	"type":"itemupgrader:item_upgrade",
 	"catalyst": {
-		"item": "minecraft:creeper_head"
+		"item": "minecraft:tnt"
 	},
 	"upgrade": "itemupgrader:creeper_totem",
 	"conditions": [{

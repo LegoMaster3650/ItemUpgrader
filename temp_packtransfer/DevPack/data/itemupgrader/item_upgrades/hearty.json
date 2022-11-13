@@ -2,17 +2,18 @@
 	"base": [
 		{
 			"type": "itemupgrader:typed",
-			"group": "itemupgrader:leggings"
+			"group": "itemupgrader:chestplate"
 		}
 	],
-	"color": "#736a6a",
-	"slots": ["legs"],
-	"description": 2,
+	"color": "#ff2222",
+	"slots": ["chest"],
+	"description": 1,
 	"upgrade": [
 		{
 			"action": "attribute",
-			"attribute": "generic.knockback_resistance",
-			"amount": 1.0
+			"attribute": "generic.max_health",
+			"operation": "add",
+			"amount": 4
 		}
 	],
 	"conditions": [{

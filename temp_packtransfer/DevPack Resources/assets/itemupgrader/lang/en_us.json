@@ -21,12 +21,20 @@
 	"upgrade.itemupgrader.reality_anchor.description": "Defend against otherworldly armor-piercing magical attacks!",
 	"upgrade.itemupgrader.reality_anchor.icon": "⛨",
 	
+	"upgrade.itemupgrader.hearty": "Hearty",
+	"upgrade.itemupgrader.hearty.description": "Gain extra max health!",
+	"upgrade.itemupgrader.hearty.icon": "❤",
+	
 	
 	
 	"upgrade.itemupgrader.sturdy_legs": "Sturdy Legs",
 	"upgrade.itemupgrader.sturdy_legs.description.1": "Hold your ground against any threat!",
-	"upgrade.itemupgrader.sturdy_legs.description.2": "Warning: Lack of knockback may have unintended consequences",
+	"upgrade.itemupgrader.sturdy_legs.description.2": "Warning: A lack of any knockback may have consequences",
 	"upgrade.itemupgrader.sturdy_legs.icon": "§l🛡",
+	
+	"upgrade.itemupgrader.magnetic": "Magnetic",
+	"upgrade.itemupgrader.magnetic.description": "Attract nearby items and experience from far away!",
+	"upgrade.itemupgrader.magnetic.icon": "§l⧈",
 	
 	
 	
@@ -85,6 +93,10 @@
 	"tooltip.itemupgrader.dwarven.stone": "block is a stone type",
 	"tooltip.itemupgrader.dwarven.deep": "block is any natural deepslate",
 	
+	"upgrade.itemupgrader.superheated": "Superheated",
+	"upgrade.itemupgrader.superheated.description": "Automatically smelts block drops!",
+	"upgrade.itemupgrader.superheated.icon": "🔥",
+	
 	
 	
 	"upgrade.itemupgrader.void_totem": "Void Totem",
@@ -119,11 +131,6 @@
 	"upgrade.itemupgrader.dragon_totem.description.2": "Gain a temporary boost in strength to fight back!",
 	"upgrade.itemupgrader.dragon_totem.icon": "§lΩ",
 	
-	"upgrade.itemupgrader.wither_totem": "Wither Totem",
-	"upgrade.itemupgrader.wither_totem.description.1": "At death's door, death itself grants you a final stand!",
-	"upgrade.itemupgrader.wither_totem.description.2": "Gain the wither's shield for a short time to resist death further.",
-	"upgrade.itemupgrader.wither_totem.icon": "☠",
-	
 	
 	
 	"upgrade.itemupgrader.recall": "Recall",
@@ -149,6 +156,5 @@
 	
 	
 	"predicate.itemupgrader.not_burning": "not burning",
-	"predicate.itemupgrader.is_sneaking": "sneaking",
 	"predicate.itemupgrader.high_light": "light level is above 10"
 }

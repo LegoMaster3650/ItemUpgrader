@@ -28,8 +28,6 @@ public class ModUpgradeActions {
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> UPGRADE_REMOVE = ACTIONS.register("upgrade_remove", SimpleUpgradeAction.of(UpgradeEntrySet.ITEM_PREV_UPGRADE_ID));
 	
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_TICK = ACTIONS.register("living_tick", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_SLOT_ITEM));
-	public static final RegistryObject<SimpleUpgradeAction.Serializer> PLAYER_TICK_PRE = ACTIONS.register("player_tick_pre", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
-	public static final RegistryObject<SimpleUpgradeAction.Serializer> PLAYER_TICK_POST = ACTIONS.register("player_tick_post", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
 	
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> RIGHT_CLICK = ACTIONS.register("right_click", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> RIGHT_CLICK_EFFECT = ACTIONS.register("right_click_effect", SimpleUpgradeAction.of(UpgradeEntrySet.PLAYER_SLOT_ITEM.with(builder -> builder.provide(UpgradeEntry.USED_ITEM))));
@@ -52,7 +50,6 @@ public class ModUpgradeActions {
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_TOTEM_PRE = ACTIONS.register("totem", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_SLOT_ITEM.with(builder -> builder.provide(UpgradeEntry.DAMAGE_SOURCE))));
 	public static final RegistryObject<SimpleUpgradeAction.Serializer> LIVING_TOTEM_POST = ACTIONS.register("totem_post", SimpleUpgradeAction.of(UpgradeEntrySet.LIVING_ITEM.with(builder -> builder.provide(UpgradeEntry.DAMAGE_SOURCE))));
 	
-	
-//	public static final RegistryObject<SimpleUpgradeAction.Serializer> 
+	public static final RegistryObject<SimpleUpgradeAction.Serializer> BLOCK_DROPS = ACTIONS.register("block_drops", SimpleUpgradeAction.of(UpgradeEntrySet.BLOCK_DROPS));
 	
 }

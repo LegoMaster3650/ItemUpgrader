@@ -49,6 +49,7 @@ public class EffectUpgradeResult extends UpgradeResult {
 	@Override
 	public boolean execute(UpgradeEventData data) {
 		LivingEntity entity = data.getEntry(this.livingEntry);
+		if (entity.level.isClientSide) return false;
 		return entity.addEffect(new MobEffectInstance(this.effect, this.duration, this.amplifier, this.ambient, this.showParticles, this.showIcon));
 	}
 	

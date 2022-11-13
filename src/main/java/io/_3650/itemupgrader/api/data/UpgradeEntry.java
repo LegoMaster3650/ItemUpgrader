@@ -1,5 +1,7 @@
 package io._3650.itemupgrader.api.data;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -134,6 +136,7 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<Float> FLOAT_VALUE = FACTORY.createDefault("float", EntryCategory.FLOAT_VALUE);
 	public static final UpgradeEntry<ResourceLocation> ENCHANTMENT_ID = FACTORY.create("enchantment");
 	public static final UpgradeEntry<Integer> ENCHANTMENT_LEVEL = FACTORY.create("enchantment_level", EntryCategory.INT_VALUE);
+	public static final UpgradeEntry<List<ItemStack>> BLOCK_DROPS = FACTORY.create("block_drops");
 	
 	/**<b><u>Intended for use in results</u></b>**/
 	public static final UpgradeEntry<Boolean> CANCELLED = FACTORY.create("cancelled");

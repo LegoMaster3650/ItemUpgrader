@@ -1,0 +1,22 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:fortune_enchantable"
+		}
+	],
+	"color": "#edab39",
+	"slots": ["mainhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "block_drops",
+			"result": {
+				"type": "autosmelt"
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

@@ -12,7 +12,6 @@ import io._3650.itemupgrader.mixin.LivingEntityInvoker;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
@@ -20,36 +19,34 @@ import net.minecraft.world.item.ItemStack;
 public class FallToFoodUpgradeResult extends UpgradeResult {
 	
 	public FallToFoodUpgradeResult(IUpgradeInternals internals) {
-		super(internals, UpgradeEntrySet.LIVING.with(builder -> {
-			builder.require(UpgradeEntry.FALL_DIST).require(UpgradeEntry.DAMAGE_MULT);
+		super(internals, UpgradeEntrySet.PLAYER.with(builder -> {
+			builder.require(UpgradeEntry.PLAYER).require(UpgradeEntry.FALL_DIST).require(UpgradeEntry.DAMAGE_MULT);
 		}));
 	}
 	
 	@Override
 	public boolean execute(UpgradeEventData data) {
-		LivingEntity living = data.getEntry(UpgradeEntry.LIVING);
-		if (living instanceof Player player) {
-			FoodData food = player.getFoodData();
-			float dmg = ((LivingEntityInvoker)player).callCalculateFallDamage(data.getEntry(UpgradeEntry.FALL_DIST), data.getEntry(UpgradeEntry.DAMAGE_MULT));
-			if (dmg <= 0.0F) return false;
-			else dmg *= 2.0F;
-			dmg = ((LivingEntityInvoker)player).callGetDamageAfterMagicAbsorb(DamageSource.FALL, dmg);
-			float totalFood = food.getFoodLevel() + food.getSaturationLevel();
-			if (food.getFoodLevel() > 6 && dmg <= totalFood * 4.0F) {
-				// Not needed after mixin, keeping around in case of future uses
-//				float newExhaustion = food.getExhaustionLevel() + dmg;
-//				while (newExhaustion >= 40.0F) {
-//					newExhaustion -= 4.0F;
-//					if (food.getSaturationLevel() > 0.0F) {
-//						food.setSaturation(Math.max(food.getSaturationLevel() - 1.0F, 0.0F));
-//					} else {
-//						food.setFoodLevel(Math.max(food.getFoodLevel() - 1, 0));
-//					}
+		Player player = data.getEntry(UpgradeEntry.PLAYER);
+		FoodData food = player.getFoodData();
+		float dmg = ((LivingEntityInvoker)player).callCalculateFallDamage(data.getEntry(UpgradeEntry.FALL_DIST), data.getEntry(UpgradeEntry.DAMAGE_MULT));
+		if (dmg <= 0.0F) return false;
+		else dmg *= 2.0F;
+		dmg = ((LivingEntityInvoker)player).callGetDamageAfterMagicAbsorb(DamageSource.FALL, dmg);
+		float totalFood = food.getFoodLevel() + food.getSaturationLevel();
+		if (food.getFoodLevel() > 6 && dmg <= totalFood * 4.0F) {
+			// Not needed after mixin, keeping around in case of future uses
+//			float newExhaustion = food.getExhaustionLevel() + dmg;
+//			while (newExhaustion >= 40.0F) {
+//				newExhaustion -= 4.0F;
+//				if (food.getSaturationLevel() > 0.0F) {
+//					food.setSaturation(Math.max(food.getSaturationLevel() - 1.0F, 0.0F));
+//				} else {
+//					food.setFoodLevel(Math.max(food.getFoodLevel() - 1, 0));
 //				}
-				food.addExhaustion(dmg);
-				data.setModifiableEntry(UpgradeEntry.FALL_DIST, 0.0F);
-				return true;
-			}
+//			}
+			food.addExhaustion(dmg);
+			data.setModifiableEntry(UpgradeEntry.FALL_DIST, 0.0F);
+			return true;
 		}
 		return false;
 	}
