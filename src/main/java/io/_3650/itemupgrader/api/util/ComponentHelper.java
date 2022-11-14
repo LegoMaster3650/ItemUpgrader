@@ -22,7 +22,7 @@ public class ComponentHelper {
 	/**
 	 * Simple {@linkplain DecimalFormat} that turns the given number into a percentage with up to 2 decimal places
 	 */
-	public static final DecimalFormat BASIC_PERCENT = Util.make(new DecimalFormat("#.##%"), format -> {
+	public static final DecimalFormat BASIC_PERCENT = Util.make(new DecimalFormat("+#.##%;-#.##%"), format -> {
 		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
 	});
 	

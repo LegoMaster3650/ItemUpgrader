@@ -2,6 +2,7 @@ package io._3650.itemupgrader.upgrades.results;
 
 import com.google.gson.JsonObject;
 
+import io._3650.itemupgrader.api.data.EntryCategory;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
@@ -17,14 +18,19 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class RandomTickUpgradeResult extends UpgradeResult {
 	
-	public RandomTickUpgradeResult(IUpgradeInternals internals) {
-		super(internals, UpgradeEntrySet.LEVEL);
+	private final UpgradeEntry<BlockPos> posEntry;
+	
+	public RandomTickUpgradeResult(IUpgradeInternals internals, UpgradeEntry<BlockPos> posEntry) {
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(UpgradeEntry.LEVEL, posEntry);
+		}));
+		this.posEntry = posEntry;
 	}
 	
 	@Override
 	public boolean execute(UpgradeEventData data) {
 		if (!(data.getEntry(UpgradeEntry.LEVEL) instanceof ServerLevel level)) return false;
-		BlockPos pos = data.getEntry(UpgradeEntry.BLOCK_POS);
+		BlockPos pos = data.getEntry(this.posEntry);
 		BlockState state = level.getBlockState(pos);
 		state.randomTick(level, pos, level.getRandom());
 		return true;
@@ -51,17 +57,19 @@ public class RandomTickUpgradeResult extends UpgradeResult {
 		
 		@Override
 		public RandomTickUpgradeResult fromJson(IUpgradeInternals internals, JsonObject json) {
-			return new RandomTickUpgradeResult(internals);
+			UpgradeEntry<BlockPos> posEntry = EntryCategory.BLOCK_POS.fromJson(json);
+			return new RandomTickUpgradeResult(internals, posEntry);
 		}
 		
 		@Override
 		public void toNetwork(RandomTickUpgradeResult result, FriendlyByteBuf buf) {
-			// nothing to write
+			result.posEntry.toNetwork(buf);
 		}
 		
 		@Override
 		public RandomTickUpgradeResult fromNetwork(IUpgradeInternals internals, FriendlyByteBuf buf) {
-			return new RandomTickUpgradeResult(internals);
+			UpgradeEntry<BlockPos> posEntry = EntryCategory.BLOCK_POS.fromNetwork(buf);
+			return new RandomTickUpgradeResult(internals, posEntry);
 		}
 		
 	}

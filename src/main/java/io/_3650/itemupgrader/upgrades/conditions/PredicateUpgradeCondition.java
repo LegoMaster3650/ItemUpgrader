@@ -45,11 +45,9 @@ public class PredicateUpgradeCondition extends UpgradeCondition {
 			UpgradeEntry<BlockPos> blockPosEntry,
 			Vec3i blockPosOffset,
 			UpgradeEntry<ItemStack> itemEntry) {
-		super(internals, false, UpgradeEntrySet.ENTITY.fillCategories(mapper -> mapper
-				.set(EntryCategory.ENTITY, entityEntry)
-				.set(EntryCategory.POSITION, posEntry)
-				.setOptional(EntryCategory.BLOCK_POS, blockPosEntry)
-				.setOptional(EntryCategory.ITEM, itemEntry)));
+		super(internals, false, UpgradeEntrySet.ENTITY.with(builder -> {
+			builder.requireAll(entityEntry, posEntry);
+		}));
 		this.predicateId = predicateId;
 		this.entityEntry = entityEntry;
 		this.posEntry = posEntry;

@@ -21,8 +21,8 @@ public class RemoveItemUpgradeResult extends UpgradeResult {
 	private final int amount;
 	
 	public RemoveItemUpgradeResult(IUpgradeInternals internals, UpgradeEntry<ItemStack> itemEntry, int amount) {
-		super(internals, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.require(itemEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.amount = amount;

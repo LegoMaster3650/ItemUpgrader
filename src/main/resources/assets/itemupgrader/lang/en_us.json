@@ -139,10 +139,6 @@
 	"action.itemupgrader.loot_enchantment.tooltip.one": "Add %s level of %s",
 	"action.itemupgrader.loot_enchantment.tooltip.decrease": "Remove %s levels of %s",
 	
-	"upgradeAction.itemupgrader.mining_speed": "",
-	"action.itemupgrader.mining_speed.tooltip.plus": "+%s%% Mining Speed",
-	"action.itemupgrader.mining_speed.tooltip.take": "-%s%% Mining Speed",
-	
 	
 	"upgradeAction.itemupgrader.upgrade_apply_pre": "Before this upgrade is applied: ",
 	"upgradeAction.itemupgrader.upgrade_apply_post": "After this upgrade is applied: ",
@@ -170,6 +166,8 @@
 	"upgradeAction.itemupgrader.fall": "On fall: ",
 	"upgradeAction.itemupgrader.totem": "On totem use: ",
 	"upgradeAction.itemupgrader.totem_post": "After totem use: ",
+	
+	"upgradeAction.itemupgrader.breaking_speed": "",
 	
 	"upgradeAction.itemupgrader.block_drops": "On block drops: ",
 	

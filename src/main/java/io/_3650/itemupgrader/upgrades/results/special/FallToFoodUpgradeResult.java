@@ -19,8 +19,8 @@ import net.minecraft.world.item.ItemStack;
 public class FallToFoodUpgradeResult extends UpgradeResult {
 	
 	public FallToFoodUpgradeResult(IUpgradeInternals internals) {
-		super(internals, UpgradeEntrySet.PLAYER.with(builder -> {
-			builder.require(UpgradeEntry.PLAYER).require(UpgradeEntry.FALL_DIST).require(UpgradeEntry.DAMAGE_MULT);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(UpgradeEntry.PLAYER, UpgradeEntry.DAMAGE_MULT).modifiable(UpgradeEntry.FALL_DIST);
 		}));
 	}
 	

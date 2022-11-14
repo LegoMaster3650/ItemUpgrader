@@ -35,7 +35,9 @@ public class PlaySoundUpgradeResult extends UpgradeResult {
 	private final float pitch;
 	
 	public PlaySoundUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Vec3> posEntry, ResourceLocation soundId, SoundSource source, float volume, float pitch) {
-		super(internals, UpgradeEntrySet.LEVEL);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(UpgradeEntry.LEVEL, posEntry);
+		}));
 		this.posEntry = posEntry;
 		this.soundId = soundId;
 		this.sound = ForgeRegistries.SOUND_EVENTS.getValue(soundId);

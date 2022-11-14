@@ -33,8 +33,8 @@ public class EffectUpgradeResult extends UpgradeResult {
 	private final boolean showIcon;
 	
 	public EffectUpgradeResult(IUpgradeInternals internals, UpgradeEntry<LivingEntity> livingEntry, ResourceLocation effectId, int duration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon) {
-		super(internals, UpgradeEntrySet.LIVING.fillCategories(mapper -> {
-			mapper.set(EntryCategory.LIVING, livingEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.require(livingEntry);
 		}));
 		this.livingEntry = livingEntry;
 		this.effectId = effectId;

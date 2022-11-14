@@ -38,6 +38,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -101,8 +102,8 @@ public class ModEvents {
 					.entry(UpgradeEntry.BLOCK_STATE, state)
 					.entry(UpgradeEntry.BLOCK_POS, pos)
 					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
-					.modifiableEntry(ModUpgradeEntry.BREAKING_SPEED, breakSpeed));
-			breakSpeed = data.getEntry(ModUpgradeEntry.BREAKING_SPEED);
+					.modifiableEntry(UpgradeEntry.BREAKING_SPEED, breakSpeed));
+			breakSpeed = data.getEntry(UpgradeEntry.BREAKING_SPEED);
 		}
 		event.setNewSpeed(breakSpeed);
 	}
@@ -110,26 +111,6 @@ public class ModEvents {
 	/*
 	 * RIGHT CLICK (USE)
 	 */
-	
-	@SubscribeEvent
-	public static void interactEntitySpecific(PlayerInteractEvent.EntityInteractSpecific event) {
-		EquipmentSlot slot = slotFromHand(event.getHand());
-		Player player = event.getPlayer();
-		Entity targetEntity = event.getTarget();
-		Vec3 targetPos = targetEntity.position();
-		Vec3 interactionPos = targetPos.add(event.getLocalPos());
-		UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot)
-				.entry(UpgradeEntry.TARGET_ENTITY, targetEntity)
-				.entry(UpgradeEntry.TARGET_ENTITY_POS, targetPos)
-				.entry(UpgradeEntry.INTERACTION_POS, interactionPos)
-				.modifiableEntry(UpgradeEntry.CONSUMED, false)
-				.cancellable();
-		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ENTITY_INTERACT_SPECIFIC, builder);
-		if (data.getBoolEntry(UpgradeEntry.CONSUMED)) {
-			event.setCancellationResult(InteractionResult.CONSUME);
-			event.setCanceled(true);
-		} else if (data.isCancelled()) event.setCanceled(true);
-	}
 	
 	@SubscribeEvent
 	public static void interactEntity(PlayerInteractEvent.EntityInteract event) {
@@ -147,6 +128,26 @@ public class ModEvents {
 	}
 	
 	@SubscribeEvent
+	public static void interactEntitySpecific(PlayerInteractEvent.EntityInteractSpecific event) {
+		EquipmentSlot slot = slotFromHand(event.getHand());
+		Player player = event.getPlayer();
+		Entity targetEntity = event.getTarget();
+		Vec3 targetPos = targetEntity.position();
+		Vec3 interactionPos = targetPos.add(event.getLocalPos());
+		UpgradeEventData.Builder builder = new UpgradeEventData.Builder(player, slot)
+				.entry(UpgradeEntry.TARGET_ENTITY, targetEntity)
+				.entry(UpgradeEntry.TARGET_ENTITY_POS, targetPos)
+				.entry(UpgradeEntry.INTERACTION_POS, interactionPos)
+				.cancellable()
+				.consumable();
+		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.ENTITY_INTERACT_SPECIFIC, builder);
+		if (data.getBoolEntry(UpgradeEntry.CONSUMED)) {
+			event.setCancellationResult(InteractionResult.CONSUME);
+			event.setCanceled(true);
+		} else if (data.isCancelled()) event.setCanceled(true);
+	}
+	
+	@SubscribeEvent
 	public static void playerUseBlock(PlayerInteractEvent.RightClickBlock event) {
 		Player player = event.getPlayer();
 		EquipmentSlot slot = slotFromHand(event.getHand());
@@ -157,8 +158,8 @@ public class ModEvents {
 				.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 				.entry(UpgradeEntry.BLOCK_STATE, state)
 				.entry(UpgradeEntry.INTERACTION_POS, event.getHitVec().getLocation())
-				.modifiableEntry(UpgradeEntry.CONSUMED, false)
-				.cancellable();
+				.cancellable()
+				.consumable();
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_BLOCK, builder, event.getItemStack());
 		if (data.getBoolEntry(UpgradeEntry.CONSUMED)) {
 			event.setCancellationResult(InteractionResult.CONSUME);
@@ -177,7 +178,7 @@ public class ModEvents {
 					.entry(UpgradeEntry.BLOCK_STATE, state)
 					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
 					.entry(UpgradeEntry.USED_ITEM, event.getItemStack())
-					.modifiableEntry(UpgradeEntry.CONSUMED, false));
+					.consumable());
 			if (data1.getBoolEntry(UpgradeEntry.CONSUMED)) {
 				event.setCancellationResult(InteractionResult.CONSUME);
 				event.setCanceled(true);
@@ -205,10 +206,11 @@ public class ModEvents {
 	}
 	
 	public static void rightClickBase(EquipmentSlot slot, Player player, ItemStack stack) {
-		if (!stack.isEmpty()) ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK, new UpgradeEventData.Builder(player, slot));
+		if (!stack.isEmpty()) ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK, new UpgradeEventData.Builder(player, slot).cancellable());
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
-			ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1).entry(UpgradeEntry.USED_ITEM, stack));
+			UpgradeEventData data1 = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1).entry(UpgradeEntry.USED_ITEM, stack).consumable());
+			if (data1.isConsumed()) break;
 		}
 	}
 	
@@ -218,7 +220,8 @@ public class ModEvents {
 		if (!emptyStack) data = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK, new UpgradeEventData.Builder(player, slot).cancellable());
 		for (var slot1 : EquipmentSlot.values()) {
 			if (slot1 == slot) continue;
-			ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1).entry(UpgradeEntry.USED_ITEM, stack));
+			UpgradeEventData data1 = ItemUpgraderApi.runActions(ModUpgradeActions.RIGHT_CLICK_EFFECT, new UpgradeEventData.Builder(player, slot1).entry(UpgradeEntry.USED_ITEM, stack).consumable());
+			if (data1.isConsumed()) break;
 		}
 		return data;
 	}
@@ -238,7 +241,7 @@ public class ModEvents {
 				.entry(UpgradeEntry.BLOCK_FACE, event.getFace())
 				.entry(UpgradeEntry.BLOCK_STATE, state)
 				.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
-				.modifiableEntry(UpgradeEntry.CONSUMED, false);
+				.consumable();
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LEFT_CLICK_BLOCK, builder, event.getItemStack());
 		if (data.getBoolEntry(UpgradeEntry.CONSUMED)) return;
 		for (var slot1 : EquipmentSlot.values()) {
@@ -249,7 +252,7 @@ public class ModEvents {
 					.entry(UpgradeEntry.BLOCK_STATE, state)
 					.entry(UpgradeEntry.INTERACTION_POS, Vec3.atCenterOf(pos))
 					.entry(UpgradeEntry.USED_ITEM, event.getItemStack())
-					.modifiableEntry(UpgradeEntry.CONSUMED, false));
+					.consumable());
 			if (data1.getBoolEntry(UpgradeEntry.CONSUMED)) return;
 			
 		}
@@ -291,8 +294,8 @@ public class ModEvents {
 					.entry(UpgradeEntry.TARGET_ENTITY, event.getTarget())
 					.entry(UpgradeEntry.TARGET_ENTITY_POS, event.getTarget().position())
 					.entry(UpgradeEntry.INTERACTION_POS, event.getTarget().position())
-					.modifiableEntry(UpgradeEntry.CONSUMED, false)
-					.cancellable());
+					.cancellable()
+					.consumable());
 			if (data.isCancelled()) {
 				event.setCanceled(true);
 				break;
@@ -366,8 +369,8 @@ public class ModEvents {
 			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_FALL, new UpgradeEventData.Builder(living, slot)
 					.modifiableEntry(UpgradeEntry.FALL_DIST, event.getDistance())
 					.modifiableEntry(UpgradeEntry.DAMAGE_MULT, event.getDamageMultiplier())
-					.modifiableEntry(UpgradeEntry.CONSUMED, false)
-					.cancellable());
+					.cancellable()
+					.consumable());
 			if (data.isCancelled()) {
 				event.setCanceled(true);
 				return;
@@ -399,6 +402,25 @@ public class ModEvents {
 		ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_TOTEM_POST, new UpgradeEventData.Builder(living)
 				.entry(UpgradeEntry.ITEM, event.totem)
 				.entry(UpgradeEntry.DAMAGE_SOURCE, event.damageSource));
+	}
+	
+	@SubscribeEvent
+	public static void shieldTrigger(ShieldBlockEvent event) {
+		if (!(event.getEntityLiving() instanceof Player player)) return;
+		ItemStack stack = player.getUseItem();
+		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.PLAYER_SHIELD_BLOCK, new UpgradeEventData.Builder(player)
+				.entry(UpgradeEntry.ITEM, stack)
+				.entry(UpgradeEntry.DAMAGE_SOURCE, event.getDamageSource())
+				.modifiableEntry(UpgradeEntry.DAMAGE, event.getBlockedDamage())
+				.modifiableEntry(UpgradeEntry.DO_SHIELD_DAMAGE, event.shieldTakesDamage())
+				.cancellable());
+		if (data.isCancelled()) {
+			event.setCanceled(true);
+			return;
+		} else {
+			event.setBlockedDamage(data.getEntry(UpgradeEntry.DAMAGE));
+			event.setShieldTakesDamage(data.getEntry(UpgradeEntry.DO_SHIELD_DAMAGE));
+		}
 	}
 	
 }

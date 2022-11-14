@@ -24,8 +24,8 @@ public class UpdatePositionUpgradeResult extends UpgradeResult {
 	private final PositionSource source;
 	
 	public UpdatePositionUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Vec3> posEntry, UpgradeEntry<Entity> entityEntry, PositionSource source) {
-		super(internals, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.POSITION, posEntry).set(EntryCategory.ENTITY, entityEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(posEntry, entityEntry);
 		}));
 		this.posEntry = posEntry;
 		this.entityEntry = entityEntry;

@@ -121,26 +121,6 @@ public class UpgradeEntrySet {
 	}
 	
 	/**
-	 * Fills in category values using a category set mapper
-	 * @param mapperConsumer A {@linkplain Consumer} of a {@linkplain EntryCategorySet.Mapper Mapper} that will define all the values
-	 * @return A new {@linkplain UpgradeEntrySet} with the categories defined.
-	 */
-	public UpgradeEntrySet fillCategories(Consumer<EntryCategorySet.Mapper> mapperConsumer) {
-		EntryCategorySet.Mapper mapper = new EntryCategorySet.Mapper();
-		mapperConsumer.accept(mapper);
-		EntryCategorySet categories = mapper.freeze();
-		return this.with(builder -> {
-			for (var category : categories.getCategoryMap().keySet()) {
-				var entry = categories.getEntry(category);
-				if (entry != null) {
-					if (categories.isRequired(category)) builder.require(entry);
-					else builder.provide(entry);
-				}
-			}
-		});
-	}
-	
-	/**
 	 * The builder for {@linkplain UpgradeEntrySet}s
 	 */
 	public static class Builder {
@@ -159,7 +139,8 @@ public class UpgradeEntrySet {
 			this.combine(preset);
 		}
 		/**
-		 * Adds all the data from the given entry to this one
+		 * Adds all the data from the given entry set to this one
+		 * @param preset The {@linkplain UpgradeEntrySet} to copy from
 		 * @return The {@linkplain Builder} to chain more statements on
 		 */
 		public Builder combine(UpgradeEntrySet preset) {
@@ -167,6 +148,16 @@ public class UpgradeEntrySet {
 			this.provided.addAll(preset.provided);
 			this.modified.addAll(preset.modified);
 			this.additionalProvided.addAll(preset.forced);
+			return this;
+		}
+		
+		/**
+		 * Adds all the data from the given entry sets to this one
+		 * @param presets The {@linkplain UpgradeEntrySet}s to copy from
+		 * @return The {@linkplain Builder} to chain more statements on
+		 */
+		public Builder combineAll(UpgradeEntrySet... presets) {
+			for (var preset : presets) this.combine(preset);
 			return this;
 		}
 		
@@ -184,6 +175,18 @@ public class UpgradeEntrySet {
 		}
 		
 		/**
+		 * Adds all {@code entries} to the builder's required AND provided list<br>
+		 * Requires the given entries to be present in the target when calling {@linkplain UpgradeEntrySet#verify(UpgradeEntrySet)}<br>
+		 * @param entries Every {@linkplain UpgradeEntry} to append to the builder's requirements
+		 * @return The {@linkplain Builder} to chain more statements on
+		 * @see #provideAll(UpgradeEntry...)
+		 */
+		public Builder requireAll(UpgradeEntry<?>... entries) {
+			for (var entry : entries) this.require(entry);
+			return this;
+		}
+		
+		/**
 		 * Adds {@code entry} to the builder's provided set<br>
 		 * Provides without requiring the entry for verification as the target in {@linkplain UpgradeEntrySet#verify(UpgradeEntrySet)}
 		 * @param entry The {@linkplain UpgradeEntry} to append to the builder's provided entry set
@@ -195,13 +198,35 @@ public class UpgradeEntrySet {
 		}
 		
 		/**
-		 * Adds {@code entry} to the builder's modified set<br>
+		 * Adds all {@code entries} to the builder's provided set<br>
+		 * Provides without requiring the entries for verification as the target in {@linkplain UpgradeEntrySet#verify(UpgradeEntrySet)}
+		 * @param entries Every {@linkplain UpgradeEntry} to append to the builder's provided entry set
+		 * @return The {@linkplain Builder} to chain more statements on
+		 */
+		public Builder provideAll(UpgradeEntry<?>... entries) {
+			for (var entry : entries) this.provide(entry);
+			return this;
+		}
+		
+		/**
+		 * Adds {@code entry} to the builder's modified, required, and provided sets<br>
 		 * The modified list requires certain entries to be modifiable, useful for return data or cancellation
-		 * @param entry The {@linkplain UpgradeEntry} to append to the builder's provided and modified entry sets
+		 * @param entry The {@linkplain UpgradeEntry} to append to the builder's modified, required, and provided entry sets
 		 * @return The {@linkplain Builder} to chain more statements on
 		 */
 		public Builder modifiable(UpgradeEntry<?> entry) {
 			this.modified.add(entry);
+			return this.require(entry);
+		}
+		
+		/**
+		 * Adds all {@code entries} to the builder's modified, required, and provided sets<br>
+		 * The modified list requires certain entries to be modifiable, useful for return data or cancellation
+		 * @param entry Every {@linkplain UpgradeEntry} to append to the builder's modified, required, and provided entry sets
+		 * @return The {@linkplain Builder} to chain more statements on
+		 */
+		public Builder modifiableAll(UpgradeEntry<?>... entries) {
+			for (var entry : entries) this.modifiable(entry);
 			return this;
 		}
 		
@@ -215,6 +240,22 @@ public class UpgradeEntrySet {
 		public Builder provideForce(UpgradeEntry<?> entry) {
 			this.additionalProvided.add(entry);
 			return this.provide(entry);
+		}
+		
+		/**
+		 * Requires the target to be cancellable
+		 * @return The {@linkplain Builder} to chain more statements on
+		 */
+		public Builder cancellable() {
+			return this.modifiable(UpgradeEntry.CANCELLED);
+		}
+		
+		/**
+		 * Requires the target to be consumable
+		 * @return The {@linkplain Builder} to chain more statements on
+		 */
+		public Builder consumable() {
+			return this.modifiable(UpgradeEntry.CONSUMED);
 		}
 		
 		/**
@@ -293,13 +334,13 @@ public class UpgradeEntrySet {
 	public static final UpgradeEntrySet ENCHANTMENT_ID = create(builder -> {
 		builder.require(UpgradeEntry.ENCHANTMENT_ID);
 	});
-	/**Enchantment Level*/
+	/**&ltEnchantment Level&gt*/
 	public static final UpgradeEntrySet ENCHANTMENT_LEVEL = create(builder -> {
-		builder.require(UpgradeEntry.ENCHANTMENT_LEVEL);
+		builder.modifiable(UpgradeEntry.ENCHANTMENT_LEVEL);
 	});
-	/**Enchantment ID, Enchantment Level*/
+	/**Enchantment ID, &ltEnchantment Level&gt*/
 	public static final UpgradeEntrySet ENCHANTMENT = ENCHANTMENT_ID.with(ENCHANTMENT_LEVEL);
-	/**[Item], Enchantment ID, Enchantment Level*/
+	/**[Item], Enchantment ID, &ltEnchantment Level&gt*/
 	public static final UpgradeEntrySet ITEM_ENCHANTMENT = ITEM.with(ENCHANTMENT);
 	
 	/* ==== ENTITY STUFF ==== */
@@ -336,7 +377,7 @@ public class UpgradeEntrySet {
 	
 	/**Target Entity, Target Entity Position, Interaction Position*/
 	public static final UpgradeEntrySet TARGET_ENTITY = create(builder -> {
-		builder.require(UpgradeEntry.TARGET_ENTITY).require(UpgradeEntry.TARGET_ENTITY_POS).require(UpgradeEntry.INTERACTION_POS);
+		builder.requireAll(UpgradeEntry.TARGET_ENTITY, UpgradeEntry.TARGET_ENTITY_POS, UpgradeEntry.INTERACTION_POS);
 	});
 	/**Side, Level, [Position], Target Entity, Target Entity Position, Interaction Position*/
 	public static final UpgradeEntrySet TARGET_ENTITY_EXTENDED = LEVEL_POSITION.with(TARGET_ENTITY);
@@ -400,7 +441,18 @@ public class UpgradeEntrySet {
 	public static final UpgradeEntrySet LIVING_DAMAGE = LIVING_SLOT_ITEM.with(DAMAGE_EVENT);
 	/**Side, Level, [Position], Entity, Item, Block Pos, Block State, Block Drops*/
 	public static final UpgradeEntrySet BLOCK_DROPS = UpgradeEntrySet.ENTITY.withAll(UpgradeEntrySet.ITEM, UpgradeEntrySet.BLOCK_POS_STATE).with(builder -> {
-		builder.require(UpgradeEntry.ENTITY).require(UpgradeEntry.BLOCK_POS).require(UpgradeEntry.BLOCK_DROPS);
+		builder.requireAll(UpgradeEntry.ENTITY, UpgradeEntry.BLOCK_POS).modifiable(UpgradeEntry.BLOCK_DROPS);
 	});
+	
+	/* ==== HELP ==== */
+	/**&ltCancelled&gt*/
+	public static final UpgradeEntrySet CANCELLABLE = create(builder -> {
+		builder.modifiable(UpgradeEntry.CANCELLED);
+	});
+	/**&ltConsumed&gt*/
+	public static final UpgradeEntrySet CONSUMABLE = create(builder -> {
+		builder.modifiable(UpgradeEntry.CONSUMED);
+	});
+	
 	//TEMPLATE: public static final UpgradeEntrySet 
 }

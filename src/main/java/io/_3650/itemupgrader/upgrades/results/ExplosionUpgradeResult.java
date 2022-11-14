@@ -28,8 +28,8 @@ public class ExplosionUpgradeResult extends UpgradeResult {
 	private final boolean allowGriefing;
 	
 	public ExplosionUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Vec3> posEntry, UpgradeEntry<Entity> entityEntry, float radius, boolean allowGriefing) {
-		super(internals, UpgradeEntrySet.ENTITY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.POSITION, posEntry).set(EntryCategory.ENTITY, entityEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(posEntry, entityEntry);
 		}));
 		this.posEntry = posEntry;
 		this.entityEntry = entityEntry;

@@ -28,8 +28,8 @@ public class HasUpgradeCondition extends UpgradeCondition {
 	private final ResourceLocation upgradeId;
 	
 	public HasUpgradeCondition(IUpgradeInternals internals, boolean inverted, UpgradeEntry<LivingEntity> livingEntry, EquipmentSlot slot, ResourceLocation upgradeId) {
-		super(internals, inverted, UpgradeEntrySet.LIVING.fillCategories(mapper -> {
-			mapper.set(EntryCategory.LIVING, livingEntry);
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			builder.require(livingEntry);
 		}));
 		this.livingEntry = livingEntry;
 		this.slot = slot;

@@ -178,6 +178,21 @@ public class UpgradeEventData {
 	}
 	
 	/**
+	 * Consumes the event, preventing any further runs of this action on any other items
+	 */
+	public void consume() {
+		this.setModifiableEntry(UpgradeEntry.CONSUMED, true);
+	}
+	
+	/**
+	 * Whether or not to run this action for any more items
+	 * @return Whether or not to run this action for any more items
+	 */
+	public boolean isConsumed() {
+		return this.getBoolEntry(UpgradeEntry.CONSUMED);
+	}
+	
+	/**
 	 * A utility function to safely get a boolean result or false if not present
 	 * @param entry The boolean result to get
 	 * @return The boolean output of the result
@@ -255,15 +270,34 @@ public class UpgradeEventData {
 		 * @param slot An {@linkplain EquipmentSlot} to use for context
 		 */
 		public Builder(Player player, EquipmentSlot slot) {
-			Level level = player.level;
 			this.entry(UpgradeEntry.ITEM, player.hasItemInSlot(slot) ? player.getItemBySlot(slot) : ItemStack.EMPTY)
 				.entry(UpgradeEntry.SLOT, slot)
 				.entry(UpgradeEntry.PLAYER, player)
 				.entry(UpgradeEntry.LIVING, player)
 				.entry(UpgradeEntry.ENTITY, player)
 				.entry(UpgradeEntry.POSITION, player.position())
-				.entry(UpgradeEntry.LEVEL, level)
-				.entry(UpgradeEntry.SIDE, level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+				.entry(UpgradeEntry.LEVEL, player.level)
+				.entry(UpgradeEntry.SIDE, player.level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+		}
+		
+		/**
+		 * <b>Complaint with {@linkplain UpgradeEntrySet#PLAYER}</b><br>
+		 * Constructs a builder with following properties automatically determined:<br>
+		 * {@linkplain UpgradeEntry#PLAYER}<br>
+		 * {@linkplain UpgradeEntry#LIVING}<br>
+		 * {@linkplain UpgradeEntry#ENTITY}<br>
+		 * {@linkplain UpgradeEntry#POSITION}<br>
+		 * {@linkplain UpgradeEntry#LEVEL}<br>
+		 * {@linkplain UpgradeEntry#SIDE}
+		 * @param living A {@linkplain LivingEntity} to use for context
+		 */
+		public Builder(Player player) {
+			this.entry(UpgradeEntry.PLAYER, player)
+				.entry(UpgradeEntry.LIVING, player)
+				.entry(UpgradeEntry.ENTITY, player)
+				.entry(UpgradeEntry.POSITION, player.position())
+				.entry(UpgradeEntry.LEVEL, player.level)
+				.entry(UpgradeEntry.SIDE, player.level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
 		}
 		
 		/**
@@ -280,14 +314,13 @@ public class UpgradeEventData {
 		 * @param slot An {@linkplain EquipmentSlot} to use for context
 		 */
 		public Builder(LivingEntity living, EquipmentSlot slot) {
-			Level level = living.level;
 			this.entry(UpgradeEntry.ITEM, living.hasItemInSlot(slot) ? living.getItemBySlot(slot) : ItemStack.EMPTY)
 				.entry(UpgradeEntry.SLOT, slot)
 				.entry(UpgradeEntry.LIVING, living)
 				.entry(UpgradeEntry.ENTITY, living)
 				.entry(UpgradeEntry.POSITION, living.position())
-				.entry(UpgradeEntry.LEVEL, level)
-				.entry(UpgradeEntry.SIDE, level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+				.entry(UpgradeEntry.LEVEL, living.level)
+				.entry(UpgradeEntry.SIDE, living.level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
 		}
 		
 		/**
@@ -301,12 +334,11 @@ public class UpgradeEventData {
 		 * @param living A {@linkplain LivingEntity} to use for context
 		 */
 		public Builder(LivingEntity living) {
-			Level level = living.level;
 			this.entry(UpgradeEntry.LIVING, living)
 				.entry(UpgradeEntry.ENTITY, living)
 				.entry(UpgradeEntry.POSITION, living.position())
-				.entry(UpgradeEntry.LEVEL, level)
-				.entry(UpgradeEntry.SIDE, level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+				.entry(UpgradeEntry.LEVEL, living.level)
+				.entry(UpgradeEntry.SIDE, living.level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
 		}
 		
 		/**
@@ -319,11 +351,10 @@ public class UpgradeEventData {
 		 * @param entity An {@linkplain Entity} to use for context
 		 */
 		public Builder(Entity entity) {
-			Level level = entity.level;
 			this.entry(UpgradeEntry.ENTITY, entity)
 				.entry(UpgradeEntry.POSITION, entity.position())
-				.entry(UpgradeEntry.LEVEL, level)
-				.entry(UpgradeEntry.SIDE, level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+				.entry(UpgradeEntry.LEVEL, entity.level)
+				.entry(UpgradeEntry.SIDE, entity.level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
 		}
 		
 		/**
@@ -461,6 +492,14 @@ public class UpgradeEventData {
 		public Builder cancellableIf(boolean condition, boolean defaultValue) {
 			if (condition) this.modifiableEntry(UpgradeEntry.CANCELLED, defaultValue);
 			return this;
+		}
+		
+		/**
+		 * Allows this event to be consumed (should stop all future item runs for this occurence but NOT cancel the event if true)
+		 * @return This builder
+		 */
+		public Builder consumable() {
+			return this.modifiableEntry(UpgradeEntry.CONSUMED, false);
 		}
 		
 		/**

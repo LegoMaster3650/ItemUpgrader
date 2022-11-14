@@ -14,12 +14,11 @@ import net.minecraft.world.item.ItemStack;
 public class CancelUpgradeResult extends UpgradeResult {
 	
 	public CancelUpgradeResult(IUpgradeInternals internals) {
-		super(internals, UpgradeEntrySet.EMPTY);
+		super(internals, UpgradeEntrySet.CANCELLABLE);
 	}
 	
 	@Override
 	public boolean execute(UpgradeEventData data) {
-		if (!data.isCancellable()) return false;
 		data.cancel();
 		return true;
 	}

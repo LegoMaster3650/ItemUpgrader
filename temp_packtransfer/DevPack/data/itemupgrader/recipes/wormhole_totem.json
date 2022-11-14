@@ -1,7 +1,7 @@
 {
 	"type":"itemupgrader:item_upgrade",
 	"catalyst": {
-		"item": "minecraft:lodestone"
+		"item": "minecraft:diamond"
 	},
 	"upgrade": "itemupgrader:wormhole_totem",
 	"conditions": [{

@@ -2,7 +2,6 @@ package io._3650.itemupgrader.upgrades.results;
 
 import com.google.gson.JsonObject;
 
-import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
@@ -15,13 +14,12 @@ import net.minecraft.world.item.ItemStack;
 public class ConsumeUpgradeResult extends UpgradeResult {
 	
 	public ConsumeUpgradeResult(IUpgradeInternals internals) {
-		super(internals, UpgradeEntrySet.EMPTY);
+		super(internals, UpgradeEntrySet.CONSUMABLE);
 	}
 	
 	@Override
 	public boolean execute(UpgradeEventData data) {
-		if (!data.hasModifiableEntry(UpgradeEntry.CONSUMED)) return false;
-		data.setModifiableEntry(UpgradeEntry.CONSUMED, true);
+		data.consume();
 		return true;
 	}
 	

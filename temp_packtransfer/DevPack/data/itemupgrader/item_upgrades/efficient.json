@@ -10,8 +10,13 @@
 	"description": 1,
 	"upgrade": [
 		{
-			"action": "mining_speed",
-			"amount": 0.4
+			"action": "breaking_speed",
+			"result": {
+				"type": "multiply_entry",
+				"entry": "breaking_speed",
+				"amount": 0.4,
+				"positive": true
+			}
 		}
 	],
 	"conditions": [{

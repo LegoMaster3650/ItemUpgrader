@@ -116,7 +116,8 @@ public class EntryCategory<T> {
 		boolean pass = !this.entries.containsKey(entry.getId());
 		this.entries.put(entry.getId(), (UpgradeEntry<T>) entry);
 		//I know this isn't the best idea but it's a compromise for user friendliness
-		this.entries.put(new ResourceLocation(entry.getId().getPath()), (UpgradeEntry<T>) entry);
+		ResourceLocation basicEntryId = new ResourceLocation(entry.getId().getPath()); //only using first registered value
+		if (!this.entries.containsKey(basicEntryId)) this.entries.put(basicEntryId, (UpgradeEntry<T>) entry);
 		if (this.hasParent()) pass = this.parent.addEntry(entry) && pass;
 		return pass;
 	}
@@ -269,6 +270,9 @@ public class EntryCategory<T> {
 	
 	/**Float Value*/
 	public static final EntryCategory<Float> FLOAT_VALUE = create("float");
+	
+	/**Boolean Value*/
+	public static final EntryCategory<Boolean> BOOL_VALUE = create("boolean");
 	
 	/**Damage Source*/
 	public static final EntryCategory<DamageSource> DAMAGE_SOURCE = create("damage_source");

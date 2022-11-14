@@ -23,6 +23,8 @@ public abstract class BlockMixin {
 	
 	@Inject(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
 	private static void itemupgrader_getDrops(BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity, Entity entity, ItemStack stack, CallbackInfoReturnable<List<ItemStack>> cir) {
+		if (entity == null) return;
+		
 		List<ItemStack> originalDrops = cir.getReturnValue();
 		
 		UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.BLOCK_DROPS, new UpgradeEventData.Builder(entity)

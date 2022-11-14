@@ -7,7 +7,7 @@
 	"description": 2,
 	"upgrade": [
 		{
-			"action": "totem_post",
+			"action": "after_totem",
 			"player_override": {"source": "living"},
 			"condition": {
 				"type": "cooldown"

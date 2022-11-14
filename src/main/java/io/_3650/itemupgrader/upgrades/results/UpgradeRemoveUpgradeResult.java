@@ -24,8 +24,8 @@ public class UpgradeRemoveUpgradeResult extends UpgradeResult {
 	private final boolean ignoreCreative;
 	
 	public UpgradeRemoveUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Player> playerEntry, UpgradeEntry<ItemStack> itemEntry, boolean wholeStack, boolean ignoreCreative) {
-		super(internals, UpgradeEntrySet.PLAYER_ITEM.fillCategories(mapper -> {
-			mapper.set(EntryCategory.PLAYER, playerEntry).set(EntryCategory.ITEM, itemEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(playerEntry, itemEntry);
 		}));
 		this.playerEntry = playerEntry;
 		this.itemEntry = itemEntry;

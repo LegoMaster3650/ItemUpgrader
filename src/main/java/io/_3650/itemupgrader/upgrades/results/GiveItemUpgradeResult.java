@@ -23,8 +23,8 @@ public class GiveItemUpgradeResult extends UpgradeResult {
 	private final ItemStack stack;
 	
 	public GiveItemUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Player> playerEntry, ItemStack stack) {
-		super(internals, UpgradeEntrySet.PLAYER.fillCategories(mapper -> {
-			mapper.set(EntryCategory.PLAYER, playerEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.require(playerEntry);
 		}));
 		this.playerEntry = playerEntry;
 		this.stack = stack;

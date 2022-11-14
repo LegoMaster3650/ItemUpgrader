@@ -22,8 +22,8 @@ public class DamageSourceTypeUpgradeCondition extends UpgradeCondition {
 	private final String sourceType;
 	
 	public DamageSourceTypeUpgradeCondition(IUpgradeInternals internals, boolean inverted, UpgradeEntry<DamageSource> sourceEntry, String sourceType) {
-		super(internals, inverted, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.DAMAGE_SOURCE, sourceEntry);
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			builder.require(sourceEntry);
 		}));
 		this.sourceEntry = sourceEntry;
 		this.sourceType = sourceType;

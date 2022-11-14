@@ -25,8 +25,8 @@ public class SavePositionUpgradeResult extends UpgradeResult {
 	private final boolean dimension;
 	
 	public SavePositionUpgradeResult(IUpgradeInternals internals, UpgradeEntry<ItemStack> itemEntry, String tagName, UpgradeEntry<Vec3> posEntry, boolean dimension) {
-		super(internals, UpgradeEntrySet.POSITION.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry).set(EntryCategory.POSITION, posEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(itemEntry, posEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.tagName = tagName;

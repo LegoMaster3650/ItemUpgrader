@@ -24,8 +24,8 @@ public class VerifyTimestampUpgradeCondition extends UpgradeCondition {
 	private final int ticks;
 	
 	public VerifyTimestampUpgradeCondition(IUpgradeInternals internals, boolean inverted, UpgradeEntry<ItemStack> itemEntry, String tagName, int ticks) {
-		super(internals, inverted, UpgradeEntrySet.LEVEL.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(UpgradeEntry.LEVEL, itemEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.tagName = tagName;

@@ -22,8 +22,8 @@ public class SaveTimestampUpgradeResult extends UpgradeResult {
 	private final String tagName;
 	
 	public SaveTimestampUpgradeResult(IUpgradeInternals internals, UpgradeEntry<ItemStack> itemEntry, String tagName) {
-		super(internals, UpgradeEntrySet.LEVEL.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(UpgradeEntry.LEVEL, itemEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.tagName = tagName;

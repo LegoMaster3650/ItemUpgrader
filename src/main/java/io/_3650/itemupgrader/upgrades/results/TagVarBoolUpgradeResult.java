@@ -26,8 +26,8 @@ public class TagVarBoolUpgradeResult extends UpgradeResult {
 			UpgradeEntry<ItemStack> itemEntry,
 			String tagName,
 			boolean value) {
-		super(internals, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.require(itemEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.tagName = tagName;

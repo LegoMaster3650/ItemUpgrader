@@ -6,7 +6,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 
 import io._3650.itemupgrader.ItemUpgrader;
-import io._3650.itemupgrader.api.data.EntryCategory;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -19,7 +18,5 @@ public class ModUpgradeEntry {
 	
 	public static final UpgradeEntry<SetMultimap<Attribute, AttributeModifier>> ATTRIBUTE_ADDITIONS = FACTORY.create("attribute_additions");
 	public static final UpgradeEntry<Set<AttributeReplacement>> ATTRIBUTE_REPLACEMENTS = FACTORY.create("attribute_replacements");
-	
-	public static final UpgradeEntry<Float> BREAKING_SPEED = FACTORY.create("breaking_speed", EntryCategory.FLOAT_VALUE);
 	
 }

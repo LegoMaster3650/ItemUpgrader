@@ -24,9 +24,8 @@ public class ItemCooldownUpgradeCondition extends UpgradeCondition {
 			boolean inverted,
 			UpgradeEntry<Player> playerEntry,
 			UpgradeEntry<ItemStack> itemEntry) {
-		super(internals, inverted, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.PLAYER, playerEntry);
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(playerEntry, itemEntry);
 		}));
 		this.playerEntry = playerEntry;
 		this.itemEntry = itemEntry;

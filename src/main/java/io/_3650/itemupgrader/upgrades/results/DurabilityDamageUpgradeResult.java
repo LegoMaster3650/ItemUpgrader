@@ -25,8 +25,8 @@ public class DurabilityDamageUpgradeResult extends UpgradeResult {
 	private final int amount;
 	
 	public DurabilityDamageUpgradeResult(IUpgradeInternals internals, UpgradeEntry<ItemStack> itemEntry, UpgradeEntry<LivingEntity> livingEntry, int amount) {
-		super(internals, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry).set(EntryCategory.LIVING, livingEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(itemEntry, livingEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.livingEntry = livingEntry;

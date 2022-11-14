@@ -18,8 +18,8 @@ public class EdibleUpgradeCondition extends UpgradeCondition {
 	private final UpgradeEntry<ItemStack> itemEntry;
 	
 	public EdibleUpgradeCondition(IUpgradeInternals internals, boolean inverted, UpgradeEntry<ItemStack> itemEntry) {
-		super(internals, inverted, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			builder.require(itemEntry);
 		}));
 		this.itemEntry = itemEntry;
 	}

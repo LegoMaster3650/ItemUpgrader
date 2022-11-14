@@ -23,8 +23,8 @@ public class TellCoordsUpgradeResult extends UpgradeResult {
 	private final UpgradeEntry<Player> playerEntry;
 	
 	public TellCoordsUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Player> playerEntry) {
-		super(internals, UpgradeEntrySet.PLAYER.fillCategories(mapper -> {
-			mapper.set(EntryCategory.PLAYER, playerEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.require(playerEntry);
 		}));
 		this.playerEntry = playerEntry;
 	}

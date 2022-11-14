@@ -28,8 +28,8 @@ public class EyesInFluidUpgradeCondition extends UpgradeCondition {
 	private final String fluidKey;
 	
 	public EyesInFluidUpgradeCondition(IUpgradeInternals internals, boolean inverted, UpgradeEntry<Entity> entityEntry, ResourceLocation fluidId, String fluidKey) {
-		super(internals, inverted, UpgradeEntrySet.ENTITY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ENTITY, entityEntry);
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			builder.require(entityEntry);
 		}));
 		this.entityEntry = entityEntry;
 		this.fluidId = fluidId;

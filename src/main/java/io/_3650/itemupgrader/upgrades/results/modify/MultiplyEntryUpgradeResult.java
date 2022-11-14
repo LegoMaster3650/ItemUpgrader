@@ -35,9 +35,9 @@ public class MultiplyEntryUpgradeResult extends UpgradeResult {
 			@Nullable UpgradeEntry<Float> floatEntry,
 			double amount, boolean doPercentFormat,
 			boolean isNegative) {
-		super(internals, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			if (target == NumberType.INTEGER) mapper.set(EntryCategory.INT_VALUE, intEntry);
-			if (target == NumberType.FLOAT) mapper.set(EntryCategory.FLOAT_VALUE, floatEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			if (target == NumberType.INTEGER) builder.modifiable(intEntry);
+			if (target == NumberType.FLOAT) builder.modifiable(floatEntry);
 		}));
 		this.target = target;
 		this.intEntry = intEntry;
@@ -104,7 +104,7 @@ public class MultiplyEntryUpgradeResult extends UpgradeResult {
 			}
 			double amount = GsonHelper.getAsDouble(json, "amount");
 			boolean doPercentFormat = GsonHelper.getAsBoolean(json, "percent_tooltip", true);
-			boolean isNegative = (!GsonHelper.getAsBoolean(json, "positive", true)) ^ (amount < 0);
+			boolean isNegative = GsonHelper.getAsBoolean(json, "positive", true) ? amount < 0 : amount > 0;
 			return new MultiplyEntryUpgradeResult(internals, target, intEntry, floatEntry, amount, doPercentFormat, isNegative);
 		}
 		

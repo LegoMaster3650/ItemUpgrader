@@ -10,22 +10,32 @@
 	"description": 1,
 	"upgrade": [
 		{
-			"action": "mining_speed",
+			"action": "breaking_speed",
 			"condition": {
 				"type": "block_tag",
 				"tag": "forge:stone",
 				"tooltip_override": "tooltip.itemupgrader.dwarven.stone"
 			},
-			"amount": 0.6
+			"result": {
+				"type": "multiply_entry",
+				"entry": "breaking_speed",
+				"amount": 0.6,
+				"positive": true
+			}
 		},
 		{
-			"action": "mining_speed",
+			"action": "breaking_speed",
 			"condition": {
 				"type": "block_tag",
 				"tag": "itemupgrader:any_deepslate",
 				"tooltip_override": "tooltip.itemupgrader.dwarven.deep"
 			},
-			"amount": 0.2
+			"result": {
+				"type": "multiply_entry",
+				"entry": "breaking_speed",
+				"amount": 0.2,
+				"positive": true
+			}
 		}
 	],
 	"conditions": [{

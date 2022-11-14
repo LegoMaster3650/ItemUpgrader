@@ -134,12 +134,15 @@ public class UpgradeEntry<T> {
 	public static final UpgradeEntry<ResourceLocation> PREV_UPGRADE_ID = FACTORY.create("prev_upgrade_id", EntryCategory.UPGRADE_ID);
 	public static final UpgradeEntry<Integer> INT_VALUE = FACTORY.createDefault("int", EntryCategory.INT_VALUE);
 	public static final UpgradeEntry<Float> FLOAT_VALUE = FACTORY.createDefault("float", EntryCategory.FLOAT_VALUE);
+	public static final UpgradeEntry<Boolean> BOOL_VALUE = FACTORY.createDefault("boolean", EntryCategory.BOOL_VALUE);
 	public static final UpgradeEntry<ResourceLocation> ENCHANTMENT_ID = FACTORY.create("enchantment");
 	public static final UpgradeEntry<Integer> ENCHANTMENT_LEVEL = FACTORY.create("enchantment_level", EntryCategory.INT_VALUE);
+	public static final UpgradeEntry<Float> BREAKING_SPEED = FACTORY.create("breaking_speed", EntryCategory.FLOAT_VALUE);
 	public static final UpgradeEntry<List<ItemStack>> BLOCK_DROPS = FACTORY.create("block_drops");
+	public static final UpgradeEntry<Boolean> DO_SHIELD_DAMAGE = FACTORY.create("do_shield_damage", EntryCategory.BOOL_VALUE);
 	
 	/**<b><u>Intended for use in results</u></b>**/
-	public static final UpgradeEntry<Boolean> CANCELLED = FACTORY.create("cancelled");
+	public static final UpgradeEntry<Boolean> CANCELLED = FACTORY.create("cancelled"); //twitter entry    bottom text
 	/**<b><u>Intended for use in results</u></b>**/
 	public static final UpgradeEntry<Boolean> CONSUMED = FACTORY.create("consumed");
 	

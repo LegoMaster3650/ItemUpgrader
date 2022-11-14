@@ -24,8 +24,8 @@ public class UpdateSlotItemUpgradeResult extends UpgradeResult {
 	private final EquipmentSlot slot;
 	
 	public UpdateSlotItemUpgradeResult(IUpgradeInternals internals, UpgradeEntry<ItemStack> itemEntry, UpgradeEntry<LivingEntity> livingEntry, EquipmentSlot slot) {
-		super(internals, UpgradeEntrySet.SLOT.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry).set(EntryCategory.LIVING, livingEntry);
+		super(internals, UpgradeEntrySet.SLOT.with(builder -> {
+			builder.requireAll(itemEntry, livingEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.livingEntry = livingEntry;

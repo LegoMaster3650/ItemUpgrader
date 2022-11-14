@@ -38,8 +38,8 @@ public class MagnetUpgradeResult extends UpgradeResult {
 	private final double rangeSquared;
 	
 	public MagnetUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Vec3> posEntry, boolean attractItems, boolean attractXp, double range, double speed, boolean isSphere) {
-		super(internals, UpgradeEntrySet.LEVEL_POSITION.fillCategories(mapper -> {
-			mapper.set(EntryCategory.POSITION, posEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(UpgradeEntry.LEVEL, posEntry);
 		}));
 		this.posEntry = posEntry;
 		this.attractItems = attractItems;

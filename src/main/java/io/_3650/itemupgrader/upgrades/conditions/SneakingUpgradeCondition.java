@@ -19,8 +19,8 @@ public class SneakingUpgradeCondition extends UpgradeCondition {
 	private final UpgradeEntry<LivingEntity> livingEntry;
 	
 	public SneakingUpgradeCondition(IUpgradeInternals internals, boolean inverted, UpgradeEntry<LivingEntity> livingEntry) {
-		super(internals, inverted, UpgradeEntrySet.LIVING.fillCategories(mapper -> {
-			mapper.set(EntryCategory.LIVING, livingEntry);
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			builder.require(livingEntry);
 		}));
 		this.livingEntry = livingEntry;
 	}

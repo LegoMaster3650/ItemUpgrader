@@ -19,7 +19,7 @@
 				},
 				{
 					"type": "cooldown",
-					"cooldown": 2400
+					"cooldown": 600
 				}
 			]
 		}

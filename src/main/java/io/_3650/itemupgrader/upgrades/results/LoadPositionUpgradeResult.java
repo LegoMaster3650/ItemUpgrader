@@ -34,8 +34,8 @@ public class LoadPositionUpgradeResult extends UpgradeResult {
 	private final boolean discard;
 	
 	public LoadPositionUpgradeResult(IUpgradeInternals internals, UpgradeEntry<ItemStack> itemEntry, UpgradeEntry<Player> playerEntry, String tagName, boolean dimension, boolean discard) {
-		super(internals, UpgradeEntrySet.PLAYER_ITEM.fillCategories(mapper -> {
-			mapper.set(EntryCategory.PLAYER, playerEntry).set(EntryCategory.ITEM, itemEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(playerEntry, itemEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.playerEntry = playerEntry;

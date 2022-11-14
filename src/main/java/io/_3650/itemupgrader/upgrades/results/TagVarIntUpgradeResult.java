@@ -28,8 +28,8 @@ public class TagVarIntUpgradeResult extends UpgradeResult {
 			String tagName,
 			ValueModifier modifier,
 			int value) {
-		super(internals, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.require(itemEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.tagName = tagName;

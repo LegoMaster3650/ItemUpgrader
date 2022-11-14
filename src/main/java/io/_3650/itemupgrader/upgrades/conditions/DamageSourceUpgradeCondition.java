@@ -55,8 +55,8 @@ public class DamageSourceUpgradeCondition extends UpgradeCondition {
 			boolean isBypassInvul, boolean isBypassMagic, boolean isCreativePlayer,
 			boolean isDamageHelmet, boolean isExplosion, boolean isFall, boolean isFire,
 			boolean isMagic, boolean isNoAggro, boolean isProjectile) {
-		super(internals, inverted, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.DAMAGE_SOURCE, sourceEntry);
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			builder.require(sourceEntry);
 		}));
 		this.sourceEntry = sourceEntry;
 		this.hasEntity = hasEntity;

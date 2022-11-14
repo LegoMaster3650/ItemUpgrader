@@ -26,8 +26,8 @@ public class DamageUpgradeResult extends UpgradeResult {
 	private final DamageSource damageSourceType;
 	
 	public DamageUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Entity> entityEntry, float damage, String damageSource) {
-		super(internals, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ENTITY, entityEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.require(entityEntry);
 		}));
 		this.entityEntry = entityEntry;
 		this.damage = damage;

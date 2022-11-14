@@ -7,8 +7,8 @@ public class ModUpgradeEntrySet {
 	public static final UpgradeEntrySet ATTRIBUTES = UpgradeEntrySet.SLOT_ITEM.with(builder -> {
 		builder
 		.require(ModUpgradeEntry.ATTRIBUTES)
-		.require(ModUpgradeEntry.ATTRIBUTE_ADDITIONS)
-		.require(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS);
+		.modifiable(ModUpgradeEntry.ATTRIBUTE_ADDITIONS)
+		.modifiable(ModUpgradeEntry.ATTRIBUTE_REPLACEMENTS);
 	});
 	
 }

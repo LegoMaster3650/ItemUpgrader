@@ -36,16 +36,9 @@ public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 			UpgradeEntry<Float> floatEntry,
 			int intValue,
 			float floatValue) {
-		super(internals, inverted, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			switch (target) {
-			default:
-			case INTEGER:
-				mapper.set(EntryCategory.INT_VALUE, intEntry);
-				break;
-			case FLOAT:
-				mapper.set(EntryCategory.FLOAT_VALUE, floatEntry);
-				break;
-			}
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			if (target == NumberType.INTEGER) builder.require(intEntry);
+			if (target == NumberType.FLOAT) builder.require(floatEntry);
 		}));
 		this.target = target;
 		this.op = op;

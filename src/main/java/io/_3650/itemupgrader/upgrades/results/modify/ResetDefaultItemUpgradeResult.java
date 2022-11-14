@@ -18,8 +18,8 @@ public class ResetDefaultItemUpgradeResult extends UpgradeResult {
 	private final UpgradeEntry<ItemStack> itemEntry;
 	
 	public ResetDefaultItemUpgradeResult(IUpgradeInternals internals, UpgradeEntry<ItemStack> itemEntry) {
-		super(internals, UpgradeEntrySet.SLOT.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.require(itemEntry);
 		}));
 		this.itemEntry = itemEntry;
 	}

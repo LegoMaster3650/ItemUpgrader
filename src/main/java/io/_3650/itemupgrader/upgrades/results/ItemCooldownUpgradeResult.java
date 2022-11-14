@@ -24,9 +24,8 @@ public class ItemCooldownUpgradeResult extends UpgradeResult {
 	
 	public ItemCooldownUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Player> playerEntry,
 			UpgradeEntry<ItemStack> itemEntry, int cooldownTicks) {
-		super(internals, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.PLAYER, playerEntry);
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(playerEntry, itemEntry);
 		}));
 		this.playerEntry = playerEntry;
 		this.itemEntry = itemEntry;

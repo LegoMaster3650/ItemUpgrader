@@ -30,8 +30,8 @@ public class TagVarFloatUpgradeCondition extends UpgradeCondition {
 			OperationValue op,
 			String tagName,
 			float value) {
-		super(internals, inverted, UpgradeEntrySet.EMPTY.fillCategories(mapper -> {
-			mapper.set(EntryCategory.ITEM, itemEntry);
+		super(internals, inverted, UpgradeEntrySet.create(builder -> {
+			builder.require(itemEntry);
 		}));
 		this.itemEntry = itemEntry;
 		this.op = op;

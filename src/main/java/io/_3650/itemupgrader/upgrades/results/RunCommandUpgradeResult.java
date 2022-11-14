@@ -10,7 +10,6 @@ import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeResult;
-import io._3650.itemupgrader.api.util.BoolHolder;
 import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.api.util.UpgradeJsonHelper;
 import net.minecraft.commands.CommandSource;
@@ -25,7 +24,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.LogicalSide;
 
 public class RunCommandUpgradeResult extends UpgradeResult {
 	
@@ -46,10 +44,8 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 			UpgradeEntry<Entity> entityEntry,
 			boolean ignoreEntity,
 			int permissionLevel) {
-		super(internals, UpgradeEntrySet.ENTITY.fillCategories(mapper -> {
-			mapper
-				.set(EntryCategory.POSITION, posEntry)
-				.setOptional(EntryCategory.ENTITY, entityEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.requireAll(UpgradeEntry.LEVEL, posEntry);
 		}));
 		this.commandFormat = commandFormat;
 		this.posEntry = posEntry;
@@ -62,14 +58,7 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 	
 	@Override
 	public boolean execute(UpgradeEventData data) {
-		BoolHolder success = new BoolHolder(false);
-		if (data.getOptional(UpgradeEntry.SIDE).orElse(LogicalSide.CLIENT) == LogicalSide.SERVER) data.getOptional(UpgradeEntry.LEVEL).ifPresent(unknownLevel -> {
-			if (unknownLevel instanceof ServerLevel level) success.value = this.executeOnLevel(data, level);
-		});
-		return success.value;
-	}
-	
-	public boolean executeOnLevel(UpgradeEventData data, ServerLevel level) {
+		if (!(data.getEntry(UpgradeEntry.LEVEL) instanceof ServerLevel level)) return false;
 		Entity entity = data.getEntryOrNull(this.entityEntry);
 		Vec3 pos = data.getEntry(this.posEntry).add(this.posOffset);
 		CommandSourceStack sourceStack;

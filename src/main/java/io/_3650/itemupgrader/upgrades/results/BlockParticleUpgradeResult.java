@@ -42,9 +42,7 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 			UpgradeEntry<Player> playerEntry,
 			boolean clientOnly) {
 		super(internals, UpgradeEntrySet.create(builder -> {
-			builder.require(UpgradeEntry.SIDE).require(UpgradeEntry.LEVEL).require(UpgradeEntry.BLOCK_STATE);
-		}).fillCategories(mapper -> {
-			mapper.set(EntryCategory.POSITION, posEntry).set(EntryCategory.PLAYER, playerEntry);
+			builder.requireAll(UpgradeEntry.LEVEL, UpgradeEntry.BLOCK_STATE, posEntry, playerEntry);
 		}));
 		this.posEntry = posEntry;
 		this.offset = offset;
@@ -55,8 +53,6 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 		this.clientOnly = clientOnly;
 	}
 	
-	private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
-	
 	@Override
 	public boolean execute(UpgradeEventData data) {
 		if (!(data.getEntry(UpgradeEntry.LEVEL) instanceof ServerLevel level)) return false;
@@ -65,11 +61,9 @@ public class BlockParticleUpgradeResult extends UpgradeResult {
 		@SuppressWarnings("deprecation") //L + ratio cope and seethe (why do I think this will backfire in 1.19)
 		BlockParticleOption options = BlockParticleOption.DESERIALIZER.fromNetwork(ParticleTypes.BLOCK, new FriendlyByteBuf(Unpooled.buffer()).writeVarInt(Block.getId(state)));
 		if (this.clientOnly && data.getEntry(this.playerEntry) instanceof ServerPlayer player) {
-			LOGGER.debug("client");
 			level.sendParticles(player, options, false, spawnPos.x, spawnPos.y, spawnPos.z, this.count, this.delta.x, this.delta.y, this.delta.z, this.speed);
 			return true;
 		} else if (!this.clientOnly) {
-			LOGGER.debug("server");
 			level.sendParticles(options, spawnPos.x, spawnPos.y, spawnPos.z, this.count, this.delta.x, this.delta.y, this.delta.z, this.speed);
 			return true;
 		}

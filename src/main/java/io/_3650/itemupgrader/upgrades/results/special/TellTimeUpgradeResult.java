@@ -22,8 +22,8 @@ public class TellTimeUpgradeResult extends UpgradeResult {
 	private final UpgradeEntry<Player> playerEntry;
 	
 	public TellTimeUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Player> playerEntry) {
-		super(internals, UpgradeEntrySet.PLAYER.fillCategories(mapper -> {
-			mapper.set(EntryCategory.PLAYER, playerEntry);
+		super(internals, UpgradeEntrySet.create(builder -> {
+			builder.require(playerEntry);
 		}));
 		this.playerEntry = playerEntry;
 	}
