@@ -85,7 +85,7 @@ public class PlaySoundUpgradeResult extends UpgradeResult {
 			UpgradeEntry<Vec3> posEntry = EntryCategory.POSITION.fromJson(json);
 			ResourceLocation soundId = new ResourceLocation(GsonHelper.getAsString(json, "sound"));
 			if (!ForgeRegistries.SOUND_EVENTS.containsKey(soundId)) throw new IllegalArgumentException("Sound does not exist: " + soundId);
-			SoundSource source = sourceByName(GsonHelper.getAsString(json, "source", "master"));
+			SoundSource source = sourceByName(GsonHelper.getAsString(json, "source", "player"));
 			float volume = GsonHelper.getAsFloat(json, "volume", 1.0F);
 			float pitch = GsonHelper.getAsFloat(json, "pitch", 1.0F);
 			return new PlaySoundUpgradeResult(internals, posEntry, soundId, source, volume, pitch);

@@ -1,0 +1,62 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:trident"
+		}
+	],
+	"color": "#e281fc",
+	"slots": [],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "trident_hit",
+			"result": [
+				{
+					"type": "sound",
+					"sound": "minecraft:item.trident.thunder",
+					"source": "",
+					"volume": 0.5,
+					"pitch": 0.8,
+					"visible": false
+				},
+				{
+					"type": "command",
+					"command": "particle enchanted_hit ~ ~ ~ 2 2 2 0.1 100",
+					"visible": false
+				},
+				{
+					"type": "area_damage",
+					"damage": 3,
+					"directSource": "direct_damager",
+					"source": "damager_entity",
+					"damage_source": {
+						"name": "tridentShock",
+						"bypass_armor": true,
+						"magic": true
+					}
+				},
+				{
+					"type": "with_entries",
+					"entries": {
+						"entity": "target_entity"
+					},
+					"convert": {
+						"source": {"entity": "target_entity"},
+						"target": {"living": "living"}
+					},
+					"result": {
+						"type": "effect",
+						"living": "target_entity",
+						"effect": "minecraft:slowness",
+						"duration": 30,
+						"amplifier": 2
+					}
+				}
+			]
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

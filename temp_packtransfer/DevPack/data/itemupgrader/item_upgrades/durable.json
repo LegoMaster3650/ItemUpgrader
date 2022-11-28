@@ -1,0 +1,19 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:unbreaking_enchantable"
+	},
+	"color": "#403d3d",
+	"slots": [],
+	"description": 2,
+	"upgrade": [
+		{
+			"action": "enchantment",
+			"enchantment": "minecraft:unbreaking",
+			"amount": 1
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

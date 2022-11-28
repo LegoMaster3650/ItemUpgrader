@@ -1,4 +1,4 @@
-package io._3650.itemupgrader.upgrades.results.special;
+package io._3650.itemupgrader.upgrades.results;
 
 import java.util.ArrayList;
 import java.util.List;

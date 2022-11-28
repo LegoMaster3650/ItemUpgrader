@@ -34,14 +34,15 @@ public class ItemUpgradeRecipe extends UpgradeRecipe {
 	@Override
 	public boolean matches(Container inv, Level level) {
 		if (this.getUpgrade() == null) return false;
-		if (inv.getItem(0).getCount() > 1) return false; //only allow upgrading one item at a time
 		return this.getUpgrade().isValidItem(inv.getItem(0)) && this.catalyst.test(inv.getItem(1));
 	}
 	
 	@Override
 	public ItemStack assemble(Container inv) {
 		if (this.getUpgrade() == null) return ItemStack.EMPTY;
-		return ItemUpgraderApi.applyUpgrade(inv.getItem(0).copy(), this.upgradeId);
+		ItemStack result = inv.getItem(0).copy();
+		result.setCount(1);
+		return ItemUpgraderApi.applyUpgrade(result, this.upgradeId);
 	}
 	
 	@Override

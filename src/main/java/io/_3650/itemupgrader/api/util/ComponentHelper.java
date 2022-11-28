@@ -20,9 +20,16 @@ import net.minecraft.world.entity.EquipmentSlot;
 public class ComponentHelper {
 	
 	/**
-	 * Simple {@linkplain DecimalFormat} that turns the given number into a percentage with up to 2 decimal places
+	 * Simple {@linkplain DecimalFormat} that signs the given number with +/- and limiting it to 2 decimal places
 	 */
-	public static final DecimalFormat BASIC_PERCENT = Util.make(new DecimalFormat("+#.##%;-#.##%"), format -> {
+	public static final DecimalFormat SIGNED_NUMBER = Util.make(new DecimalFormat("+#.##;-#.##"), format -> {
+		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
+	});
+	
+	/**
+	 * Simple {@linkplain DecimalFormat} that signs the given number with +/- and turns it into a percentage with up to 2 decimal places
+	 */
+	public static final DecimalFormat SIGNED_PERCENT = Util.make(new DecimalFormat("+#.##%;-#.##%"), format -> {
 		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
 	});
 	

@@ -66,8 +66,8 @@ public class ConditionalUpgradeResult extends UpgradeResult {
 		@Override
 		public ConditionalUpgradeResult fromJson(IUpgradeInternals internals, JsonObject json) {
 			UpgradeCondition condition = UpgradeSerializer.condition(GsonHelper.getAsJsonObject(json, "condition"));
-			UpgradeResult result = UpgradeSerializer.result(GsonHelper.getAsJsonObject(json, "result"));
-			UpgradeResult elseResult = GsonHelper.isObjectNode(json, "else") ? UpgradeSerializer.result(GsonHelper.getAsJsonObject(json, "else")) : null;
+			UpgradeResult result = UpgradeSerializer.result(json.get("result"));
+			UpgradeResult elseResult = GsonHelper.isObjectNode(json, "else") ? UpgradeSerializer.result(json.get("else")) : null;
 			return new ConditionalUpgradeResult(internals, condition, result, elseResult);
 		}
 		

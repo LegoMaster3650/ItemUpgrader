@@ -76,7 +76,7 @@ public class UpgradeEventData {
 	 * @return If the entry type is present
 	 */
 	public boolean hasEntry(UpgradeEntry<?> entry) {
-		return entry.isNullable() ? this.entries.containsKey(entry) : this.getEntryOrNull(entry) == null;
+		return entry.isNullable() ? this.entries.containsKey(entry) : this.getEntryOrNull(entry) != null;
 	}
 	
 	/**
@@ -567,7 +567,7 @@ public class UpgradeEventData {
 		 * @param value The data to store for this entry
 		 * @throws IllegalArgumentException if the provided entry doesn't allow null values but a null value was given anyways
 		 */
-		public static <T> void forceAddEntry(UpgradeEventData data, UpgradeEntry<T> entry, T value) throws IllegalArgumentException {
+		public static <T> void forceSetEntry(UpgradeEventData data, UpgradeEntry<T> entry, T value) throws IllegalArgumentException {
 			if (!entry.isNullable() && value == null) throw new IllegalArgumentException("Tried to set the value of non-nullable entry " + entry + " to null");
 			data.entries.put(entry, value);
 		}

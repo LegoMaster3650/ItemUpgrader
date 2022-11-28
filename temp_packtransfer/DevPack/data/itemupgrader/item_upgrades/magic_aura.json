@@ -1,0 +1,37 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:enchantable"
+	},
+	"color": "#8c13ad",
+	"slots": [],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "enchantability",
+			"result": [
+				{
+					"type": "add_entry",
+					"entry": "enchantability",
+					"amount": 5,
+					"positive": true
+				}
+			]
+		},
+		{
+			"action": "living_tick",
+			"visible": false,
+			"condition": {
+				"type": "random",
+				"chance": 0.1
+			},
+			"result": {
+				"type": "command",
+				"command": "particle enchant ~ ~1.2 ~ .135 .135 .135 .02 1"
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

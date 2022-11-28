@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public class ClientStuff {
 	
@@ -19,6 +20,11 @@ public class ClientStuff {
 	@SuppressWarnings("resource")
 	public static void playerActionBar(Component msg) {
 		Minecraft.getInstance().player.displayClientMessage(msg, true);
+	}
+	
+	@SuppressWarnings("resource")
+	public static void displayItemActivation(ItemStack stack) {
+		Minecraft.getInstance().gameRenderer.displayItemActivation(stack);
 	}
 	
 }

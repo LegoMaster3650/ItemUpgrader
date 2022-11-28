@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
 
 import io._3650.itemupgrader.ItemUpgrader;
+import io._3650.itemupgrader.upgrades.EntryCategoryManager;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,15 +42,6 @@ public class EntryCategory<T> {
 	private final Map<ResourceLocation, UpgradeEntry<T>> entries = Maps.newHashMap();
 	
 	private UpgradeEntry<T> defaultValue = null;
-	
-	/**
-	 * Constructs a new upgrade entry category
-	 * @param id A {@linkplain ResourceLocation} to use as your category's id
-	 */
-	private EntryCategory(ResourceLocation id) {
-		this.id = id;
-		this.parent = null;
-	}
 	
 	/**
 	 * Constructs a new upgrade entry category with a parent category
@@ -118,7 +110,7 @@ public class EntryCategory<T> {
 		//I know this isn't the best idea but it's a compromise for user friendliness
 		ResourceLocation basicEntryId = new ResourceLocation(entry.getId().getPath()); //only using first registered value
 		if (!this.entries.containsKey(basicEntryId)) this.entries.put(basicEntryId, (UpgradeEntry<T>) entry);
-		if (this.hasParent()) pass = this.parent.addEntry(entry) && pass;
+		if (this.hasParent()) pass &= this.parent.addEntry(entry);
 		return pass;
 	}
 	
@@ -127,7 +119,7 @@ public class EntryCategory<T> {
 	 * @param entry The {@linkplain UpgradeEntry} to check
 	 * @return If this category contains the given entry
 	 */
-	public boolean hasEntry(UpgradeEntry<T> entry) {
+	public boolean hasEntry(UpgradeEntry<?> entry) {
 		return this.entries.containsKey(entry.getId());
 	}
 	
@@ -299,7 +291,7 @@ public class EntryCategory<T> {
 		 * @return A new {@linkplain EntryCategory} with the given parameters
 		 */
 		public <T> EntryCategory<T> create(String name) {
-			return new EntryCategory<>(new ResourceLocation(modId, name));
+			return create(name, null);
 		}
 		
 		/**
@@ -310,8 +302,26 @@ public class EntryCategory<T> {
 		 * @return A new {@linkplain EntryCategory} with the given parameters
 		 */
 		public <T> EntryCategory<T> create(String name, EntryCategory<? super T> parent) {
-			return new EntryCategory<>(new ResourceLocation(modId, name), parent);
+			EntryCategory<T> category = new EntryCategory<>(new ResourceLocation(modId, name), parent);
+			EntryCategoryManager.addCategory(category.id, category);
+			return category;
 		}
+	}
+	
+	/**
+	 * Abomination of a method never meant to be called<br>
+	 * Does a really dumb check for if an entry is a subclass of what this category is for<br>
+	 * Starts with z to put it low in any sorted method lists to hide it
+	 * @param entry The entry to check if it could be for a subclass of this category
+	 * @return Whether or not the given entry holds a subclass of this category
+	 */
+	public boolean zCheckIfSubclass(UpgradeEntry<?> entry) {
+		EntryCategory<?> cantidate = this;
+		do {
+			if (cantidate.hasEntry(entry)) return true;
+			cantidate = cantidate.getParent();
+		} while (cantidate != null);
+		return false;
 	}
 	
 }

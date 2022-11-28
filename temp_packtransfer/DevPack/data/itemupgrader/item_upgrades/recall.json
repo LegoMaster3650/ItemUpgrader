@@ -5,7 +5,7 @@
 		}
 	],
 	"color": "#93ed91",
-	"slots": ["mainhand"],
+	"slots": ["mainhand", "offhand"],
 	"description": 1,
 	"upgrade": [
 		{
@@ -17,7 +17,8 @@
 				{
 					"type": "sound",
 					"visible": false,
-					"sound": "block.enchantment_table.use"
+					"sound": "block.enchantment_table.use",
+					"source": "player"
 				},
 				{
 					"type": "remove_upgrade"

@@ -3,7 +3,7 @@
 		"item": "minecraft:totem_of_undying"
 	},
 	"color": "#2d1282",
-	"slots": ["mainhand","offhand"],
+	"slots": [],
 	"description": 1,
 	"upgrade": [
 		{
@@ -19,8 +19,12 @@
 				},
 				{
 					"type": "damage",
-					"amount": 1000,
-					"source": "magic"
+					"damage": 1000,
+					"damage_source": {
+						"name": "magic",
+						"bypass_armor": true,
+						"magic": true
+					}
 				},
 				{
 					"type": "effect",

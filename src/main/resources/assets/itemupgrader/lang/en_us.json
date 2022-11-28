@@ -1,5 +1,6 @@
 {
 	"itemupgrader.mod_name": "Item Upgrader",
+	"itemupgrader.jei.category": "Item Upgrades",
 	"key.categories.itemupgrader": "Item Upgrader",
 	"key.itemupgrader.show_tooltip": "Show Tooltip",
 	
@@ -9,6 +10,7 @@
 	"equipmentSlot.chest": "Chest",
 	"equipmentSlot.legs": "Legs",
 	"equipmentSlot.feet": "Feet",
+	"equipmentSlot.any": "Equipped",
 	
 	"fluid.minecraft.water": "Water",
 	"fluid.minecraft.lava": "Lava",
@@ -32,6 +34,12 @@
 	
 	"tooltip.itemupgrader.if": "If %s, ",
 	"tooltip.itemupgrader.else": ", Or Else ",
+	
+	
+	
+	"death.attack.itemUpgrader": "%1$s died",
+	"death.attack.itemUpgrader.player": "%1$s died because of %2$s",
+	"death.attack.itemUpgrader.player.item": "%1$s died because of %2$s using %3$s",
 	
 	
 	
@@ -62,8 +70,14 @@
 	"upgradeEntry.itemupgrader.prev_upgrade_id": "Previous Upgrade ID",
 	"upgradeEntry.itemupgrader.int": "Generic Integer",
 	"upgradeEntry.itemupgrader.float": "Generic Float",
+	"upgradeEntry.itemupgrader.boolean": "Generic Boolean",
 	"upgradeEntry.itemupgrader.enchantment": "Enchantment",
 	"upgradeEntry.itemupgrader.enchantment_level": "Enchantment Level",
+	"upgradeEntry.itemupgrader.enchantability": "Enchantability",
+	"upgradeEntry.itemupgrader.breaking_speed": "Breaking Speed",
+	"upgradeEntry.itemupgrader.block_drops": "Block Drops",
+	"upgradeEntry.itemupgrader.do_shield_damage": "Damage Shield",
+	"upgradeEntry.itemupgrader.projectile": "Projectile",
 	
 	"upgradeEntry.itemupgrader.cancelled": "Cancelled",
 	"upgradeEntry.itemupgrader.consumed": "Consumed",
@@ -71,7 +85,6 @@
 	"upgradeEntry.itemupgrader.attributes": "Attributes",
 	"upgradeEntry.itemupgrader.attribute_additions": "Attribute Additions",
 	"upgradeEntry.itemupgrader.attribute_replacements": "Attribute Replacements",
-	"upgradeEntry.itemupgrader.breaking_speed": "Breaking Speed",
 	
 	
 	
@@ -139,6 +152,19 @@
 	"action.itemupgrader.loot_enchantment.tooltip.one": "Add %s level of %s",
 	"action.itemupgrader.loot_enchantment.tooltip.decrease": "Remove %s levels of %s",
 	
+	"upgradeAction.itemupgrader.enchantment": "",
+	"action.itemupgrader.enchantment.tooltip": "Add %s levels of %s",
+	"action.itemupgrader.enchantment.tooltip.one": "Add %s level of %s",
+	"action.itemupgrader.enchantment.tooltip.decrease": "Remove %s levels of %s",
+	"action.itemupgrader.enchantment.tooltip.present": " if already enchanted",
+	"action.itemupgrader.enchantment.tooltip.min_level": " if level is %s or above",
+	
+	"upgradeAction.itemupgrader.enchantability": "",
+	
+	"upgradeAction.itemupgrader.block_drops": "On block drops: ",
+	"upgradeAction.itemupgrader.trident_throw": "On throw: ",
+	
+	"upgradeAction.itemupgrader.breaking_speed": "",
 	
 	"upgradeAction.itemupgrader.upgrade_apply_pre": "Before this upgrade is applied: ",
 	"upgradeAction.itemupgrader.upgrade_apply_post": "After this upgrade is applied: ",
@@ -163,13 +189,18 @@
 	"upgradeAction.itemupgrader.pre_hurt": "Before damage is started: ",
 	"upgradeAction.itemupgrader.hurt": "Before damage is taken: ",
 	"upgradeAction.itemupgrader.damage": "When damage is taken: ",
+	"upgradeAction.itemupgrader.death": "On death: ",
 	"upgradeAction.itemupgrader.fall": "On fall: ",
 	"upgradeAction.itemupgrader.totem": "On totem use: ",
-	"upgradeAction.itemupgrader.totem_post": "After totem use: ",
+	"upgradeAction.itemupgrader.after_totem": "After totem use: ",
+	"upgradeAction.itemupgrader.shield_block": "On shield block: ",
 	
-	"upgradeAction.itemupgrader.breaking_speed": "",
+	"upgradeAction.itemupgrader.trident_hit": "On trident hit: ",
+	"upgradeAction.itemupgrader.projectile_block": "On projectile block: ",
 	
-	"upgradeAction.itemupgrader.block_drops": "On block drops: ",
+	"upgradeAction.itemupgrader.break_block": "On block broken: ",
+	"upgradeAction.itemupgrader.place_block": "On block placed: ",
+	
 	
 	
 	"upgradeCondition.itemupgrader.and": "%s",
@@ -202,6 +233,10 @@
 	"upgradeCondition.itemupgrader.success.inverted": "last result failed",
 	"upgradeCondition.itemupgrader.edible": "item is edible",
 	"upgradeCondition.itemupgrader.sneaking": "sneaking",
+	"upgradeCondition.itemupgrader.random": "%s chance",
+	
+	"upgradeCondition.itemupgrader.internal_can_parry": "started blocking under %s seconds ago",
+	"upgradeCondition.itemupgrader.internal_can_rebound": "started blocking under %s seconds ago",
 	
 	
 	
@@ -218,6 +253,8 @@
 	"upgradeResult.itemupgrader.save_position": "Save position %s to tag %s",
 	"upgradeResult.itemupgrader.load_position": "Load position tag %s",
 	"upgradeResult.itemupgrader.damage": "Deal %s %s damage to %s",
+	"upgradeResult.itemupgrader.heal": "Heal %s health to %s",
+	"upgradeResult.itemupgrader.set_health": "Set health of %s to %s",
 	"upgradeResult.itemupgrader.sound": "Play sound %s",
 	"upgradeResult.itemupgrader.explosion": "Explode with radius %s",
 	"upgradeResult.itemupgrader.durability": "Deal %s durability damage",
@@ -228,10 +265,14 @@
 	"upgradeResult.itemupgrader.save_timestamp": "Save current timestamp",
 	"upgradeResult.itemupgrader.conditional": "%s",
 	"upgradeResult.itemupgrader.compound": "%s",
+	"upgradeResult.itemupgrader.with_entries": "%s",
 	"upgradeResult.itemupgrader.magnet": "Attract all %s within %s blocks",
 	"upgradeResult.itemupgrader.magnet.items": "Items",
 	"upgradeResult.itemupgrader.magnet.xp": "Experience",
 	"upgradeResult.itemupgrader.autosmelt": "Smelt dropped items.",
+	"upgradeResult.itemupgrader.display_item": "Display an item.",
+	"upgradeResult.itemupgrader.area_damage": "Deal %s damage to all entities within %s blocks.",
+	"upgradeResult.itemupgrader.pierce": "+%s pierce",
 	
 	"upgradeResult.itemupgrader.update_position": "Update position %s",
 	"upgradeResult.itemupgrader.update_item": "Update item %s in slot %s",
@@ -239,7 +280,9 @@
 	
 	"upgradeResult.itemupgrader.modify_damage": "%s Damage",
 	
+	"upgradeResult.itemupgrader.add_entry": "%s %s",
 	"upgradeResult.itemupgrader.multiply_entry": "%s %s",
+	"upgradeResult.itemupgrader.set_number": "Set %s to %s",
 	
 	"upgradeResult.itemupgrader.internal_fall_to_food": "Absorb fall damage as hunger",
 	"upgradeResult.itemupgrader.internal_spawnpoint": "Return to spawnpoint",
@@ -249,6 +292,9 @@
 	"tooltip.itemupgrader.internal_tell_time.day": "Day %d, ",
 	"tooltip.itemupgrader.internal_tell_time.time": "%s:%s",
 	"tooltip.itemupgrader.internal_tell_time.am": " AM",
-	"tooltip.itemupgrader.internal_tell_time.pm": " PM"
+	"tooltip.itemupgrader.internal_tell_time.pm": " PM",
+	"upgradeResult.itemupgrader.internal_totem_particles": "Spawn totem of undying particles",
+	"upgradeResult.itemupgrader.internal_parry": "Parry the projectile",
+	"upgradeResult.itemupgrader.internal_rebound": "Rebound the attacker"
 	
 }

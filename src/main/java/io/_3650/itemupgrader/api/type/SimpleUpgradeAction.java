@@ -84,7 +84,7 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 	public void run(UpgradeEventData data) {
 		if (this.serializer.hasPlayerUpgrade()) {
 			if (data.getEntry(this.serializer.playerUpgrade.source) instanceof Player player) {
-				UpgradeEventData.InternalStuffIgnorePlease.forceAddEntry(data, this.serializer.playerUpgrade.target, player);
+				UpgradeEventData.InternalStuffIgnorePlease.forceSetEntry(data, this.serializer.playerUpgrade.target, player);
 				super.run(data);
 			} else return;
 		} else super.run(data);
@@ -171,7 +171,7 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 			List<UpgradeResult> results;
 			if (json.has("result")) {
 				results = UpgradeJsonHelper.collectObjects(json.get("result"), resultJson -> {
-					UpgradeResult result = UpgradeSerializer.result(resultJson);
+					UpgradeResult result = UpgradeSerializer.resultFromObject(resultJson);
 					if (serializerInstance.verifyResult(result)) return result;
 					else return null;
 				});
@@ -179,7 +179,7 @@ public class SimpleUpgradeAction extends ConditionalUpgradeAction {
 			List<UpgradeResult> elseResults;
 			if (json.has("else")) {
 				elseResults = UpgradeJsonHelper.collectObjects(json.get("else"), resultJson -> {
-					UpgradeResult result = UpgradeSerializer.result(resultJson);
+					UpgradeResult result = UpgradeSerializer.resultFromObject(resultJson);
 					if (serializerInstance.verifyResult(result)) return result;
 					else return null;
 				});

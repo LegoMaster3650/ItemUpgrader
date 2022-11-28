@@ -5,7 +5,7 @@
 		}
 	],
 	"color": "#5bc924",
-	"slots": ["mainhand"],
+	"slots": ["mainhand", "offhand"],
 	"description": 1,
 	"upgrade": [
 		{

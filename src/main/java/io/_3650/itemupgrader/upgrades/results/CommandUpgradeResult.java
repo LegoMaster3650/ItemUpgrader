@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-public class RunCommandUpgradeResult extends UpgradeResult {
+public class CommandUpgradeResult extends UpgradeResult {
 	
 	private final String commandFormat;
 	private final UpgradeEntry<Vec3> posEntry;
@@ -35,7 +35,7 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 	private final boolean ignoreEntity;
 	private final int permissionLevel;
 	
-	public RunCommandUpgradeResult(
+	public CommandUpgradeResult(
 			IUpgradeInternals internals,
 			String commandFormat,
 			UpgradeEntry<Vec3> posEntry,
@@ -101,10 +101,10 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 		this.getSerializer().toNetwork(this, buf);
 	}
 	
-	public static class Serializer extends UpgradeResultSerializer<RunCommandUpgradeResult> {
+	public static class Serializer extends UpgradeResultSerializer<CommandUpgradeResult> {
 		
 		@Override
-		public RunCommandUpgradeResult fromJson(IUpgradeInternals internals, JsonObject json) {
+		public CommandUpgradeResult fromJson(IUpgradeInternals internals, JsonObject json) {
 			String commandFormat = GsonHelper.getAsString(json, "command");
 			UpgradeEntry<Vec3> posEntry = EntryCategory.POSITION.fromJson(json);
 			Vec3 posOffset = UpgradeJsonHelper.getPosition(json, "offset");
@@ -112,11 +112,11 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 			UpgradeEntry<Entity> entityEntry = EntryCategory.ENTITY.fromJson(json);
 			boolean ignoreEntity = GsonHelper.getAsBoolean(json, "ignore_entity", false);
 			int permissionLevel = Math.min(2, GsonHelper.getAsInt(json, "permission_level", 2));
-			return new RunCommandUpgradeResult(internals, commandFormat, posEntry, posOffset, rotation, entityEntry, ignoreEntity, permissionLevel);
+			return new CommandUpgradeResult(internals, commandFormat, posEntry, posOffset, rotation, entityEntry, ignoreEntity, permissionLevel);
 		}
 		
 		@Override
-		public void toNetwork(RunCommandUpgradeResult result, FriendlyByteBuf buf) {
+		public void toNetwork(CommandUpgradeResult result, FriendlyByteBuf buf) {
 			buf.writeUtf(result.commandFormat);
 			result.posEntry.toNetwork(buf);
 			buf.writeDouble(result.posOffset.x).writeDouble(result.posOffset.y).writeDouble(result.posOffset.z);
@@ -127,7 +127,7 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 		}
 		
 		@Override
-		public RunCommandUpgradeResult fromNetwork(IUpgradeInternals internals, FriendlyByteBuf buf) {
+		public CommandUpgradeResult fromNetwork(IUpgradeInternals internals, FriendlyByteBuf buf) {
 			String commandFormat = buf.readUtf();
 			UpgradeEntry<Vec3> posEntry = EntryCategory.POSITION.fromNetwork(buf);
 			Vec3 posOffset = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
@@ -135,7 +135,7 @@ public class RunCommandUpgradeResult extends UpgradeResult {
 			UpgradeEntry<Entity> entityEntry = EntryCategory.ENTITY.fromNetwork(buf);
 			boolean ignoreEntity = buf.readBoolean();
 			int permissionLevel = buf.readInt();
-			return new RunCommandUpgradeResult(internals, commandFormat, posEntry, posOffset, rotation, entityEntry, ignoreEntity, permissionLevel);
+			return new CommandUpgradeResult(internals, commandFormat, posEntry, posOffset, rotation, entityEntry, ignoreEntity, permissionLevel);
 		}
 		
 	}

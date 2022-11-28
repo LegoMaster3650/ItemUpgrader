@@ -4,12 +4,20 @@
 	"compatibilityLevel": "JAVA_17",
 	"refmap": "itemupgrader.refmap.json",
 	"mixins": [
-		"FoodDataMixin",
 		"BlockMixin",
+		"DrownedMixin",
+		"FoodDataMixin",
+		"ItemStackMixin",
+		"TridentItemMixin",
+		"SmithingMenuMixin",
+		"IForgeItemStackMixin",
 		"ApplyBonusCountMixin",
 		"LivingEntityMixin",
 		"LivingEntityInvoker",
-		"ServerPlayerInvoker"
+		"ServerPlayerInvoker",
+		"ThrownTridentMixin",
+		"ThrownTridentAccessor",
+		"AbstractArrowAccessor"
 	],
 	"minVersion": "0.8"
 }

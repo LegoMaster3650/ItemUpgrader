@@ -6,13 +6,25 @@
 		}
 	],
 	"color": "#edab39",
-	"slots": ["mainhand"],
+	"slots": [],
 	"description": 1,
 	"upgrade": [
 		{
 			"action": "block_drops",
 			"result": {
 				"type": "autosmelt"
+			}
+		},
+		{
+			"action": "living_tick",
+			"visible": false,
+			"condition": {
+				"type": "random",
+				"chance": 0.03
+			},
+			"result": {
+				"type": "command",
+				"command": "particle flame ~ ~1 ~ .135 .135 .135 .02 1"
 			}
 		}
 	],

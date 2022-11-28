@@ -1,0 +1,22 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:trident"
+		}
+	],
+	"color": "#5ed65a",
+	"slots": ["mainhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "attribute",
+			"attribute": "forge:reach_distance",
+			"operation": "add",
+			"amount": 1.0
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

@@ -1,0 +1,35 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:trident"
+		}
+	],
+	"color": "#7df5ef",
+	"slots": [],
+	"description": 2,
+	"upgrade": [
+		{
+			"action": "trident_throw",
+			"result": {
+				"type": "pierce",
+				"amount": 3
+			}
+		},
+		{
+			"action": "enchantment",
+			"enchantment": "minecraft:loyalty",
+			"amount": 2,
+			"minimum_level": 1
+		},
+		{
+			"action": "enchantment",
+			"enchantment": "minecraft:riptide",
+			"amount": 2,
+			"minimum_level": 1
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

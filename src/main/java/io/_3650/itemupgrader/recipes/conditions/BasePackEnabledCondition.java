@@ -29,6 +29,7 @@ public class BasePackEnabledCondition implements ICondition {
 		return test();
 	}
 	
+	@SuppressWarnings("removal")
 	@Override
 	public boolean test() {
 		boolean basePackEnabled = Config.COMMON.basePackEnabled.get();

@@ -107,7 +107,7 @@ public class CompareNumbersUpgradeCondition extends UpgradeCondition {
 		case INTEGER:
 			return new MutableComponent[] {new TranslatableComponent(this.intEntry.getDescriptionId()), new TextComponent(this.op.getName()), new TextComponent("" + this.intValue)};
 		case FLOAT:
-			return new MutableComponent[] {new TranslatableComponent(this.floatEntry.getDescriptionId()), new TextComponent(this.op.getName()), new TextComponent("" + this.floatValue)};
+			return new MutableComponent[] {new TranslatableComponent(this.floatEntry.getDescriptionId()), new TextComponent(this.op.getName()), new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(this.floatValue))};
 		}
 	}
 	

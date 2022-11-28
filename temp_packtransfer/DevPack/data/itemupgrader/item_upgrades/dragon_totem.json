@@ -3,7 +3,7 @@
 		"item": "minecraft:totem_of_undying"
 	},
 	"color": "#8f1bc4",
-	"slots": ["mainhand","offhand"],
+	"slots": [],
 	"description": 2,
 	"upgrade": [
 		{

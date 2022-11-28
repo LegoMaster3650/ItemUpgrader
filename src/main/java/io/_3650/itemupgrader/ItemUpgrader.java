@@ -54,7 +54,7 @@ public class ItemUpgrader {
 	public static final Supplier<IForgeRegistry<UpgradeResultSerializer<UpgradeResult>>> RESULT_REGISTRY = ModUpgradeResults.RESULTS.makeRegistry(RegistryHelper.fixStupidClass(UpgradeResultSerializer.class), () ->
 			new RegistryBuilder<UpgradeResultSerializer<UpgradeResult>>().disableSaving());
 	
-	public static final Supplier<IForgeRegistry<TypedCriteria>> TYPED_CRITERIA_REGISTRY = ModTypedCriteria.TYPED_CRITERIA.makeRegistry(TypedCriteria.class, () -> new RegistryBuilder<TypedCriteria>());
+	public static final Supplier<IForgeRegistry<TypedCriteria>> TYPED_CRITERIA_REGISTRY = ModTypedCriteria.CRITERIA.makeRegistry(TypedCriteria.class, () -> new RegistryBuilder<TypedCriteria>());
 	
 	public ItemUpgrader() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -63,7 +63,7 @@ public class ItemUpgrader {
 		ModUpgradeActions.ACTIONS.register(bus);
 		ModUpgradeConditions.CONDITIONS.register(bus);
 		ModUpgradeResults.RESULTS.register(bus);
-		ModTypedCriteria.TYPED_CRITERIA.register(bus);
+		ModTypedCriteria.CRITERIA.register(bus);
 		
 		bus.addListener(this::setup);
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ItemUpgraderClient::new);

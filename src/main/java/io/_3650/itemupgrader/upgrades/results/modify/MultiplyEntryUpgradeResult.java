@@ -77,7 +77,7 @@ public class MultiplyEntryUpgradeResult extends UpgradeResult {
 	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		MutableComponent amountTooltip = new TextComponent(this.doPercentFormat ? ComponentHelper.BASIC_PERCENT.format(this.amount) : ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(this.amount));
+		MutableComponent amountTooltip = new TextComponent(this.doPercentFormat ? ComponentHelper.SIGNED_PERCENT.format(this.amount) : "x" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(this.amount));
 		MutableComponent entryTooltip = new TranslatableComponent(this.target == NumberType.FLOAT ? this.floatEntry.getDescriptionId() : this.intEntry.getDescriptionId());
 		return new MutableComponent[] {amountTooltip, entryTooltip};
 	}

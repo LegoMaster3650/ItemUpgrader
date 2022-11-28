@@ -1,5 +1,6 @@
 package io._3650.itemupgrader.api.util;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -8,6 +9,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io._3650.itemupgrader.ItemUpgrader;
@@ -18,7 +20,11 @@ import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeAction;
 import io._3650.itemupgrader.api.type.UpgradeCondition;
 import io._3650.itemupgrader.api.type.UpgradeResult;
+import io._3650.itemupgrader.upgrades.conditions.compound.AndUpgradeCondition;
+import io._3650.itemupgrader.upgrades.results.CompoundUpgradeResult;
 import io._3650.itemupgrader.api.type.IUpgradeType.IUpgradeInternals;
+import io._3650.itemupgrader.registry.ModUpgradeConditions;
+import io._3650.itemupgrader.registry.ModUpgradeResults;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -61,12 +67,32 @@ public class UpgradeSerializer {
 	}
 	
 	/**
+	 * Deserializes an upgrade condition from a json object or array, auto-generating a compound condition if true
+	 * @param json The {@linkplain JsonElement} to deserialize which is either a {@linkplain JsonObject} or {@linkplain JsonArray}
+	 * @return The resulting {@linkplain UpgradeCondition}
+	 * @throws NoSuchElementException if there is no valid condition type for one of the detected identifiers
+	 */
+	public static UpgradeCondition condition(JsonElement json) throws NoSuchElementException {
+		if (json.isJsonArray()) {
+			JsonArray jsonConditions = json.getAsJsonArray();
+			ArrayList<UpgradeCondition> conditions = new ArrayList<>(jsonConditions.size());
+			boolean visible = true;
+			for (var jsonCondition : jsonConditions) {
+				UpgradeCondition condition = conditionFromObject(jsonCondition.getAsJsonObject());
+				visible &= condition.isVisible();
+				conditions.add(condition);
+			}
+			return new AndUpgradeCondition(new IUpgradeInternals(ModUpgradeConditions.AND.getId(), null, visible), conditions);
+		} else return conditionFromObject(json.getAsJsonObject());
+	}
+	
+	/**
 	 * Deserializes an upgrade condition from a json object
 	 * @param json The {@linkplain JsonObject} to deserialize
 	 * @return The resulting {@linkplain UpgradeCondition}
 	 * @throws NoSuchElementException if there is no valid condition type for the detected identifier
 	 */
-	public static UpgradeCondition condition(JsonObject json) throws NoSuchElementException {
+	public static UpgradeCondition conditionFromObject(JsonObject json) throws NoSuchElementException {
 		//get condition id
 		ResourceLocation conditionId = new ResourceLocation(GsonHelper.getAsString(json, "type"));
 		//minecraft never registers anything anyways, default to item upgrader instead
@@ -84,12 +110,32 @@ public class UpgradeSerializer {
 	}
 	
 	/**
+	 * Deserializes an upgrade result from a json object or array, auto-generating a compound result if true
+	 * @param json The {@linkplain JsonElement} to deserialize which is either a {@linkplain JsonObject} or {@linkplain JsonArray}
+	 * @return The resulting {@linkplain UpgradeResult}
+	 * @throws NoSuchElementException if there is no valid result type for one of the detected identifiers
+	 */
+	public static UpgradeResult result(JsonElement json) throws NoSuchElementException {
+		if (json.isJsonArray()) {
+			JsonArray jsonResults = json.getAsJsonArray();
+			ArrayList<UpgradeResult> results = new ArrayList<>(jsonResults.size());
+			boolean visible = true;
+			for (var jsonResult : jsonResults) {
+				UpgradeResult result = resultFromObject(jsonResult.getAsJsonObject());
+				visible &= result.isVisible();
+				results.add(result);
+			}
+			return new CompoundUpgradeResult(new IUpgradeInternals(ModUpgradeResults.COMPOUND.getId(), null, visible), results);
+		} else return resultFromObject(json.getAsJsonObject());
+	}
+	
+	/**
 	 * Deserializes an upgrade result from a json object
 	 * @param json The {@linkplain JsonObject} to deserialize
 	 * @return The resulting {@linkplain UpgradeResult}
 	 * @throws NoSuchElementException if there is no valid result type for the detected identifier
 	 */
-	public static UpgradeResult result(JsonObject json) throws NoSuchElementException {
+	public static UpgradeResult resultFromObject(JsonObject json) throws NoSuchElementException {
 		// get result id
 		ResourceLocation resultId = new ResourceLocation(GsonHelper.getAsString(json, "type"));
 		// minecraft never registers anything anyways, default to item upgrader instead

@@ -36,6 +36,11 @@
 	"upgrade.itemupgrader.magnetic.description": "Attract nearby items and experience from far away!",
 	"upgrade.itemupgrader.magnetic.icon": "§l⧈",
 	
+	"upgrade.itemupgrader.undying": "Undying",
+	"upgrade.itemupgrader.undying.description.1": "Store the totem of undying in your pockets!",
+	"upgrade.itemupgrader.undying.description.2": "It still works!",
+	"upgrade.itemupgrader.undying.icon": "☠",
+	
 	
 	
 	"upgrade.itemupgrader.dolphins_gift": "Dolphin's Gift",
@@ -60,11 +65,21 @@
 	"upgrade.itemupgrader.obsidian_shield.description": "Protects the Wielder from Flames temporarily.",
 	"upgrade.itemupgrader.obsidian_shield.icon": "☠",
 	
+	"upgrade.itemupgrader.parry": "Parry",
+	"upgrade.itemupgrader.parry.description.1": "Reflect certain projectiles by raising your shield just before getting hit.",
+	"upgrade.itemupgrader.parry.description.2": "Also defends against pierce on parry!",
+	"upgrade.itemupgrader.parry.icon": "◎",
+	
+	"upgrade.itemupgrader.rebound": "Rebound",
+	"upgrade.itemupgrader.rebound.description.1": "Rebounds any living attackers by raising your shield just before getting hit.",
+	"upgrade.itemupgrader.rebound.description.2": "REMEMBER TO ADD A LINE HERE",
+	"upgrade.itemupgrader.rebound.icon": "⏹",
+	
 	
 	
 	"upgrade.itemupgrader.dual_wield": "Dual Wield",
 	"upgrade.itemupgrader.dual_wield.description": "Attack significantly faster, but at what cost?",
-	"upgrade.itemupgrader.dual_wield.icon": "🗡🗡",
+	"upgrade.itemupgrader.dual_wield.icon": "⚔",
 	
 	"tooltip.itemupgrader.dual_wield.flag": "upgrade is in both hands",
 	"tooltip.itemupgrader.dual_wield.has_bonus": "attack speed bonus is applied",
@@ -96,6 +111,23 @@
 	"upgrade.itemupgrader.superheated": "Superheated",
 	"upgrade.itemupgrader.superheated.description": "Automatically smelts block drops!",
 	"upgrade.itemupgrader.superheated.icon": "🔥",
+	
+	
+	
+	"upgrade.itemupgrader.poseidon": "Poseidon",
+	"upgrade.itemupgrader.poseidon.description.1": "The wrath of the seas strengthens your weapon.",
+	"upgrade.itemupgrader.poseidon.description.2": "Pierce your foes and strike down all who oppose you!",
+	"upgrade.itemupgrader.poseidon.icon": "§l♦",
+	
+	"upgrade.itemupgrader.reach": "Reach",
+	"upgrade.itemupgrader.reach.description": "Reach your foes from slightly further away!",
+	"upgrade.itemupgrader.reach.icon": "§l♦",
+	
+	"upgrade.itemupgrader.resonate": "Resonate",
+	"upgrade.itemupgrader.resonate.description": "A trident landing causes violent magical vibrations.",
+	"upgrade.itemupgrader.resonate.icon": "§l♦",
+	"death.attack.tridentShock": "%1$s was shocked by %2$s",
+	"death.attack.tridentShock.item": "%1$s was shocked by %2$s using %3$s",
 	
 	
 	
@@ -146,6 +178,7 @@
 	"upgrade.itemupgrader.wayfinder.icon": "❤",
 	
 	
+	
 	"upgrade.itemupgrader.time_teller": "Time Teller",
 	"upgrade.itemupgrader.time_teller.description": "Tells you the current day and time.",
 	"upgrade.itemupgrader.time_teller.icon": "☀",
@@ -153,6 +186,24 @@
 	"upgrade.itemupgrader.accelerator": "Accelerator",
 	"upgrade.itemupgrader.accelerator.description": "Allows you to mess with time itself.",
 	"upgrade.itemupgrader.accelerator.icon": "§l↑",
+	
+	
+	
+	"upgrade.itemupgrader.magic_aura": "Magic Aura",
+	"upgrade.itemupgrader.magic_aura.description": "Your item feels easier to enchant...",
+	"upgrade.itemupgrader.magic_aura.icon": "♢",
+	
+	"upgrade.itemupgrader.durable": "Durable",
+	"upgrade.itemupgrader.durable.description.1": "Sometimes you might just want your item to break slower.",
+	"upgrade.itemupgrader.durable.description.2": "In that case, you're in luck!",
+	"upgrade.itemupgrader.durable.icon": "§l🛡",
+	
+	
+	
+	"upgrade.itemupgrader.my_reaction_to_that_information": "My Reaction To That Information",
+	"upgrade.itemupgrader.my_reaction_to_that_information.description": "My Reaction To That Information",
+	"upgrade.itemupgrader.my_reaction_to_that_information.icon": "ඞ",
+	
 	
 	
 	"predicate.itemupgrader.not_burning": "not burning",

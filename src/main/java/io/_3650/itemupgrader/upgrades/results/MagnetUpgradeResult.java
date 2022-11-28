@@ -34,8 +34,8 @@ public class MagnetUpgradeResult extends UpgradeResult {
 	private final double range;
 	private final double speed;
 	private final boolean isSphere;
-	private final double cubeRange;
 	private final double rangeSquared;
+	private final double cubeRange;
 	
 	public MagnetUpgradeResult(IUpgradeInternals internals, UpgradeEntry<Vec3> posEntry, boolean attractItems, boolean attractXp, double range, double speed, boolean isSphere) {
 		super(internals, UpgradeEntrySet.create(builder -> {
@@ -47,8 +47,8 @@ public class MagnetUpgradeResult extends UpgradeResult {
 		this.range = range;
 		this.speed = speed;
 		this.isSphere = isSphere;
-		this.cubeRange = isSphere ? Math.sqrt((range * range) * 2) : range;
 		this.rangeSquared = range * range;
+		this.cubeRange = isSphere ? Math.sqrt(this.rangeSquared * 2) : range;
 	}
 	
 	@Override
@@ -103,7 +103,7 @@ public class MagnetUpgradeResult extends UpgradeResult {
 			boolean attractXp = GsonHelper.getAsBoolean(json, "xp", true);
 			double range = GsonHelper.getAsDouble(json, "range", 5.0D);
 			double speed = GsonHelper.getAsDouble(json, "speed", 1.0D) / 2.0D;
-			boolean isSphere = GsonHelper.getAsString(json, "shape", "cube").equals("sphere") && Config.COMMON.allowMagneticSphere.get();
+			boolean isSphere = GsonHelper.getAsString(json, "shape", "cube").equals("sphere") && Config.COMMON.allowRadiusSphere.get();
 			return new MagnetUpgradeResult(internals, posEntry, attractItems, attractXp, range, speed, isSphere);
 		}
 		

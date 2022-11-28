@@ -1,0 +1,46 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:shield"
+	},
+	"color": "#c124ed",
+	"slots": ["mainhand", "offhand"],
+	"description": 2,
+	"upgrade": [
+		{
+			"action": "projectile_block",
+			"condition": {
+				"type": "internal_can_parry"
+			},
+			"result": [
+				{
+					"type": "internal_parry",
+					"power": 1.3,
+					"facing_bias": 0.6
+				},
+				{
+					"type": "cancel",
+					"visible": false
+				},
+				{
+					"type": "command",
+					"command": "particle enchanted_hit ~ ~1 ~ 0.5 0.5 0.5 0.1 20",
+					"visible": false
+				}
+			]
+		},
+		{
+			"action": "right_click",
+			"visible": false,
+			"result": {
+				"type": "sound",
+				"sound": "minecraft:item.armor.equip_chain",
+				"source": "player",
+				"pitch": 2.0
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

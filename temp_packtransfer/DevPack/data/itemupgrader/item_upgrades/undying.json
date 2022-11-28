@@ -1,0 +1,53 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:leggings"
+		}
+	],
+	"color": "#48f39f",
+	"slots": ["legs"],
+	"description": 2,
+	"upgrade": [
+		{
+			"action": "death",
+			"player_override": {"source": "living"},
+			"result": [
+				{
+					"type": "cancel"
+				},
+				{
+					"type": "set_health",
+					"amount": 1.0
+				},
+				{
+					"type": "remove_upgrade"
+				},
+				{
+					"type": "effect",
+					"effect": "minecraft:regeneration",
+					"duration": 900,
+					"amplifier": 1
+				},
+				{
+					"type": "effect",
+					"effect": "minecraft:absorption",
+					"duration": 100,
+					"amplifier": 1
+				},
+				{
+					"type": "effect",
+					"effect": "minecraft:fire_resistance",
+					"duration": 800
+				},
+				{
+					"type": "internal_totem_particles",
+					"visible": false
+				}
+			]
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

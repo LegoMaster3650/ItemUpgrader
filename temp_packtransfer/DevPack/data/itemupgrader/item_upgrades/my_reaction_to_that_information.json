@@ -1,0 +1,76 @@
+{
+	"base": [
+		{
+			"item": "minecraft:brick"
+		}
+	],
+	"color": "#FF0000",
+	"slots": ["mainhand"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "entity_interact",
+			"visible": false,
+			"player_override": {"source": "target_entity"},
+			"result": [
+				{
+					"type": "display_item",
+					"item": {
+						"item": "minecraft:observer"
+					}
+				}
+			]
+		},
+		{
+			"action": "right_click",
+			"player_override": {"source": "entity"},
+			"result": [
+				{
+					"type": "display_item",
+					"item": {
+						"item": "minecraft:observer"
+					}
+				},
+				{
+					"type": "sound",
+					"sound": "minecraft:ui.toast.challenge_complete",
+					"pitch": 2.0,
+					"visible": false
+				}
+			]
+		},
+		{
+			"action": "left_click_block",
+			"visible": false,
+			"player_override": {"source": "entity"},
+			"condition": {
+				"type": "block",
+				"block": "minecraft:dragon_egg"
+			},
+			"result": [
+				{
+					"type": "display_item",
+					"item": {
+						"item": "minecraft:dragon_head"
+					}
+				},
+				{
+					"type": "sound",
+					"sound": "minecraft:ui.toast.challenge_complete",
+					"pitch": 2.0,
+					"visible": false
+				},
+				{
+					"type": "sound",
+					"sound": "minecraft:music.credits",
+					"volume": 10000,
+					"pitch": 2.0,
+					"visible": false
+				}
+			]
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader:base_pack_enabled"
+	}]
+}

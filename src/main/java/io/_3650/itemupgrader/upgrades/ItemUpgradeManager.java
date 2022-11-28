@@ -65,11 +65,15 @@ public class ItemUpgradeManager extends SimpleJsonResourceReloadListener {
 				//base
 				Ingredient base = Ingredient.fromJson(json.get("base"));
 				//slots
-				JsonArray validSlotsJson = GsonHelper.getAsJsonArray(json, "slots");
-				Set<EquipmentSlot> validSlots = new LinkedHashSet<EquipmentSlot>(validSlotsJson.size());
-				for (var element : validSlotsJson) {
-					if (GsonHelper.isStringValue(element)) validSlots.add(EquipmentSlot.byName(element.getAsString()));
+				Set<EquipmentSlot> validSlots = Set.of();
+				if (GsonHelper.isArrayNode(json, "slots")) {
+					JsonArray validSlotsJson = GsonHelper.getAsJsonArray(json, "slots");
+					validSlots = new LinkedHashSet<EquipmentSlot>(validSlotsJson.size());
+					for (var element : validSlotsJson) {
+						if (GsonHelper.isStringValue(element)) validSlots.add(EquipmentSlot.byName(element.getAsString()));
+					}
 				}
+				
 				//is visible (or is hidden)
 				boolean visible = GsonHelper.getAsBoolean(json, "visible", true);
 				if (visible) visible ^= GsonHelper.getAsBoolean(json, "hidden", false); //xor my beloved

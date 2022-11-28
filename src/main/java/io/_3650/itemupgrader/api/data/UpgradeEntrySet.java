@@ -3,6 +3,7 @@ package io._3650.itemupgrader.api.data;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
@@ -129,7 +130,7 @@ public class UpgradeEntrySet {
 		private final Set<UpgradeEntry<?>> provided = Sets.newIdentityHashSet();
 		private final Set<UpgradeEntry<?>> modified = Sets.newIdentityHashSet();
 		
-		private final Set<UpgradeEntry<?>> additionalProvided = Sets.newIdentityHashSet();
+		private final Set<UpgradeEntry<?>> forced = Sets.newIdentityHashSet();
 		
 		/**Constructs a new empty builder*/
 		public Builder() {}
@@ -147,7 +148,21 @@ public class UpgradeEntrySet {
 			this.required.addAll(preset.required);
 			this.provided.addAll(preset.provided);
 			this.modified.addAll(preset.modified);
-			this.additionalProvided.addAll(preset.forced);
+			this.forced.addAll(preset.forced);
+			return this;
+		}
+		
+		/**
+		 * Adds all the data from the given entry set to this one after running it through a filter
+		 * @param preset The {@linkplain UpgradeEntrySet} to copy from
+		 * @param filter A {@linkplain Predicate} that returns whether to add the given {@linkplain UpgradeEntry}
+		 * @return The {@linkplain Builder} to chain more statements on
+		 */
+		public Builder combine(UpgradeEntrySet preset, Predicate<UpgradeEntry<?>> filter) {
+			for (var entry : preset.required) if (filter.test(entry)) this.required.add(entry);
+			for (var entry : preset.provided) if (filter.test(entry)) this.provided.add(entry);
+			for (var entry : preset.modified) if (filter.test(entry)) this.modified.add(entry);
+			for (var entry : preset.forced) if (filter.test(entry)) this.forced.add(entry);
 			return this;
 		}
 		
@@ -238,7 +253,7 @@ public class UpgradeEntrySet {
 		 * @see #provide(UpgradeEntry)
 		 */
 		public Builder provideForce(UpgradeEntry<?> entry) {
-			this.additionalProvided.add(entry);
+			this.forced.add(entry);
 			return this.provide(entry);
 		}
 		
@@ -263,7 +278,7 @@ public class UpgradeEntrySet {
 		 * @return A new {@linkplain UpgradeEntrySet} with this builder's required list made immutable
 		 */
 		public UpgradeEntrySet build() {
-			return new UpgradeEntrySet(this.required, this.provided, this.modified, this.additionalProvided);
+			return new UpgradeEntrySet(this.required, this.provided, this.modified, this.forced);
 		}
 		
 	}

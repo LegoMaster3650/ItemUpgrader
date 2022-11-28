@@ -23,7 +23,10 @@ public class Config {
 		public final BooleanValue basePackEnabled;
 		public final BooleanValue basePackRecipes;
 
-		public final BooleanValue allowMagneticSphere;
+		public final BooleanValue allowRadiusSphere;
+		
+		public final IntValue shieldRaiseSpeed;
+		public final IntValue shieldParryDuration;
 		
 		Common(ForgeConfigSpec.Builder builder) {
 			builder.comment("Strangely buggy when in server config so this is in common config instead.").push("datapack");
@@ -35,7 +38,14 @@ public class Config {
 			
 			builder.push("performance");
 			
-			allowMagneticSphere = builder.comment("Allows the magnetic upgrade and any variants to search for items in a sphere rather than a cube.", "Disabling this COULD help performance.", "Requires datapack reload to take effect.", "[Default: true]").define("allowMagneticSphere", true);
+			allowRadiusSphere = builder.comment("Allows upgrades to search for items in a sphere rather than a cube if specified.", "Disabling this COULD help performance.", "Requires datapack reload to take effect.", "[Default: true]").define("allowMagneticSphere", true);
+			
+			builder.pop();
+			
+			builder.push("functionality");
+			
+			shieldRaiseSpeed = builder.comment("How long it takes a shield to activate and block damage.", "[Vanilla: 5]", "[Default: 0]").defineInRange("shieldRaiseSpeed", 0, 0, 20);
+			shieldParryDuration = builder.comment("Defines the duration after putting up a shield the parry upgrade will be functional for.", "[Default: 20]").defineInRange("shieldParryDuration", 20, 5, 100);
 			
 			builder.pop();
 		}
@@ -50,6 +60,11 @@ public class Config {
 		
 		public final IntValue coordinateDisplayMode;
 		public final IntValue timeDisplayMode;
+		
+		public final IntValue recipeClickAreaLeftX;
+		public final IntValue recipeClickAreaTopY;
+		public final IntValue recipeClickAreaWidth;
+		public final IntValue recipeClickAreaHeight;
 		
 		Client(ForgeConfigSpec.Builder builder) {
 			builder.push("tooltip");
@@ -77,6 +92,17 @@ public class Config {
 					"4 - HH:MM",
 					"[Default: 1]").defineInRange("timeDisplayMode", 1, 1, 4);
 			
+			builder.pop();
+			///////////////////////////////////////////////////////////
+			builder.push("jei");
+			builder.comment("Tweaking the area you can click in the smithing table gui to view upgrade recipes.", "Mainly intended if you have an incompatible gui modifying resource pack.", ">> Requires a reload for changes to apply! <<").push("recipeClickArea");
+			
+			recipeClickAreaLeftX = builder.comment("X of left edge of click area").defineInRange("recipeClickAreaLeftX", 17, 0, 175);
+			recipeClickAreaTopY = builder.comment("Y of top edge of click area").defineInRange("recipeClickAreaTopY", 7, 0, 165);
+			recipeClickAreaWidth = builder.comment("Width of click area").defineInRange("recipeClickAreaWidth", 30, 1, 176);
+			recipeClickAreaHeight = builder.comment("Height of click area").defineInRange("recipeClickAreaHeight", 30, 1, 166);
+			
+			builder.pop();
 			builder.pop();
 		}
 		

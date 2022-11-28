@@ -7,12 +7,16 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.BookItem;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,40 +24,47 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModTypedCriteria {
 	
-	public static final DeferredRegister<TypedCriteria> TYPED_CRITERIA = DeferredRegister.create(ItemUpgraderRegistry.TYPED_CRITERIA, ItemUpgrader.MOD_ID);
+	public static final DeferredRegister<TypedCriteria> CRITERIA = DeferredRegister.create(ItemUpgraderRegistry.TYPED_CRITERIA, ItemUpgrader.MOD_ID);
 	
 	//Always True or False criteria
-	public static final RegistryObject<TypedCriteria> TRUE = TYPED_CRITERIA.register("true", TypedCriteria.TRUE);
-	public static final RegistryObject<TypedCriteria> FALSE = TYPED_CRITERIA.register("false", TypedCriteria.FALSE);
+	public static final RegistryObject<TypedCriteria> TRUE = CRITERIA.register("true", TypedCriteria.TRUE);
+	public static final RegistryObject<TypedCriteria> FALSE = CRITERIA.register("false", TypedCriteria.FALSE);
 	
 	//Tool criteria
-	public static final RegistryObject<TypedCriteria> SWORD = TYPED_CRITERIA.register("sword", () -> new TypedCriteria(item -> item instanceof SwordItem));
-	public static final RegistryObject<TypedCriteria> AXE = TYPED_CRITERIA.register("axe", () -> new TypedCriteria(item -> item instanceof AxeItem));
-	public static final RegistryObject<TypedCriteria> PICKAXE = TYPED_CRITERIA.register("pickaxe", () -> new TypedCriteria(item -> item instanceof PickaxeItem));
-	public static final RegistryObject<TypedCriteria> SHOVEL = TYPED_CRITERIA.register("shovel", () -> new TypedCriteria(item -> item instanceof ShovelItem));
-	public static final RegistryObject<TypedCriteria> HOE = TYPED_CRITERIA.register("hoe", () -> new TypedCriteria(item -> item instanceof HoeItem));
+	public static final RegistryObject<TypedCriteria> SWORD = CRITERIA.register("sword", TypedCriteria.of(stack -> stack.getItem() instanceof SwordItem));
+	public static final RegistryObject<TypedCriteria> AXE = CRITERIA.register("axe", TypedCriteria.of(stack -> stack.getItem() instanceof AxeItem));
+	public static final RegistryObject<TypedCriteria> PICKAXE = CRITERIA.register("pickaxe", TypedCriteria.of(stack -> stack.getItem() instanceof PickaxeItem));
+	public static final RegistryObject<TypedCriteria> SHOVEL = CRITERIA.register("shovel", TypedCriteria.of(stack -> stack.getItem() instanceof ShovelItem));
+	public static final RegistryObject<TypedCriteria> HOE = CRITERIA.register("hoe", TypedCriteria.of(stack -> stack.getItem() instanceof HoeItem));
+	public static final RegistryObject<TypedCriteria> FISHING_ROD = CRITERIA.register("fishing_rod", TypedCriteria.of(stack -> stack.getItem() instanceof FishingRodItem));
+	public static final RegistryObject<TypedCriteria> BOW = CRITERIA.register("bow", TypedCriteria.of(stack -> stack.getItem() instanceof BowItem));
+	public static final RegistryObject<TypedCriteria> CROSSBOW = CRITERIA.register("crossbow", TypedCriteria.of(stack -> stack.getItem() instanceof CrossbowItem));
+	public static final RegistryObject<TypedCriteria> TRIDENT = CRITERIA.register("trident", TypedCriteria.of(stack -> stack.getItem() instanceof TridentItem));
 	
-	public static final RegistryObject<TypedCriteria> SHIELD = TYPED_CRITERIA.register("shield", () -> new TypedCriteria(item -> item.canPerformAction(new ItemStack(item), ToolActions.SHIELD_BLOCK)));
+	public static final RegistryObject<TypedCriteria> SHIELD = CRITERIA.register("shield", TypedCriteria.of(stack -> stack.getItem().canPerformAction(stack, ToolActions.SHIELD_BLOCK)));
 	
 	//Equipment Slot criteria
-	public static final RegistryObject<TypedCriteria> HEAD = TYPED_CRITERIA.register("head", () -> new TypedCriteria(item -> LivingEntity.getEquipmentSlotForItem(new ItemStack(item)) == EquipmentSlot.HEAD));
-	public static final RegistryObject<TypedCriteria> CHEST = TYPED_CRITERIA.register("chest", () -> new TypedCriteria(item -> LivingEntity.getEquipmentSlotForItem(new ItemStack(item)) == EquipmentSlot.CHEST));
-	public static final RegistryObject<TypedCriteria> LEGS = TYPED_CRITERIA.register("legs", () -> new TypedCriteria(item -> LivingEntity.getEquipmentSlotForItem(new ItemStack(item)) == EquipmentSlot.LEGS));
-	public static final RegistryObject<TypedCriteria> FEET = TYPED_CRITERIA.register("feet", () -> new TypedCriteria(item -> LivingEntity.getEquipmentSlotForItem(new ItemStack(item)) == EquipmentSlot.FEET));
-	public static final RegistryObject<TypedCriteria> MAINHAND = TYPED_CRITERIA.register("mainhand", () -> new TypedCriteria(item -> LivingEntity.getEquipmentSlotForItem(new ItemStack(item)) == EquipmentSlot.MAINHAND));
-	public static final RegistryObject<TypedCriteria> OFFHAND = TYPED_CRITERIA.register("offhand", () -> new TypedCriteria(item -> LivingEntity.getEquipmentSlotForItem(new ItemStack(item)) == EquipmentSlot.OFFHAND));
+	public static final RegistryObject<TypedCriteria> HEAD = CRITERIA.register("head", TypedCriteria.of(stack -> LivingEntity.getEquipmentSlotForItem(stack) == EquipmentSlot.HEAD));
+	public static final RegistryObject<TypedCriteria> CHEST = CRITERIA.register("chest", TypedCriteria.of(stack -> LivingEntity.getEquipmentSlotForItem(stack) == EquipmentSlot.CHEST));
+	public static final RegistryObject<TypedCriteria> LEGS = CRITERIA.register("legs", TypedCriteria.of(stack -> LivingEntity.getEquipmentSlotForItem(stack) == EquipmentSlot.LEGS));
+	public static final RegistryObject<TypedCriteria> FEET = CRITERIA.register("feet", TypedCriteria.of(stack -> LivingEntity.getEquipmentSlotForItem(stack) == EquipmentSlot.FEET));
+	public static final RegistryObject<TypedCriteria> MAINHAND = CRITERIA.register("mainhand", TypedCriteria.of(stack -> LivingEntity.getEquipmentSlotForItem(stack) == EquipmentSlot.MAINHAND));
+	public static final RegistryObject<TypedCriteria> OFFHAND = CRITERIA.register("offhand", TypedCriteria.of(stack -> LivingEntity.getEquipmentSlotForItem(stack) == EquipmentSlot.OFFHAND));
 	
 	//Armor criteria (only accepts actual armor, not elytras)
-	public static final RegistryObject<TypedCriteria> HELMET = TYPED_CRITERIA.register("helmet", () -> new TypedCriteria(item -> armorCheck(item, EquipmentSlot.HEAD)));
-	public static final RegistryObject<TypedCriteria> CHESTPLATE = TYPED_CRITERIA.register("chestplate", () -> new TypedCriteria(item -> armorCheck(item, EquipmentSlot.CHEST)));
-	public static final RegistryObject<TypedCriteria> LEGGINGS = TYPED_CRITERIA.register("leggings", () -> new TypedCriteria(item -> armorCheck(item, EquipmentSlot.LEGS)));
-	public static final RegistryObject<TypedCriteria> BOOTS = TYPED_CRITERIA.register("boots", () -> new TypedCriteria(item -> armorCheck(item, EquipmentSlot.FEET)));
+	public static final RegistryObject<TypedCriteria> HELMET = CRITERIA.register("helmet", TypedCriteria.of(stack -> armorCheck(stack.getItem(), EquipmentSlot.HEAD)));
+	public static final RegistryObject<TypedCriteria> CHESTPLATE = CRITERIA.register("chestplate", TypedCriteria.of(stack -> armorCheck(stack.getItem(), EquipmentSlot.CHEST)));
+	public static final RegistryObject<TypedCriteria> LEGGINGS = CRITERIA.register("leggings", TypedCriteria.of(stack -> armorCheck(stack.getItem(), EquipmentSlot.LEGS)));
+	public static final RegistryObject<TypedCriteria> BOOTS = CRITERIA.register("boots", TypedCriteria.of(stack -> armorCheck(stack.getItem(), EquipmentSlot.FEET)));
 	
 	//Misc.
-	public static final RegistryObject<TypedCriteria> EFFICIENCY_ENCHANTABLE = TYPED_CRITERIA.register("efficiency_enchantable", () -> new TypedCriteria(item -> Enchantments.BLOCK_EFFICIENCY.canEnchant(new ItemStack(item))));
-	public static final RegistryObject<TypedCriteria> FORTUNE_ENCHANTABLE = TYPED_CRITERIA.register("fortune_enchantable", () -> new TypedCriteria(item -> Enchantments.BLOCK_FORTUNE.canEnchant(new ItemStack(item))));
-	public static final RegistryObject<TypedCriteria> SHARPNESS_ENCHANTABLE = TYPED_CRITERIA.register("sharpness_enchantable", () -> new TypedCriteria(item -> Enchantments.SHARPNESS.canEnchant(new ItemStack(item))));
-	public static final RegistryObject<TypedCriteria> LOOTING_ENCHANTABLE = TYPED_CRITERIA.register("looting_enchantable", () -> new TypedCriteria(item -> Enchantments.MOB_LOOTING.canEnchant(new ItemStack(item))));
+	public static final RegistryObject<TypedCriteria> BOOK = CRITERIA.register("book", TypedCriteria.of(stack -> stack.getItem() instanceof BookItem));
+	public static final RegistryObject<TypedCriteria> ENCHANTABLE = CRITERIA.register("enchantable", TypedCriteria.of(stack -> stack.getItem().getEnchantmentValue() > 0));
+	public static final RegistryObject<TypedCriteria> UNBRAKING_ENCHANTABLE = CRITERIA.register("unbreaking_enchantable", TypedCriteria.of(stack -> Enchantments.UNBREAKING.canEnchant(stack)));
+	public static final RegistryObject<TypedCriteria> EFFICIENCY_ENCHANTABLE = CRITERIA.register("efficiency_enchantable", TypedCriteria.of(stack -> Enchantments.BLOCK_EFFICIENCY.canEnchant(stack)));
+	public static final RegistryObject<TypedCriteria> FORTUNE_ENCHANTABLE = CRITERIA.register("fortune_enchantable", TypedCriteria.of(stack -> Enchantments.BLOCK_FORTUNE.canEnchant(stack)));
+	public static final RegistryObject<TypedCriteria> SHARPNESS_ENCHANTABLE = CRITERIA.register("sharpness_enchantable", TypedCriteria.of(stack -> Enchantments.SHARPNESS.canEnchant(stack)));
+	public static final RegistryObject<TypedCriteria> LOOTING_ENCHANTABLE = CRITERIA.register("looting_enchantable", TypedCriteria.of(stack -> Enchantments.MOB_LOOTING.canEnchant(stack)));
 	
 	//Utility functions
 	private static boolean armorCheck(Item item, EquipmentSlot slot) {

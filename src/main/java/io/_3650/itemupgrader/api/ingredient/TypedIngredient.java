@@ -11,7 +11,6 @@ import io._3650.itemupgrader.ItemUpgrader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.AbstractIngredient;
@@ -19,7 +18,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 
 /**
- * Custom ingredient that runs the stack through a {@linkplain TypedCriteria} containing a {@linkplain Predicate} for an {@linkplain Item}
+ * Custom ingredient that runs the stack through a {@linkplain TypedCriteria} containing a {@linkplain Predicate} for an {@linkplain ItemStack}
  * @author LegoMaster3650
  * @see TypedCriteria
  */
@@ -36,7 +35,7 @@ public class TypedIngredient extends AbstractIngredient {
 	@Override
 	public boolean test(@Nullable ItemStack stack) {
 		if (stack == null) return false;
-		return this.criteria.test(stack.getItem());
+		return this.criteria.test(stack);
 	}
 	
 	@Override

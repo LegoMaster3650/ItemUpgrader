@@ -3,7 +3,7 @@
 		"item": "minecraft:totem_of_undying"
 	},
 	"color": "#60cf44",
-	"slots": ["mainhand","offhand"],
+	"slots": [],
 	"description": 2,
 	"upgrade": [
 		{
@@ -15,7 +15,7 @@
 			"result": [
 				{
 					"type": "explosion",
-					"power": 3
+					"power": 4
 				},
 				{
 					"type": "cooldown",

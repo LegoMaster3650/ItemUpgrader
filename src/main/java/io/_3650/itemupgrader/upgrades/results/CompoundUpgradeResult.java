@@ -63,7 +63,7 @@ public class CompoundUpgradeResult extends UpgradeResult {
 		public CompoundUpgradeResult fromJson(IUpgradeInternals internals, JsonObject json) {
 			JsonArray jsonResults = GsonHelper.getAsJsonArray(json, "results");
 			ArrayList<UpgradeResult> results = new ArrayList<>(jsonResults.size());
-			for (var jsonResult : jsonResults) results.add(UpgradeSerializer.result(jsonResult.getAsJsonObject()));
+			for (var jsonResult : jsonResults) results.add(UpgradeSerializer.resultFromObject(jsonResult.getAsJsonObject()));
 			return new CompoundUpgradeResult(internals, results);
 		}
 		

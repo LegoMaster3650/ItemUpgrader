@@ -13,6 +13,7 @@ import io._3650.itemupgrader.api.ItemUpgraderApi;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.event.LivingTotemEvent;
+import io._3650.itemupgrader.mixin.ThrownTridentAccessor;
 import io._3650.itemupgrader.network.NetworkHandler;
 import io._3650.itemupgrader.network.PlayerLeftClickEmptyPacket;
 import io._3650.itemupgrader.network.PlayerRightClickEmptyPacket;
@@ -20,6 +21,7 @@ import io._3650.itemupgrader.registry.ModUpgradeActions;
 import io._3650.itemupgrader.upgrades.data.AttributeReplacement;
 import io._3650.itemupgrader.upgrades.data.ModUpgradeEntry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -29,12 +31,20 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -42,6 +52,8 @@ import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -361,6 +373,22 @@ public class ModEvents {
 			}
 		}
 	}
+
+	@SubscribeEvent
+	public static void livingDeath(LivingDeathEvent event) {
+		LivingEntity living = event.getEntityLiving();
+		for (EquipmentSlot slot : EquipmentSlot.values()) {
+			if (living.hasItemInSlot(slot)) {
+				UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_DEATH, new UpgradeEventData.Builder(living, slot)
+						.entry(UpgradeEntry.DAMAGE_SOURCE, event.getSource())
+						.cancellable());
+				if (data.isCancelled()) {
+					event.setCanceled(true);
+					return;
+				}
+			}
+		}
+	}
 	
 	@SubscribeEvent
 	public static void fallDamage(LivingFallEvent event) {
@@ -404,6 +432,7 @@ public class ModEvents {
 				.entry(UpgradeEntry.DAMAGE_SOURCE, event.damageSource));
 	}
 	
+	//it's just the not damage event which is technically a damage event
 	@SubscribeEvent
 	public static void shieldTrigger(ShieldBlockEvent event) {
 		if (!(event.getEntityLiving() instanceof Player player)) return;
@@ -420,6 +449,120 @@ public class ModEvents {
 		} else {
 			event.setBlockedDamage(data.getEntry(UpgradeEntry.DAMAGE));
 			event.setShieldTakesDamage(data.getEntry(UpgradeEntry.DO_SHIELD_DAMAGE));
+		}
+	}
+	
+	/*
+	 * IMPACT
+	 */
+	
+	@SubscribeEvent
+	public static void onProjectileHit(ProjectileImpactEvent event) {
+		Projectile projectile = event.getProjectile();
+		if (event.getRayTraceResult() instanceof EntityHitResult eHit && eHit.getEntity() instanceof LivingEntity living) {
+			Vec3 projPos = projectile.position(); //redoign shield logic myself because I want to ignore pierce
+			if (projPos != null) {
+				Vec3 shieldVec = living.getViewVector(1.0F);
+				Vec3 diff = projPos.vectorTo(living.position()).normalize();
+				diff = new Vec3(diff.x, 0.0D, diff.z);
+				if (diff.dot(shieldVec) < 0.0F) {
+					UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.PROJECTILE_BLOCK, new UpgradeEventData.Builder(living)
+							.entry(UpgradeEntry.ITEM, living.getUseItem())
+							.entry(UpgradeEntry.PROJECTILE, projectile)
+							.entry(UpgradeEntry.DIRECT_DAMAGER, projectile)
+							.entry(UpgradeEntry.TARGET_ENTITY, living)
+							.optionalEntry(UpgradeEntry.DAMAGER_ENTITY, projectile.getOwner())
+							.cancellable());
+					if (data.isCancelled()) {
+						event.setCanceled(true);
+						return;
+					}
+				}
+			}
+		}
+		if (projectile instanceof ThrownTrident trident) {
+			ItemStack stack = ((ThrownTridentAccessor)trident).getTridentItem();
+			HitResult hit = event.getRayTraceResult();
+			Vec3 pos = event.getRayTraceResult().getLocation();
+			Entity shooter = projectile.getOwner();
+			Entity hitTarget = hit instanceof EntityHitResult eHit ? eHit.getEntity() : null;
+			BlockPos hitBlockPos = null;
+			Direction hitBlockFace = null;
+			BlockState hitBlockState = null;
+			if (hit instanceof BlockHitResult bHit) {
+				hitBlockPos = bHit.getBlockPos();
+				hitBlockFace = bHit.getDirection();
+				hitBlockState = trident.level.getBlockState(hitBlockPos);
+			}
+			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.TRIDENT_HIT, new UpgradeEventData.Builder(trident)
+					.entry(UpgradeEntry.ITEM, stack)
+					.entry(UpgradeEntry.POSITION, pos)
+					.entry(UpgradeEntry.DIRECT_DAMAGER, trident)
+					.entry(UpgradeEntry.PROJECTILE, trident)
+					.optionalEntry(UpgradeEntry.DAMAGER_ENTITY, shooter)
+					.optionalEntry(UpgradeEntry.TARGET_ENTITY, hitTarget)
+					.optionalEntry(UpgradeEntry.BLOCK_POS, hitBlockPos)
+					.optionalEntry(UpgradeEntry.BLOCK_FACE, hitBlockFace)
+					.optionalEntry(UpgradeEntry.BLOCK_STATE, hitBlockState)
+					.cancellable());
+			if (data.isCancelled()) {
+				event.setCanceled(true);
+				return;
+			}
+		}
+	}
+	
+	/*
+	 * BLOCKS
+	 */
+	
+	@SubscribeEvent
+	public static void breakBlock(BreakEvent event) {
+		Player player = event.getPlayer();
+		BlockPos pos = event.getPos();
+		BlockState state = event.getState();
+		for (var slot : EquipmentSlot.values()) {
+			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.BREAK_BLOCK, new UpgradeEventData.Builder(player, slot)
+					.entry(UpgradeEntry.BLOCK_POS, pos)
+					.entry(UpgradeEntry.BLOCK_STATE, state)
+					.cancellable()
+					.consumable());
+			if (data.isCancelled()) {
+				event.setCanceled(true);
+				return;
+			}
+			if (data.isConsumed()) return;
+		}
+	}
+
+	@SubscribeEvent
+	public static void placeBlock(EntityPlaceEvent event) {
+		if (!(event.getEntity() instanceof Player player)) return;
+		BlockPos pos = event.getPos();
+		BlockState state = event.getPlacedBlock();
+		for (var slot : EquipmentSlot.values()) {
+			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.PLACE_BLOCK, new UpgradeEventData.Builder(player, slot)
+					.entry(UpgradeEntry.BLOCK_POS, pos)
+					.entry(UpgradeEntry.BLOCK_STATE, state)
+					.cancellable()
+					.consumable());
+			if (data.isCancelled()) {
+				event.setCanceled(true);
+				return;
+			}
+			if (data.isConsumed()) return;
+		}
+	}
+	
+	/*
+	 * MOVEMENT
+	 */
+	
+	@SubscribeEvent
+	public static void livingJump(LivingJumpEvent event) {
+		for (var slot : EquipmentSlot.values()) {
+			UpgradeEventData data = ItemUpgraderApi.runActions(ModUpgradeActions.LIVING_JUMP, new UpgradeEventData.Builder(event.getEntityLiving(), slot).consumable());
+			if (data.isConsumed()) return;
 		}
 	}
 	

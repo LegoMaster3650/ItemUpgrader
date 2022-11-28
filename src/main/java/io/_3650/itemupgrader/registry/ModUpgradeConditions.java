@@ -13,6 +13,7 @@ import io._3650.itemupgrader.upgrades.conditions.EyesInFluidUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.HasUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.ItemCooldownUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.PredicateUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.RandomUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.ResultSuccessUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.SneakingUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.TagVarBoolUpgradeCondition;
@@ -22,6 +23,8 @@ import io._3650.itemupgrader.upgrades.conditions.VerifyTimestampUpgradeCondition
 import io._3650.itemupgrader.upgrades.conditions.compound.AndUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.compound.OrUpgradeCondition;
 import io._3650.itemupgrader.upgrades.conditions.compound.XorUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.special.CanReboundUpgradeCondition;
+import io._3650.itemupgrader.upgrades.conditions.special.CanReflectUpgradeCondition;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -49,5 +52,10 @@ public class ModUpgradeConditions {
 	public static final RegistryObject<ResultSuccessUpgradeCondition.Serializer> RESULT_SUCCESS = CONDITIONS.register("success", () -> new ResultSuccessUpgradeCondition.Serializer());
 	public static final RegistryObject<EdibleUpgradeCondition.Serializer> EDIBLE = CONDITIONS.register("edible", () -> new EdibleUpgradeCondition.Serializer());
 	public static final RegistryObject<SneakingUpgradeCondition.Serializer> SNEAKING = CONDITIONS.register("sneaking", () -> new SneakingUpgradeCondition.Serializer());
+	public static final RegistryObject<RandomUpgradeCondition.Serializer> RANDOM = CONDITIONS.register("random", () -> new RandomUpgradeCondition.Serializer());
+	
+	public static final RegistryObject<CanReflectUpgradeCondition.Serializer> CAN_PARRY = CONDITIONS.register("internal_can_parry", () -> new CanReflectUpgradeCondition.Serializer());
+	public static final RegistryObject<CanReboundUpgradeCondition.Serializer> CAN_REBOUND = CONDITIONS.register("internal_can_rebound", () -> new CanReboundUpgradeCondition.Serializer());
+	
 	
 }

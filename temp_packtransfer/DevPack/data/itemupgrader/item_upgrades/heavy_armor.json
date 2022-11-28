@@ -32,6 +32,30 @@
 			"attribute": "generic.movement_speed",
 			"operation": "multiply_base",
 			"amount": -0.2
+		},
+		{
+			"action": "living_tick",
+			"visible": false,
+			"condition": {
+				"type": "random",
+				"chance": 0.002
+			},
+			"result": {
+				"type": "command",
+				"command": "particle falling_dust gravel ~ ~1.2 ~ .135 .135 .135 .02 1"
+			}
+		},
+		{
+			"action": "jump",
+			"visible": false,
+			"condition": {
+				"type": "random",
+				"chance": 0.3
+			},
+			"result": {
+				"type": "command",
+				"command": "particle falling_dust gravel ~ ~1.2 ~ .135 .135 .135 .02 1"
+			}
 		}
 	],
 	"conditions": [{

@@ -113,7 +113,7 @@ public class ItemUpgrade {
 	 * @return If the slot is valid
 	 */
 	public boolean isValidSlot(EquipmentSlot slot) {
-		return this.validSlots.contains(slot);
+		return this.validSlots.isEmpty() || this.validSlots.contains(slot);
 	}
 	
 	/**

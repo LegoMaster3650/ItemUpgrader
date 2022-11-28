@@ -99,7 +99,7 @@ public class ClientEvents {
 					for (EquipmentSlot slot : upgrade.getValidSlots()) {
 						slotsList.add(ComponentHelper.slotInOn(slot));
 					}
-					tooltip.add(slotsDisplayIndex, upgradeLine(new TranslatableComponent("tooltip.itemupgrader.slots", ComponentHelper.orList(slotsList)).withStyle(ChatFormatting.GRAY)));
+					tooltip.add(slotsDisplayIndex, upgradeLine(new TranslatableComponent("tooltip.itemupgrader.slots", slotsList.size() == 0 ? new TranslatableComponent("equipmentSlot.any") : ComponentHelper.orList(slotsList)).withStyle(ChatFormatting.GRAY)));
 					if (hasDescription) tooltip.add(slotsDisplayIndex, upgradeLine(new TextComponent("")));
 				}
 				

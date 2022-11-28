@@ -25,11 +25,22 @@
 				{
 					"type": "magnet",
 					"range": 25.0,
-					"speed": 2.0,
 					"items": false,
 					"xp": true
 				}
 			]
+		},
+		{
+			"action": "living_tick",
+			"visible": false,
+			"condition": {
+				"type": "random",
+				"chance": 0.02
+			},
+			"result": {
+				"type": "command",
+				"command": "particle crit ~ ~0.5 ~ .135 .135 .135 .02 1"
+			}
 		}
 	],
 	"conditions": [{

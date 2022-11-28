@@ -9,11 +9,13 @@ import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
+import io._3650.itemupgrader.api.data.EntryCategory;
 import io._3650.itemupgrader.api.data.UpgradeEntry;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.event.UpgradeEvent;
 import io._3650.itemupgrader.api.serializer.UpgradeActionSerializer;
 import io._3650.itemupgrader.registry.Reference;
+import io._3650.itemupgrader.upgrades.EntryCategoryManager;
 import io._3650.itemupgrader.upgrades.ItemUpgradeManager;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.nbt.CompoundTag;
@@ -351,6 +353,18 @@ public class ItemUpgraderApi {
 	@Nullable
 	public static ItemUpgrade managerGetUpgrade(ResourceLocation id) {
 		return ItemUpgradeManager.INSTANCE.getUpgrade(id);
+	}
+	
+	/* Categories */
+	
+	/**
+	 * Gets an entry category by id
+	 * @param id The {@linkplain ResourceLocation} of the category to get
+	 * @return The {@linkplain UpgradeEntry} with the given id if present or <code>null</code> if not
+	 */
+	@Nullable
+	public static EntryCategory<?> getCategory(ResourceLocation id) {
+		return EntryCategoryManager.getCategory(id);
 	}
 	
 }

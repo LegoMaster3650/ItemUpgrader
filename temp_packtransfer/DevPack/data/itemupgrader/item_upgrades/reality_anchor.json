@@ -25,6 +25,18 @@
 					"amount": 1
 				}
 			]
+		},
+		{
+			"action": "living_tick",
+			"visible": false,
+			"condition": {
+				"type": "random",
+				"chance": 0.01
+			},
+			"result": {
+				"type": "command",
+				"command": "particle enchanted_hit ~ ~1.2 ~ .135 .135 .135 .02 1"
+			}
 		}
 	],
 	"conditions": [{
