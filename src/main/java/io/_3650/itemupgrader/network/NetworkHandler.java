@@ -24,6 +24,7 @@ public class NetworkHandler {
 		INSTANCE.registerMessage(id++, TellPlayerCoordsPacket.class, TellPlayerCoordsPacket::encode, TellPlayerCoordsPacket::decode, TellPlayerCoordsPacket::handle);
 		INSTANCE.registerMessage(id++, TellPlayerTimePacket.class, TellPlayerTimePacket::encode, TellPlayerTimePacket::decode, TellPlayerTimePacket::handle);
 		INSTANCE.registerMessage(id++, DisplayItemPacket.class, DisplayItemPacket::encode, DisplayItemPacket::decode, DisplayItemPacket::handle);
+		INSTANCE.registerMessage(id++, PickupItemPacket.class, PickupItemPacket::encode, PickupItemPacket::decode, PickupItemPacket::handle);
 	}
 	
 	public static <MSG> void sendToPlayer(ServerPlayer player, MSG msg) {

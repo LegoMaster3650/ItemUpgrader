@@ -8,7 +8,7 @@ import io._3650.itemupgrader.api.data.UpgradeEntrySet;
 import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeConditionSerializer;
 import io._3650.itemupgrader.api.type.UpgradeCondition;
-import io._3650.itemupgrader.upgrades.data.OperationValue;
+import io._3650.itemupgrader.registry.types.OperationValue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;

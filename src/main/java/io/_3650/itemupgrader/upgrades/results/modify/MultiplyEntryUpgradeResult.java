@@ -11,7 +11,7 @@ import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeResult;
 import io._3650.itemupgrader.api.util.ComponentHelper;
-import io._3650.itemupgrader.upgrades.data.NumberType;
+import io._3650.itemupgrader.registry.types.NumberType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;

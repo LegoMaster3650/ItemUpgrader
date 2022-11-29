@@ -3,7 +3,7 @@
 	"catalyst": {
 		"item": "minecraft:emerald"
 	},
-	"upgrade": "itemupgrader:reach",
+	"upgrade": "itemupgrader:gather",
 	"conditions": [{
 		"type": "itemupgrader:base_pack_enabled",
 		"recipe_only": true

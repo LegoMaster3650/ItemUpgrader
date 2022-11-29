@@ -5,6 +5,7 @@
 	"refmap": "itemupgrader.refmap.json",
 	"mixins": [
 		"BlockMixin",
+		"EntityMixin",
 		"DrownedMixin",
 		"FoodDataMixin",
 		"ItemStackMixin",

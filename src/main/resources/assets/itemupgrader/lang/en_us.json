@@ -295,6 +295,7 @@
 	"tooltip.itemupgrader.internal_tell_time.pm": " PM",
 	"upgradeResult.itemupgrader.internal_totem_particles": "Spawn totem of undying particles",
 	"upgradeResult.itemupgrader.internal_parry": "Parry the projectile",
-	"upgradeResult.itemupgrader.internal_rebound": "Rebound the attacker"
+	"upgradeResult.itemupgrader.internal_rebound": "Rebound the attacker",
+	"upgradeResult.itemupgrader.internal_absorb_items": "Pick Up items within %s blocks"
 	
 }

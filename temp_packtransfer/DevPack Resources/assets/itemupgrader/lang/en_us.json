@@ -119,9 +119,9 @@
 	"upgrade.itemupgrader.poseidon.description.2": "Pierce your foes and strike down all who oppose you!",
 	"upgrade.itemupgrader.poseidon.icon": "§l♦",
 	
-	"upgrade.itemupgrader.reach": "Reach",
-	"upgrade.itemupgrader.reach.description": "Reach your foes from slightly further away!",
-	"upgrade.itemupgrader.reach.icon": "§l♦",
+	"upgrade.itemupgrader.gather": "Gather",
+	"upgrade.itemupgrader.gather.description": "Collect and store items from far away!",
+	"upgrade.itemupgrader.gather.icon": "§l♦",
 	
 	"upgrade.itemupgrader.resonate": "Resonate",
 	"upgrade.itemupgrader.resonate.description": "A trident landing causes violent magical vibrations.",

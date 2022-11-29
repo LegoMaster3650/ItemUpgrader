@@ -18,8 +18,9 @@ import io._3650.itemupgrader.network.NetworkHandler;
 import io._3650.itemupgrader.network.PlayerLeftClickEmptyPacket;
 import io._3650.itemupgrader.network.PlayerRightClickEmptyPacket;
 import io._3650.itemupgrader.registry.ModUpgradeActions;
-import io._3650.itemupgrader.upgrades.data.AttributeReplacement;
-import io._3650.itemupgrader.upgrades.data.ModUpgradeEntry;
+import io._3650.itemupgrader.registry.types.AttributeReplacement;
+import io._3650.itemupgrader.registry.types.ModUpgradeEntry;
+import io._3650.itemupgrader.registry.types.UpgradeHitLimited;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -480,7 +481,7 @@ public class ModEvents {
 				}
 			}
 		}
-		if (projectile instanceof ThrownTrident trident) {
+		if (projectile instanceof ThrownTrident trident && ((UpgradeHitLimited)trident).itemupgrader_doHit()) {
 			ItemStack stack = ((ThrownTridentAccessor)trident).getTridentItem();
 			HitResult hit = event.getRayTraceResult();
 			Vec3 pos = event.getRayTraceResult().getLocation();

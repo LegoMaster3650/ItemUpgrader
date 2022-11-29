@@ -40,6 +40,7 @@ import io._3650.itemupgrader.upgrades.results.modify.ResetDefaultItemUpgradeResu
 import io._3650.itemupgrader.upgrades.results.modify.SetNumberEntryUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.modify.UpdatePositionUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.modify.UpdateSlotItemUpgradeResult;
+import io._3650.itemupgrader.upgrades.results.special.AbsorbItemsUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.special.FallToFoodUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.special.PlayerDeathpointUpgradeResult;
 import io._3650.itemupgrader.upgrades.results.special.PlayerSpawnpointUpgradeResult;
@@ -103,6 +104,7 @@ public class ModUpgradeResults {
 	public static final RegistryObject<TotemParticlesUpgradeResult.Serializer> SPECIAL_TOTEM_PARTICLES = RESULTS.register("internal_totem_particles", () -> new TotemParticlesUpgradeResult.Serializer());
 	public static final RegistryObject<ReflectProjectileUpgradeResult.Serializer> SPECIAL_PARRY = RESULTS.register("internal_parry", () -> new ReflectProjectileUpgradeResult.Serializer());
 	public static final RegistryObject<ReboundEntityUpgradeResult.Serializer> SPECIAL_REBOUND = RESULTS.register("internal_rebound", () -> new ReboundEntityUpgradeResult.Serializer());
+	public static final RegistryObject<AbsorbItemsUpgradeResult.Serializer> SPECIAL_ABSORB_ITEMS = RESULTS.register("internal_absorb_items", () -> new AbsorbItemsUpgradeResult.Serializer());
 	
 	
 }

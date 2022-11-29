@@ -1,4 +1,4 @@
-package io._3650.itemupgrader.upgrades.data;
+package io._3650.itemupgrader.registry.types;
 
 import net.minecraft.world.damagesource.DamageSource;
 

@@ -1,4 +1,4 @@
-package io._3650.itemupgrader.upgrades.data;
+package io._3650.itemupgrader.registry.types;
 
 public enum NumberType {
 	INTEGER,

@@ -10,10 +10,10 @@
 	"description": 1,
 	"upgrade": [
 		{
-			"action": "attribute",
-			"attribute": "forge:reach_distance",
-			"operation": "add",
-			"amount": 1.0
+			"action": "trident_hit",
+			"result": {
+				"type": "internal_absorb_items"
+			}
 		}
 	],
 	"conditions": [{
