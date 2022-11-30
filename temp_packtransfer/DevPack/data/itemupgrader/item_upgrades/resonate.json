@@ -16,7 +16,7 @@
 					"type": "sound",
 					"sound": "minecraft:item.trident.thunder",
 					"source": "",
-					"volume": 0.5,
+					"volume": 1,
 					"pitch": 0.8,
 					"visible": false
 				},

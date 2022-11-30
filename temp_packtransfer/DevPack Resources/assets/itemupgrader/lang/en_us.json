@@ -86,7 +86,7 @@
 	
 	"upgrade.itemupgrader.sharpened": "Sharpened",
 	"upgrade.itemupgrader.sharpened.description": "Slice through your foes with a sharpened blade.",
-	"upgrade.itemupgrader.sharpened.icon": "△",
+	"upgrade.itemupgrader.sharpened.icon": "🗡",
 	
 	"upgrade.itemupgrader.polished": "Polished",
 	"upgrade.itemupgrader.polished.description": "A polished blade cuts faster and extracts more loot.",
@@ -117,11 +117,11 @@
 	"upgrade.itemupgrader.poseidon": "Poseidon",
 	"upgrade.itemupgrader.poseidon.description.1": "The wrath of the seas strengthens your weapon.",
 	"upgrade.itemupgrader.poseidon.description.2": "Pierce your foes and strike down all who oppose you!",
-	"upgrade.itemupgrader.poseidon.icon": "§l♦",
+	"upgrade.itemupgrader.poseidon.icon": "🔱",
 	
 	"upgrade.itemupgrader.gather": "Gather",
 	"upgrade.itemupgrader.gather.description": "Collect and store items from far away!",
-	"upgrade.itemupgrader.gather.icon": "§l♦",
+	"upgrade.itemupgrader.gather.icon": "🪣",
 	
 	"upgrade.itemupgrader.resonate": "Resonate",
 	"upgrade.itemupgrader.resonate.description": "A trident landing causes violent magical vibrations.",
