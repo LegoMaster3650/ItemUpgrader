@@ -8,6 +8,10 @@
 	"upgrade": [
 		{
 			"action": "totem",
+			"player_override": {"source": "living"},
+			"condition": {
+				"type": "cooldown"
+			},
 			"result": {
 				"type": "internal_spawnpoint"
 			}
