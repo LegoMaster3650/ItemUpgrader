@@ -15,4 +15,7 @@ public interface AbstractArrowAccessor {
 	@Accessor("piercingIgnoreEntityIds")
 	public void setPiercingIgnoreEntityIds(IntOpenHashSet piercingIgnoreEntityIds);
 	
+	@Accessor("pickup")
+	public AbstractArrow.Pickup getPickup();
+	
 }

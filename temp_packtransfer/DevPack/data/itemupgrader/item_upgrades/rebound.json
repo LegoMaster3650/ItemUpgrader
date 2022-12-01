@@ -5,7 +5,7 @@
 	},
 	"color": "#24ed24",
 	"slots": [],
-	"description": 2,
+	"description": 1,
 	"upgrade": [
 		{
 			"action": "shield_block",

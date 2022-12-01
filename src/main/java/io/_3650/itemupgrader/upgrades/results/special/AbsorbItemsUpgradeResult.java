@@ -11,6 +11,7 @@ import io._3650.itemupgrader.api.data.UpgradeEventData;
 import io._3650.itemupgrader.api.serializer.UpgradeResultSerializer;
 import io._3650.itemupgrader.api.type.UpgradeResult;
 import io._3650.itemupgrader.api.util.ComponentHelper;
+import io._3650.itemupgrader.mixin.AbstractArrowAccessor;
 import io._3650.itemupgrader.network.NetworkHandler;
 import io._3650.itemupgrader.network.PickupItemPacket;
 import io._3650.itemupgrader.registry.types.UpgradeInventoryHolder;
@@ -20,6 +21,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
@@ -45,6 +47,8 @@ public class AbsorbItemsUpgradeResult extends UpgradeResult {
 		Entity entity = data.getEntry(this.entityEntry);
 		if (entity.level.isClientSide) return false;
 		UpgradeInventoryHolder holder = (UpgradeInventoryHolder) entity;
+		//Stop items that cannot be picked up at all from absorbing items to prevent items from being consumed forever
+		if (entity instanceof AbstractArrow arrow && ((AbstractArrowAccessor)arrow).getPickup() == AbstractArrow.Pickup.DISALLOWED && arrow.getOwner() != null) return false;
 		
 		Vec3 pos = entity.position();
 		Level level = entity.level;

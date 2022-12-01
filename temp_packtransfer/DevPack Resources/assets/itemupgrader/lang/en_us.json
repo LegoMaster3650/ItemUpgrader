@@ -71,8 +71,7 @@
 	"upgrade.itemupgrader.parry.icon": "◎",
 	
 	"upgrade.itemupgrader.rebound": "Rebound",
-	"upgrade.itemupgrader.rebound.description.1": "Rebounds any living attackers by raising your shield just before getting hit.",
-	"upgrade.itemupgrader.rebound.description.2": "REMEMBER TO ADD A LINE HERE",
+	"upgrade.itemupgrader.rebound.description": "Rebounds any living attackers by raising your shield just before getting hit.",
 	"upgrade.itemupgrader.rebound.icon": "⏹",
 	
 	

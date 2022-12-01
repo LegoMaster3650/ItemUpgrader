@@ -11,6 +11,7 @@ import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader.mixin.LivingEntityInvoker;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -18,10 +19,13 @@ import net.minecraft.world.item.ItemStack;
 
 public class FallToFoodUpgradeResult extends UpgradeResult {
 	
-	public FallToFoodUpgradeResult(IUpgradeInternals internals) {
+	private final double multiplier;
+	
+	public FallToFoodUpgradeResult(IUpgradeInternals internals, double multiplier) {
 		super(internals, UpgradeEntrySet.create(builder -> {
 			builder.requireAll(UpgradeEntry.PLAYER, UpgradeEntry.DAMAGE_MULT).modifiable(UpgradeEntry.FALL_DIST);
 		}));
+		this.multiplier = multiplier;
 	}
 	
 	@Override
@@ -30,7 +34,7 @@ public class FallToFoodUpgradeResult extends UpgradeResult {
 		FoodData food = player.getFoodData();
 		float dmg = ((LivingEntityInvoker)player).callCalculateFallDamage(data.getEntry(UpgradeEntry.FALL_DIST), data.getEntry(UpgradeEntry.DAMAGE_MULT));
 		if (dmg <= 0.0F) return false;
-		else dmg *= 2.0F;
+		else dmg *= this.multiplier;
 		dmg = ((LivingEntityInvoker)player).callGetDamageAfterMagicAbsorb(DamageSource.FALL, dmg);
 		float totalFood = food.getFoodLevel() + food.getSaturationLevel();
 		if (food.getFoodLevel() > 6 && dmg <= totalFood * 4.0F) {
@@ -72,17 +76,19 @@ public class FallToFoodUpgradeResult extends UpgradeResult {
 		
 		@Override
 		public FallToFoodUpgradeResult fromJson(IUpgradeInternals internals, JsonObject json) {
-			return new FallToFoodUpgradeResult(internals);
+			double multiplier = GsonHelper.getAsDouble(json, "multiplier", 3.0D);
+			return new FallToFoodUpgradeResult(internals, multiplier);
 		}
 		
 		@Override
 		public void toNetwork(FallToFoodUpgradeResult result, FriendlyByteBuf buf) {
-			// nothing to write
+			buf.writeDouble(result.multiplier);
 		}
 		
 		@Override
 		public FallToFoodUpgradeResult fromNetwork(IUpgradeInternals internals, FriendlyByteBuf buf) {
-			return new FallToFoodUpgradeResult(internals);
+			double multiplier = buf.readDouble();
+			return new FallToFoodUpgradeResult(internals, multiplier);
 		}
 		
 	}
