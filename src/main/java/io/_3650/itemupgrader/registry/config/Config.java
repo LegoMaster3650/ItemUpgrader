@@ -45,7 +45,7 @@ public class Config {
 			builder.push("functionality");
 			
 			shieldRaiseSpeed = builder.comment("How long it takes a shield to activate and block damage.", "[Vanilla: 5]", "[Default: 0]").defineInRange("shieldRaiseSpeed", 0, 0, 20);
-			shieldParryDuration = builder.comment("Defines the duration after putting up a shield the parry upgrade will be functional for.", "[Default: 20]").defineInRange("shieldParryDuration", 20, 5, 100);
+			shieldParryDuration = builder.comment("Defines the duration after putting up a shield the parry upgrade will be functional for.", "[Default: 10]").defineInRange("shieldParryDuration", 10, 5, 100);
 			
 			builder.pop();
 		}
