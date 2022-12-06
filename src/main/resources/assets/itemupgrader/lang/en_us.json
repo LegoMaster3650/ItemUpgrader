@@ -1,0 +1,232 @@
+{
+	
+	"upgradeCondition.itemupgrader.internal_can_parry": "started blocking under %s seconds ago",
+	"upgradeCondition.itemupgrader.internal_can_rebound": "started blocking under %s seconds ago",
+	
+	"upgradeResult.itemupgrader.internal_fall_to_food": "Absorb fall damage as hunger",
+	"upgradeResult.itemupgrader.internal_spawnpoint": "Return to spawnpoint",
+	"upgradeResult.itemupgrader.internal_deathpoint": "Teleport to last death",
+	"upgradeResult.itemupgrader.internal_tell_coords": "Reveal your coordinates",
+	"upgradeResult.itemupgrader.internal_tell_time": "Reveal the time",
+	"tooltip.itemupgrader.internal_tell_time.day": "Day %d, ",
+	"tooltip.itemupgrader.internal_tell_time.time": "%s:%s",
+	"tooltip.itemupgrader.internal_tell_time.am": " AM",
+	"tooltip.itemupgrader.internal_tell_time.pm": " PM",
+	"upgradeResult.itemupgrader.internal_totem_particles": "Spawn totem of undying particles",
+	"upgradeResult.itemupgrader.internal_parry": "Parry the projectile",
+	"upgradeResult.itemupgrader.internal_rebound": "Rebound the attacker",
+	"upgradeResult.itemupgrader.internal_absorb_items": "Pick Up items within %s blocks",
+	
+	
+	"_among_us": "ඞ",
+	
+	
+	"upgrade.itemupgrader.turtle_shell": "Turtle Shell",
+	"upgrade.itemupgrader.turtle_shell.description": "Wield the Power of the Turtle!",
+	"upgrade.itemupgrader.turtle_shell.icon": "§l⌂",
+	
+	"upgrade.itemupgrader.lingering_vision": "Lingering Vision",
+	"upgrade.itemupgrader.lingering_vision.description": "Your eyes retain their vision from the light within the dark.",
+	"upgrade.itemupgrader.lingering_vision.icon": "§l⏼",
+	
+	"upgrade.itemupgrader.head_shield": "Head Shield",
+	"upgrade.itemupgrader.head_shield.description": "Protect your head from kinetic impact!",
+	"upgrade.itemupgrader.head_shield.icon": "§l🛡",
+	
+	
+	
+	"upgrade.itemupgrader.heavy_armor": "Heavy Armor",
+	"upgrade.itemupgrader.heavy_armor.description": "Resist incoming attacks at the cost of your speed.",
+	"upgrade.itemupgrader.heavy_armor.icon": "§l🛡",
+	
+	"upgrade.itemupgrader.reality_anchor": "Reality Anchor",
+	"upgrade.itemupgrader.reality_anchor.description": "Defend against otherworldly armor-piercing magical attacks!",
+	"upgrade.itemupgrader.reality_anchor.icon": "⛨",
+	
+	"upgrade.itemupgrader.hearty": "Hearty",
+	"upgrade.itemupgrader.hearty.description": "Gain extra max health!",
+	"upgrade.itemupgrader.hearty.icon": "❤",
+	
+	
+	
+	"upgrade.itemupgrader.sturdy_legs": "Sturdy Legs",
+	"upgrade.itemupgrader.sturdy_legs.description.1": "Hold your ground against any threat!",
+	"upgrade.itemupgrader.sturdy_legs.description.2": "Warning: A lack of any knockback may have consequences",
+	"upgrade.itemupgrader.sturdy_legs.icon": "§l🛡",
+	
+	"upgrade.itemupgrader.magnetic": "Magnetic",
+	"upgrade.itemupgrader.magnetic.description": "Attract nearby items and experience from far away!",
+	"upgrade.itemupgrader.magnetic.icon": "§l⧈",
+	
+	"upgrade.itemupgrader.undying": "Undying",
+	"upgrade.itemupgrader.undying.description.1": "Store the totem of undying in your pockets!",
+	"upgrade.itemupgrader.undying.description.2": "It still works!",
+	"upgrade.itemupgrader.undying.icon": "☠",
+	
+	
+	
+	"upgrade.itemupgrader.dolphins_gift": "Dolphin's Gift",
+	"upgrade.itemupgrader.dolphins_gift.description.1": "Grants the gift of movement to those who swim like the dolphin.",
+	"upgrade.itemupgrader.dolphins_gift.description.2": "You must surface every 4 seconds to maintain your speed.",
+	"upgrade.itemupgrader.dolphins_gift.icon": "§l⏩",
+	
+	"tooltip.itemupgrader.dolphins_gift.entering_water": "entering water",
+	
+	"upgrade.itemupgrader.nimble_landing": "Nimble Landing",
+	"upgrade.itemupgrader.nimble_landing.description.1": "Fall damage becomes hunger damage, make sure you carry food!",
+	"upgrade.itemupgrader.nimble_landing.description.2": "Doesn't work when below 3 whole hunger bars.",
+	"upgrade.itemupgrader.nimble_landing.icon": "§l⊻",
+	
+	"upgrade.itemupgrader.speedster": "Speedster",
+	"upgrade.itemupgrader.speedster.description": "Run slightly faster!",
+	"upgrade.itemupgrader.speedster.icon": "§l⚡",
+	
+	
+	
+	"upgrade.itemupgrader.obsidian_shield": "Obsidian Shield",
+	"upgrade.itemupgrader.obsidian_shield.description": "Protects the Wielder from Flames temporarily.",
+	"upgrade.itemupgrader.obsidian_shield.icon": "☠",
+	
+	"upgrade.itemupgrader.parry": "Parry",
+	"upgrade.itemupgrader.parry.description.1": "Reflect certain projectiles by raising your shield just before getting hit.",
+	"upgrade.itemupgrader.parry.description.2": "Also defends against pierce on parry!",
+	"upgrade.itemupgrader.parry.icon": "◎",
+	
+	"upgrade.itemupgrader.rebound": "Rebound",
+	"upgrade.itemupgrader.rebound.description": "Rebounds any living attackers by raising your shield just before getting hit.",
+	"upgrade.itemupgrader.rebound.icon": "⏹",
+	
+	
+	
+	"upgrade.itemupgrader.dual_wield": "Dual Wield",
+	"upgrade.itemupgrader.dual_wield.description": "Attack significantly faster, but at what cost?",
+	"upgrade.itemupgrader.dual_wield.icon": "⚔",
+	
+	"tooltip.itemupgrader.dual_wield.flag": "upgrade is in both hands",
+	"tooltip.itemupgrader.dual_wield.has_bonus": "attack speed bonus is applied",
+	
+	"upgrade.itemupgrader.sharpened": "Sharpened",
+	"upgrade.itemupgrader.sharpened.description": "Slice through your foes with a sharpened blade.",
+	"upgrade.itemupgrader.sharpened.icon": "🗡",
+	
+	"upgrade.itemupgrader.polished": "Polished",
+	"upgrade.itemupgrader.polished.description": "A polished blade cuts faster and extracts more loot.",
+	"upgrade.itemupgrader.polished.icon": "♢",
+	
+	
+	
+	"upgrade.itemupgrader.efficient": "Efficient",
+	"upgrade.itemupgrader.efficient.description": "Dig through blocks with an increased mining speed.",
+	"upgrade.itemupgrader.efficient.icon": "⛏",
+	
+	"upgrade.itemupgrader.fortunate": "Fortunate",
+	"upgrade.itemupgrader.fortunate.description": "Grants your tool the blessing of the mine.",
+	"upgrade.itemupgrader.fortunate.icon": "♧",
+	
+	"upgrade.itemupgrader.dwarven": "Dwarven",
+	"upgrade.itemupgrader.dwarven.description": "Burrow underground, smashing through stone and deepslate.",
+	"upgrade.itemupgrader.dwarven.icon": "§l↓",
+	"tooltip.itemupgrader.dwarven.stone": "block is a stone type",
+	"tooltip.itemupgrader.dwarven.deep": "block is any natural deepslate",
+	
+	"upgrade.itemupgrader.superheated": "Superheated",
+	"upgrade.itemupgrader.superheated.description": "Automatically smelts block drops!",
+	"upgrade.itemupgrader.superheated.icon": "🔥",
+	
+	
+	
+	"upgrade.itemupgrader.poseidon": "Poseidon",
+	"upgrade.itemupgrader.poseidon.description.1": "The wrath of the seas strengthens your weapon.",
+	"upgrade.itemupgrader.poseidon.description.2": "Pierce your foes and strike down all who oppose you!",
+	"upgrade.itemupgrader.poseidon.icon": "🔱",
+	
+	"upgrade.itemupgrader.gather": "Gather",
+	"upgrade.itemupgrader.gather.description": "Collect and store items from far away!",
+	"upgrade.itemupgrader.gather.icon": "🪣",
+	
+	"upgrade.itemupgrader.resonate": "Resonate",
+	"upgrade.itemupgrader.resonate.description": "A trident landing causes violent magical vibrations.",
+	"upgrade.itemupgrader.resonate.icon": "§l♦",
+	"death.attack.tridentShock": "%1$s was shocked by %2$s",
+	"death.attack.tridentShock.item": "%1$s was shocked by %2$s using %3$s",
+	
+	
+	
+	"upgrade.itemupgrader.void_totem": "Void Totem",
+	"upgrade.itemupgrader.void_totem.description": "Saves you from dying in the void, but only once.",
+	"upgrade.itemupgrader.void_totem.icon": "§l↑",
+	
+	"tooltip.itemupgrader.void_totem.effect": "When taking void damage, gain Levitation and Feather Falling temporarily",
+	
+	"upgrade.itemupgrader.recall_totem": "Recall Totem",
+	"upgrade.itemupgrader.recall_totem.description": "Teleports you to your spawnpoint when triggered.",
+	"upgrade.itemupgrader.recall_totem.icon": "❤",
+	
+	"upgrade.itemupgrader.wormhole_totem": "Wormhole Totem",
+	"upgrade.itemupgrader.wormhole_totem.description.1": "Allows you to save and load one location.",
+	"upgrade.itemupgrader.wormhole_totem.description.2": "Can be reset with sneak+left click",
+	"upgrade.itemupgrader.wormhole_totem.icon": "§l☆",
+	
+	"tooltip.itemupgrader.wormhole_totem.no_position": "no position is set",
+	"tooltip.itemupgrader.wormhole_totem.has_position": "a position is set",
+	"tooltip.itemupgrader.wormhole_totem.save_position": "Save current position",
+	"tooltip.itemupgrader.wormhole_totem.load_position": "Load saved position",
+	"tooltip.itemupgrader.wormhole_totem.unset_position": "Clear saved position",
+	"tooltip.itemupgrader.wormhole_totem.consume_totem": "Consume the totem",
+	
+	"upgrade.itemupgrader.creeper_totem": "Creeper Totem",
+	"upgrade.itemupgrader.creeper_totem.description.1": "This totem is explosive!",
+	"upgrade.itemupgrader.creeper_totem.description.2": "When triggered, a large explosion occurs.",
+	"upgrade.itemupgrader.creeper_totem.icon": "◎",
+	
+	"upgrade.itemupgrader.dragon_totem": "Dragon Totem",
+	"upgrade.itemupgrader.dragon_totem.description.1": "Channel the fury of the dragon!",
+	"upgrade.itemupgrader.dragon_totem.description.2": "Gain a temporary boost in strength to fight back!",
+	"upgrade.itemupgrader.dragon_totem.icon": "§lΩ",
+	
+	
+	
+	"upgrade.itemupgrader.recall": "Recall",
+	"upgrade.itemupgrader.recall.description": "Teleports you back to your spawn point.",
+	"upgrade.itemupgrader.recall.icon": "◆",
+	
+	"upgrade.itemupgrader.locator": "Locator",
+	"upgrade.itemupgrader.locator.description": "Tells you your current coordinates.",
+	"upgrade.itemupgrader.locator.icon": "◎",
+	
+	"upgrade.itemupgrader.wayfinder": "Wayfinder",
+	"upgrade.itemupgrader.wayfinder.description": "Teleports you back to your death location.",
+	"upgrade.itemupgrader.wayfinder.icon": "❤",
+	
+	
+	
+	"upgrade.itemupgrader.time_teller": "Time Teller",
+	"upgrade.itemupgrader.time_teller.description": "Tells you the current day and time.",
+	"upgrade.itemupgrader.time_teller.icon": "☀",
+	
+	"upgrade.itemupgrader.accelerator": "Accelerator",
+	"upgrade.itemupgrader.accelerator.description": "Allows you to mess with time itself.",
+	"upgrade.itemupgrader.accelerator.icon": "§l↑",
+	
+	
+	
+	"upgrade.itemupgrader.magic_aura": "Magic Aura",
+	"upgrade.itemupgrader.magic_aura.description": "Your item feels easier to enchant...",
+	"upgrade.itemupgrader.magic_aura.icon": "♢",
+	
+	"upgrade.itemupgrader.durable": "Durable",
+	"upgrade.itemupgrader.durable.description.1": "Sometimes you might just want your item to break slower.",
+	"upgrade.itemupgrader.durable.description.2": "In that case, you're in luck!",
+	"upgrade.itemupgrader.durable.icon": "§l🛡",
+	
+	
+	
+	"upgrade.itemupgrader.my_reaction_to_that_information": "My Reaction To That Information",
+	"upgrade.itemupgrader.my_reaction_to_that_information.description": "My Reaction To That Information",
+	"upgrade.itemupgrader.my_reaction_to_that_information.icon": "ඞ",
+	
+	
+	
+	"predicate.itemupgrader.not_burning": "not burning",
+	"predicate.itemupgrader.high_light": "light level is above 10"
+}
