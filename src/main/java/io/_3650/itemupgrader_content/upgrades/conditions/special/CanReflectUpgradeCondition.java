@@ -11,8 +11,8 @@ import io._3650.itemupgrader.api.type.UpgradeCondition;
 import io._3650.itemupgrader.api.util.ComponentHelper;
 import io._3650.itemupgrader_content.registry.config.Config;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -42,7 +42,7 @@ public class CanReflectUpgradeCondition extends UpgradeCondition {
 	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		return ComponentHelper.arrayify(new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(Config.COMMON.shieldParryDuration.get() / 20.0D)));
+		return ComponentHelper.arrayify(Component.literal(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(Config.COMMON.shieldParryDuration.get() / 20.0D)));
 	}
 	
 	@Override

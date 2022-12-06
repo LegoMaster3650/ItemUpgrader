@@ -15,12 +15,29 @@
 					"type": "itemupgrader_content:internal_deathpoint"
 				},
 				{
-					"type": "remove_upgrade"
+					"type": "conditional",
+					"condition": {
+						"type": "success",
+						"visible": false
+					},
+					"result": [
+						{
+							"type": "sound",
+							"visible": false,
+							"sound": "block.portal.travel"
+						},
+						{
+							"type": "remove_upgrade"
+						},
+						{
+							"type": "cancel"
+						}
+					]
 				}
 			]
 		}
 	],
 	"conditions": [{
 		"type": "itemupgrader_content:base_pack_enabled"
-	},{"type":"forge:item_exists","item":"minecraft:recovery_compass"}]
+	}]
 }

@@ -30,7 +30,8 @@ public class PlayerDeathpointUpgradeResult extends UpgradeResult {
 	@Override
 	public boolean execute(UpgradeEventData data) { //TO BE ADDED IN 1.19, death pos tracker missing for now
 		if (!(data.getEntry(UpgradeEntry.PLAYER) instanceof ServerPlayer player)) return false;
-		Optional<GlobalPos> optional = Optional.empty(); /*player.getLastDeathPosition();*/
+		if (player.level.isClientSide) return false;
+		Optional<GlobalPos> optional = player.getLastDeathLocation();
 		if (optional.isPresent()) {
 			GlobalPos globalPos = optional.get();
 			ServerLevel level = globalPos.dimension() == null ? player.getLevel() : player.server.getLevel(globalPos.dimension());
@@ -43,7 +44,7 @@ public class PlayerDeathpointUpgradeResult extends UpgradeResult {
 			
 			if (player.level == level) {
 				player.teleportTo(pos.getX(), pos.getY(), pos.getZ());
-				return false;
+				return true;
 			} else {
 				player.teleportTo(level, pos.getX(), pos.getY(), pos.getZ(), player.getRespawnAngle(), 0.5F);
 				return true;

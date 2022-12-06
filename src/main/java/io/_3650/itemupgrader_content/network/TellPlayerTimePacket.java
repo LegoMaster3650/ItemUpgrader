@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 import io._3650.itemupgrader_content.client.ClientStuff;
 import io._3650.itemupgrader_content.registry.config.Config;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -33,7 +33,7 @@ public record TellPlayerTimePacket(long worldTime) {
 			int hours = dayTime / 1000;
 			int minutes = Mth.ceil((double)((dayTime % 1000) * 60) / 1000.0);
 			MutableComponent msg;
-			if (settings % 2 == 0) msg = new TranslatableComponent("tooltip.itemupgrader.internal_tell_time.time", TIME_FORMAT.format(hours), TIME_FORMAT.format(minutes));
+			if (settings % 2 == 0) msg = Component.translatable("tooltip.itemupgrader.internal_tell_time.time", TIME_FORMAT.format(hours), TIME_FORMAT.format(minutes));
 			else {
 				String ampm;
 				if (hours < 12) ampm = "tooltip.itemupgrader.internal_tell_time.am";
@@ -42,9 +42,9 @@ public record TellPlayerTimePacket(long worldTime) {
 					ampm = "tooltip.itemupgrader.internal_tell_time.pm";
 				}
 				if (hours == 0) hours = 12;
-				msg = new TranslatableComponent("tooltip.itemupgrader.internal_tell_time.time", TIME_FORMAT.format(hours), TIME_FORMAT.format(minutes)).append(new TranslatableComponent(ampm));
+				msg = Component.translatable("tooltip.itemupgrader.internal_tell_time.time", TIME_FORMAT.format(hours), TIME_FORMAT.format(minutes)).append( Component.translatable(ampm));
 			}
-			if (settings < 3) msg = new TranslatableComponent("tooltip.itemupgrader.internal_tell_time.day", day).append(msg);
+			if (settings < 3) msg = Component.translatable("tooltip.itemupgrader.internal_tell_time.day", day).append(msg);
 			final MutableComponent finalMsg = msg; //have to make it final ;-;
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientStuff.playerActionBar(finalMsg));
 		});

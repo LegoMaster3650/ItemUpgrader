@@ -89,7 +89,7 @@ public class PlayerSpawnpointUpgradeResult extends UpgradeResult {
 		
 		if (player.level == level1) {
 			player.teleportTo(player.getX(), player.getY(), player.getZ());
-			return false;
+			return true;
 		} else {
 			player.teleportTo(teleportLevel, player.getX(), player.getY(), player.getZ(), player.getViewXRot(1), 0);
 			teleportLevel.playSound(null, player.blockPosition(), SoundEvents.PORTAL_TRAVEL, SoundSource.PLAYERS, 0.3F, 1.0F);

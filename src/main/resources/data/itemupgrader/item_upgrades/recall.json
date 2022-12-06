@@ -15,13 +15,24 @@
 					"type": "itemupgrader_content:internal_spawnpoint"
 				},
 				{
-					"type": "sound",
-					"visible": false,
-					"sound": "block.enchantment_table.use",
-					"source": "player"
-				},
-				{
-					"type": "remove_upgrade"
+					"type": "conditional",
+					"condition": {
+						"type": "success",
+						"visible": false
+					},
+					"result": [
+						{
+							"type": "sound",
+							"visible": false,
+							"sound": "block.enchantment_table.use"
+						},
+						{
+							"type": "remove_upgrade"
+						},
+						{
+							"type": "cancel"
+						}
+					]
 				}
 			]
 		}

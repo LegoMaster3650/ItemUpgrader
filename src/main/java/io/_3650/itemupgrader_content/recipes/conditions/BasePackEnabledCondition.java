@@ -23,15 +23,10 @@ public class BasePackEnabledCondition implements ICondition {
 	public ResourceLocation getID() {
 		return ID;
 	}
-	
+
+	//finally the deprecated warning is gone :crab:
 	@Override
 	public boolean test(IContext context) {
-		return test();
-	}
-	
-	@SuppressWarnings("removal")
-	@Override
-	public boolean test() {
 		boolean basePackEnabled = Config.COMMON.basePackEnabled.get();
 		boolean basePackRecipes = Config.COMMON.basePackRecipes.get();
 		return basePackEnabled && !(this.recipeOnly && !basePackRecipes);

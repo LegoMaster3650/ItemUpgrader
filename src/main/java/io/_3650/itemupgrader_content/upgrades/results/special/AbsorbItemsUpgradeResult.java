@@ -16,8 +16,8 @@ import io._3650.itemupgrader_content.network.NetworkHandler;
 import io._3650.itemupgrader_content.network.PickupItemPacket;
 import io._3650.itemupgrader_content.registry.types.UpgradeInventoryHolder;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -77,7 +77,7 @@ public class AbsorbItemsUpgradeResult extends UpgradeResult {
 	
 	@Override
 	public MutableComponent[] getTooltip(ItemStack stack) {
-		return ComponentHelper.arrayify(new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(this.range)));
+		return ComponentHelper.arrayify(Component.literal(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(this.range)));
 	}
 	
 	@Override

@@ -1,11 +1,11 @@
 {
 	"type":"itemupgrader:item_upgrade",
 	"catalyst": {
-		"item": "minecraft:lodestone"
+		"item": "minecraft:nether_star"
 	},
 	"upgrade": "itemupgrader:wayfinder",
 	"conditions": [{
 		"type": "itemupgrader_content:base_pack_enabled",
 		"recipe_only": true
-	},{"type":"forge:item_exists","item":"minecraft:recovery_compass"}]
+	}]
 }
