@@ -41,13 +41,13 @@
 					"duration": 800
 				},
 				{
-					"type": "internal_totem_particles",
+					"type": "itemupgrader_content:internal_totem_particles",
 					"visible": false
 				}
 			]
 		}
 	],
 	"conditions": [{
-		"type": "itemupgrader:base_pack_enabled"
+		"type": "itemupgrader_content:base_pack_enabled"
 	}]
 }

@@ -11,11 +11,11 @@
 			"action": "fall",
 			"player_override": {"source": "living"},
 			"result": {
-				"type": "internal_fall_to_food"
+				"type": "itemupgrader_content:internal_fall_to_food"
 			}
 		}
 	],
 	"conditions": [{
-		"type": "itemupgrader:base_pack_enabled"
+		"type": "itemupgrader_content:base_pack_enabled"
 	}]
 }

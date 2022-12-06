@@ -12,7 +12,7 @@
 			"action": "right_click",
 			"result": [
 				{
-					"type": "internal_spawnpoint"
+					"type": "itemupgrader_content:internal_spawnpoint"
 				},
 				{
 					"type": "sound",
@@ -27,6 +27,6 @@
 		}
 	],
 	"conditions": [{
-		"type": "itemupgrader:base_pack_enabled"
+		"type": "itemupgrader_content:base_pack_enabled"
 	}]
 }

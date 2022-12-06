@@ -12,11 +12,11 @@
 		{
 			"action": "trident_hit",
 			"result": {
-				"type": "internal_absorb_items"
+				"type": "itemupgrader_content:internal_absorb_items"
 			}
 		}
 	],
 	"conditions": [{
-		"type": "itemupgrader:base_pack_enabled"
+		"type": "itemupgrader_content:base_pack_enabled"
 	}]
 }

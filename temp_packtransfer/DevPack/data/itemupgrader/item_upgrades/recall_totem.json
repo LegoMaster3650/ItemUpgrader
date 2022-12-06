@@ -13,11 +13,11 @@
 				"type": "cooldown"
 			},
 			"result": {
-				"type": "internal_spawnpoint"
+				"type": "itemupgrader_content:internal_spawnpoint"
 			}
 		}
 	],
 	"conditions": [{
-		"type": "itemupgrader:base_pack_enabled"
+		"type": "itemupgrader_content:base_pack_enabled"
 	}]
 }

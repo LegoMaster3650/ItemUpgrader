@@ -20,8 +20,8 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 version = '1.0.0'
-group = 'io.legom.itemupgrader'
-archivesBaseName = 'itemupgrader'
+group = 'io._3650.itemupgrader_content'
+archivesBaseName = 'itemupgrader_content'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -37,10 +37,10 @@ minecraft {
 
 			property 'forge.logging.console.level', 'debug'
 
-			property 'forge.enabledGameTestNamespaces', 'itemupgrader'
+			property 'forge.enabledGameTestNamespaces', 'itemupgrader_content'
 
 			mods {
-				itemupgrader {
+				itemupgrader_content {
 					source sourceSets.main
 				}
 			}
@@ -53,10 +53,10 @@ minecraft {
 
 			property 'forge.logging.console.level', 'debug'
 
-			property 'forge.enabledGameTestNamespaces', 'itemupgrader'
+			property 'forge.enabledGameTestNamespaces', 'itemupgrader_content'
 
 			mods {
-				itemupgrader {
+				itemupgrader_content {
 					source sourceSets.main
 				}
 			}
@@ -69,10 +69,10 @@ minecraft {
 
 			property 'forge.logging.console.level', 'debug'
 
-			property 'forge.enabledGameTestNamespaces', 'itemupgrader'
+			property 'forge.enabledGameTestNamespaces', 'itemupgrader_content'
 
 			mods {
-				itemupgrader {
+				itemupgrader_content {
 					source sourceSets.main
 				}
 			}
@@ -85,10 +85,10 @@ minecraft {
 
 			property 'forge.logging.console.level', 'debug'
 
-			args '--mod', 'itemupgrader', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+			args '--mod', 'itemupgrader_content', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
 			mods {
-				itemupgrader {
+				itemupgrader_content {
 					source sourceSets.main
 				}
 			}
@@ -115,10 +115,19 @@ repositories {
 		name = "ModMaven"
 		url = "https://modmaven.dev"
 	}
+	flatDir {
+		dir 'modfiles'
+	}
 }
 
 dependencies {
 	minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
+	
+	//Item Upgrader Core (Uncomment when all references have been safely contained)
+	//Compile against api
+	compileOnly fg.deobf("itemupgrader:itemupgrader-core:1.0.0:api")
+	//Use full core for runtime
+	runtimeOnly fg.deobf('itemupgrader:itemupgrader-core:1.0.0')
 	
 	//bring in appleskin because I need food value feedback
 	runtimeOnly fg.deobf("curse.maven:appleskin-248787:3927564")
@@ -141,8 +150,8 @@ dependencies {
 }
 
 mixin {
-	add sourceSets.main, 'itemupgrader.refmap.json'
-	config 'itemupgrader.mixins.json'
+	add sourceSets.main, 'itemupgrader_content.refmap.json'
+	config 'itemupgrader_content.mixins.json'
 	
 	debug.verbose = true
 	debug.export = true
@@ -152,7 +161,7 @@ mixin {
 jar {
 	manifest {
 		attributes([
-				"Specification-Title"     : "itemupgrader",
+				"Specification-Title"     : "itemupgrader_content",
 				"Specification-Vendor"    : "LegoMaster3650",
 				"Specification-Version"   : "1", // We are version 1 of ourselves
 				"Implementation-Title"    : project.name,
@@ -165,7 +174,7 @@ jar {
 
 task apiJar(type: Jar) {
 	archiveClassifier.set('api')
-	include 'io/_3650/itemupgrader/api/**'
+	include 'io/_3650/itemupgrader_content/api/**'
 	from sourceSets.main.allSource
 	from sourceSets.main.output
 }
@@ -177,12 +186,12 @@ task sourcesJar(type: Jar) {
 
 task javadocJar(type: Jar) {
 	archiveClassifier.set('javadoc')
-	include 'io/_3650/itemupgrader/api/**'
+	include 'io/_3650/itemupgrader_content/api/**'
 	from javadoc.destinationDir
 }
 
 javadoc {
-	include 'io/_3650/itemupgrader/api/**'
+	include 'io/_3650/itemupgrader_content/api/**'
 }
 
 artifacts {

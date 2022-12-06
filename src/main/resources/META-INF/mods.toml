@@ -4,31 +4,31 @@ license="MIT License"
 #issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
 
 [[mods]]
-modId="itemupgrader"
+modId="itemupgrader_content"
 version="${file.jarVersion}"
 displayName="Item Upgrader"
 #updateJSONURL="https://change.me.example.invalid/updates.json"
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/"
-#logoFile="itemupgrader.png"
+#logoFile="itemupgrader_content.png"
 #credits="Joe Mama"
 authors="LegoMaster3650"
 description='''
-Yeah this is a mod it does stuff and things
+Main Item Upgrader mod, containing the default upgrades and some slightly more invasive features
 '''
 
-[[dependencies.itemupgrader]]
+[[dependencies.itemupgrader_content]]
 	modId="forge"
 	mandatory=true
 	versionRange="[40,)"
 	ordering="NONE"
 	side="BOTH"
 
-[[dependencies.itemupgrader]]
+[[dependencies.itemupgrader_content]]
 	modId="minecraft"
 	mandatory=true
 	versionRange="[1.18.2,1.19)"
 	ordering="NONE"
 	side="BOTH"
 
-[modproperties.itemupgrader]
+[modproperties.itemupgrader_content]
 	catalogueItemIcon="minecraft:smithing_table"

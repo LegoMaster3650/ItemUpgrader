@@ -12,12 +12,12 @@
 			"action": "right_click",
 			"result": [
 				{
-					"type": "internal_tell_time"
+					"type": "itemupgrader_content:internal_tell_time"
 				}
 			]
 		}
 	],
 	"conditions": [{
-		"type": "itemupgrader:base_pack_enabled"
+		"type": "itemupgrader_content:base_pack_enabled"
 	}]
 }

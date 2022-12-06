@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"package": "io._3650.itemupgrader_content.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"refmap": "itemupgrader_content.refmap.json",
+	"mixins": [
+		"AbstractArrowAccessor",
+		"DrownedMixin",
+		"EntityMixin",
+		"FoodDataMixin",
+		"LivingEntityInvoker",
+		"LivingEntityMixin",
+		"ServerPlayerInvoker",
+		"SmithingMenuMixin",
+		"ThrownTridentAccessor",
+		"ThrownTridentMixin"
+	],
+	"minVersion": "0.8"
+}

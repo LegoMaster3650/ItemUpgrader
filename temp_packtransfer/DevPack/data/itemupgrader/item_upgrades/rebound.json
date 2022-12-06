@@ -10,11 +10,11 @@
 		{
 			"action": "shield_block",
 			"condition": {
-				"type": "internal_can_rebound"
+				"type": "itemupgrader_content:internal_can_rebound"
 			},
 			"result": [
 				{
-					"type": "internal_rebound",
+					"type": "itemupgrader_content:internal_rebound",
 					"power": 1.3
 				},
 				{
@@ -35,6 +35,6 @@
 		}
 	],
 	"conditions": [{
-		"type": "itemupgrader:base_pack_enabled"
+		"type": "itemupgrader_content:base_pack_enabled"
 	}]
 }

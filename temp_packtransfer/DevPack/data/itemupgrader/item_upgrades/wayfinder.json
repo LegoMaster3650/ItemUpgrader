@@ -12,7 +12,7 @@
 			"action": "right_click",
 			"result": [
 				{
-					"type": "internal_deathpoint"
+					"type": "itemupgrader_content:internal_deathpoint"
 				},
 				{
 					"type": "remove_upgrade"
@@ -21,6 +21,6 @@
 		}
 	],
 	"conditions": [{
-		"type": "itemupgrader:base_pack_enabled"
+		"type": "itemupgrader_content:base_pack_enabled"
 	},{"type":"forge:item_exists","item":"minecraft:recovery_compass"}]
 }

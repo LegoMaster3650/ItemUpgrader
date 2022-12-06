@@ -5,7 +5,7 @@
 	},
 	"upgrade": "itemupgrader:wayfinder",
 	"conditions": [{
-		"type": "itemupgrader:base_pack_enabled",
+		"type": "itemupgrader_content:base_pack_enabled",
 		"recipe_only": true
 	},{"type":"forge:item_exists","item":"minecraft:recovery_compass"}]
 }
