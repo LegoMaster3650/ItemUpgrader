@@ -25,6 +25,7 @@ public class Config {
 		
 		public final IntValue shieldRaiseSpeed;
 		public final IntValue shieldParryDuration;
+		public final IntValue echoCharges;
 		
 		Common(ForgeConfigSpec.Builder builder) {
 			builder.comment("Strangely buggy when in server config so this is in common config instead.").push("datapack");
@@ -38,6 +39,8 @@ public class Config {
 			
 			shieldRaiseSpeed = builder.comment("How long it takes a shield to activate and block damage.", "[Vanilla: 5]", "[Default: 0]").defineInRange("shieldRaiseSpeed", 0, 0, 20);
 			shieldParryDuration = builder.comment("Defines the duration after putting up a shield the parry upgrade will be functional for.", "[Default: 10]").defineInRange("shieldParryDuration", 10, 5, 100);
+			
+			echoCharges = builder.comment("How many charges each echo shard adds to the echoing (soulbound) upgrade.", "A value of -1 will make the upgrade permanent.", "[Default: 3]").defineInRange("soulboundCharges", 5, -1, 255);
 			
 			builder.pop();
 		}

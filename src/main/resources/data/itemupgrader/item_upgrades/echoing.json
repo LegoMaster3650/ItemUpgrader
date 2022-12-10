@@ -1,0 +1,61 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:enchantable"
+	},
+	"color": "#0c5259",
+	"slots": [],
+	"description": 2,
+	"upgrade": [
+		{
+			"action": "itemupgrader_content:internal_soulbound_charges",
+			"tag": "SoulboundCharges"
+		},
+		{
+			"action": "upgrade_apply_post",
+			"result": {
+				"type": "itemupgrader_content:internal_soulbound_charges",
+				"tag": "SoulboundCharges"
+			},
+			"visible": false
+		},
+		{
+			"action": "itemupgrader_content:death_drop",
+			"condition": {
+				"type": "tag_int",
+				"operation": ">=",
+				"tag": "SoulboundCharges",
+				"value": 1,
+				"tooltip_override": "tooltip.itemupgrader.echoing.if_charges"
+			},
+			"result": [
+				{
+					"type": "tag_int",
+					"operation": "-",
+					"tag": "SoulboundCharges",
+					"value": 1,
+					"tooltip_override": "tooltip.itemupgrader.echoing.use_charge"
+				},
+				{
+					"type": "cancel"
+				}
+			],
+			"else": {
+				"type": "conditional",
+				"condition": {
+					"type": "tag_int",
+					"operation": "=",
+					"tag": "SoulboundCharges",
+					"value": -1
+				},
+				"result": {
+					"type": "cancel"
+				},
+				"visible": false
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}

@@ -9,6 +9,7 @@ import io._3650.itemupgrader_content.upgrades.results.special.PlayerDeathpointUp
 import io._3650.itemupgrader_content.upgrades.results.special.PlayerSpawnpointUpgradeResult;
 import io._3650.itemupgrader_content.upgrades.results.special.ReboundEntityUpgradeResult;
 import io._3650.itemupgrader_content.upgrades.results.special.ReflectProjectileUpgradeResult;
+import io._3650.itemupgrader_content.upgrades.results.special.SoulboundChargesUpgradeResult;
 import io._3650.itemupgrader_content.upgrades.results.special.TellCoordsUpgradeResult;
 import io._3650.itemupgrader_content.upgrades.results.special.TellTimeUpgradeResult;
 import io._3650.itemupgrader_content.upgrades.results.special.TotemParticlesUpgradeResult;
@@ -28,6 +29,7 @@ public class ModUpgradeResults {
 	public static final RegistryObject<ReflectProjectileUpgradeResult.Serializer> SPECIAL_PARRY = RESULTS.register("internal_parry", () -> new ReflectProjectileUpgradeResult.Serializer());
 	public static final RegistryObject<ReboundEntityUpgradeResult.Serializer> SPECIAL_REBOUND = RESULTS.register("internal_rebound", () -> new ReboundEntityUpgradeResult.Serializer());
 	public static final RegistryObject<AbsorbItemsUpgradeResult.Serializer> SPECIAL_ABSORB_ITEMS = RESULTS.register("internal_absorb_items", () -> new AbsorbItemsUpgradeResult.Serializer());
+	public static final RegistryObject<SoulboundChargesUpgradeResult.Serializer> SPECIAL_SOULBOUND_CHARGES = RESULTS.register("internal_soulbound_charges", () -> new SoulboundChargesUpgradeResult.Serializer());
 	
 	
 }

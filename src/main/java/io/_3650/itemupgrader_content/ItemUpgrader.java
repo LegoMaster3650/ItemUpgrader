@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 
 import io._3650.itemupgrader_content.network.NetworkHandler;
 import io._3650.itemupgrader_content.recipes.conditions.BasePackEnabledCondition;
+import io._3650.itemupgrader_content.registry.ModUpgradeActions;
 import io._3650.itemupgrader_content.registry.ModUpgradeConditions;
 import io._3650.itemupgrader_content.registry.ModUpgradeResults;
 import io._3650.itemupgrader_content.registry.config.Config;
@@ -27,7 +28,7 @@ public class ItemUpgrader {
 	public ItemUpgrader() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		
-//		ModUpgradeActions.ACTIONS.register(bus);
+		ModUpgradeActions.ACTIONS.register(bus);
 		ModUpgradeConditions.CONDITIONS.register(bus);
 		ModUpgradeResults.RESULTS.register(bus);
 		

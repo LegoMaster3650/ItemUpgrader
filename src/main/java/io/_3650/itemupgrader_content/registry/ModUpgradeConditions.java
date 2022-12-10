@@ -15,5 +15,4 @@ public class ModUpgradeConditions {
 	public static final RegistryObject<CanReflectUpgradeCondition.Serializer> CAN_PARRY = CONDITIONS.register("internal_can_parry", () -> new CanReflectUpgradeCondition.Serializer());
 	public static final RegistryObject<CanReboundUpgradeCondition.Serializer> CAN_REBOUND = CONDITIONS.register("internal_can_rebound", () -> new CanReboundUpgradeCondition.Serializer());
 	
-	
 }

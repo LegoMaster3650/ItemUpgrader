@@ -1,5 +1,9 @@
 {
 	
+	"upgradeAction.itemupgrader_content.death_drop": "On death: ",
+	"upgradeAction.itemupgrader_content.internal_soulbound_charges": "%s Charges Left",
+	"tooltip.itemupgrader.unlimited_soulbound": "Unlimited",
+	
 	"upgradeCondition.itemupgrader_content.internal_can_parry": "started blocking under %s seconds ago",
 	"upgradeCondition.itemupgrader_content.internal_can_rebound": "started blocking under %s seconds ago",
 	
@@ -16,6 +20,7 @@
 	"upgradeResult.itemupgrader_content.internal_parry": "Parry the projectile",
 	"upgradeResult.itemupgrader_content.internal_rebound": "Rebound the attacker",
 	"upgradeResult.itemupgrader_content.internal_absorb_items": "Pick Up items within %s blocks",
+	"upgradeResult.itemupgrader_content.internal_soulbound_charges": "Add %s echoing charges",
 	
 	
 	"_among_us": "ඞ",
@@ -218,6 +223,14 @@
 	"upgrade.itemupgrader.durable.description.1": "Sometimes you might just want your item to break slower.",
 	"upgrade.itemupgrader.durable.description.2": "In that case, you're in luck!",
 	"upgrade.itemupgrader.durable.icon": "§l🛡",
+	
+	"upgrade.itemupgrader.echoing": "Echoing",
+	"upgrade.itemupgrader.echoing.description.1": "Preserves this item on death!",
+	"upgrade.itemupgrader.echoing.description.2": "Can be applied multiple times to stack charges.",
+	"upgrade.itemupgrader.echoing.icon": "∞",
+	
+	"tooltip.itemupgrader.echoing.if_charges": "has charge",
+	"tooltip.itemupgrader.echoing.use_charge": "%2$s%3$s charge",
 	
 	
 	
