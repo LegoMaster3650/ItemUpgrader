@@ -1,0 +1,11 @@
+{
+	"type":"itemupgrader:item_upgrade",
+	"catalyst": {
+		"tag": "minecraft:anvil"
+	},
+	"upgrade": "itemupgrader:misc/durable",
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled",
+		"recipe_only": true
+	}]
+}

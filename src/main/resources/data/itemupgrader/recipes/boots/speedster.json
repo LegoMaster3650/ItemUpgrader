@@ -1,0 +1,11 @@
+{
+	"type":"itemupgrader:item_upgrade",
+	"catalyst": {
+		"item": "minecraft:cake"
+	},
+	"upgrade": "itemupgrader:boots/speedster",
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled",
+		"recipe_only": true
+	}]
+}

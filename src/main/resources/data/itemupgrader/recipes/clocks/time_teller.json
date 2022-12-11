@@ -1,0 +1,11 @@
+{
+	"type":"itemupgrader:item_upgrade",
+	"catalyst": {
+		"item": "minecraft:iron_ingot"
+	},
+	"upgrade": "itemupgrader:clocks/time_teller",
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled",
+		"recipe_only": true
+	}]
+}

@@ -1,0 +1,11 @@
+{
+	"type":"itemupgrader:item_upgrade",
+	"catalyst": {
+		"item": "minecraft:smooth_quartz"
+	},
+	"upgrade": "itemupgrader:weapons/sharpened",
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled",
+		"recipe_only": true
+	}]
+}

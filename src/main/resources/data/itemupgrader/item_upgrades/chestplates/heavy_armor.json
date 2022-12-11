@@ -1,0 +1,58 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:chestplate"
+		}
+	],
+	"color": "#1d5f8f",
+	"slots": ["chest"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "attribute",
+			"attribute": "generic.knockback_resistance",
+			"operation": "add",
+			"amount": 0.2
+		},
+		{
+			"action": "attribute",
+			"attribute": "generic.armor",
+			"operation": "add",
+			"amount": 2
+		},
+		{
+			"action": "attribute",
+			"attribute": "generic.armor_toughness",
+			"operation": "add",
+			"amount": 2
+		},
+		{
+			"action": "living_tick",
+			"visible": false,
+			"condition": {
+				"type": "random",
+				"chance": 0.002
+			},
+			"result": {
+				"type": "command",
+				"command": "particle falling_dust gravel ~ ~1.2 ~ .135 .135 .135 .02 1"
+			}
+		},
+		{
+			"action": "jump",
+			"visible": false,
+			"condition": {
+				"type": "random",
+				"chance": 0.3
+			},
+			"result": {
+				"type": "command",
+				"command": "particle falling_dust gravel ~ ~1.2 ~ .135 .135 .135 .02 1"
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}

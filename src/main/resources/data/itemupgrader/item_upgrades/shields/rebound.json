@@ -1,0 +1,40 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:shield"
+	},
+	"color": "#24ed24",
+	"slots": [],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "shield_block",
+			"condition": {
+				"type": "itemupgrader_content:internal_can_rebound"
+			},
+			"result": [
+				{
+					"type": "itemupgrader_content:internal_rebound",
+					"power": 1.3
+				},
+				{
+					"type": "command",
+					"command": "particle dust 0.3 0.8 0.6 1 ~ ~1 ~ 0.5 0.5 0.5 0.1 20",
+					"visible": false
+				}
+			]
+		},
+		{
+			"action": "right_click",
+			"visible": false,
+			"result": {
+				"type": "sound",
+				"sound": "minecraft:item.armor.equip_chain",
+				"pitch": 2.0
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}
