@@ -50,7 +50,6 @@ public class ReflectProjectileUpgradeResult extends UpgradeResult {
 		returnAngle = returnAngle.scale(1.0 - this.facingBias).add(rotationBias);
 		projectile.shoot(returnAngle.x, returnAngle.y, returnAngle.z, reflectPower, 0.1F);
 		projectile.hurtMarked = true;
-		projectile.syncPacketPositionCodec(projectile.getX(), projectile.getY(), projectile.getZ());
 		
 		if (!living.level.isClientSide && living instanceof ServerPlayer sPlayer) {
 			sPlayer.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));

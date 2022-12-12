@@ -122,7 +122,7 @@ repositories {
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.19.2-43.1.65'
+	minecraft 'net.minecraftforge:forge:1.19.2-43.2.0'
 	
 	//Item Upgrader Core (Uncomment when all references have been safely contained)
 	//Compile against api
@@ -139,7 +139,7 @@ dependencies {
 	//QOL mods because i am an impatient being who is spending 50% of my time developing this on a non-gaming laptop (and the other 50% on a gaming pc)
 	runtimeOnly fg.deobf("curse.maven:rubidium-574856:3973894")
 	runtimeOnly fg.deobf("curse.maven:lazy-dfu-forge-460819:3831644")
-	runtimeOnly fg.deobf("curse.maven:smooth-boot-reloaded-633412:4049125")
+	runtimeOnly fg.deobf("curse.maven:smooth-boot-reloaded-633412:4162940")
 	runtimeOnly fg.deobf("curse.maven:mouse-tweaks-60089:3871353")
 	
 	// compile against the JEI API but do not include it at runtime
