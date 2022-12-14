@@ -1,0 +1,23 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:bow"
+		}
+	],
+	"color": "#fffb21",
+	"slots": [],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "bow_shoot",
+			"result": {
+				"type": "pierce",
+				"amount": 1
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}

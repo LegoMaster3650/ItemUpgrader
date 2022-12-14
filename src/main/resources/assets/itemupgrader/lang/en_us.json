@@ -187,6 +187,35 @@
 	
 	
 	
+	"upgrade.itemupgrader.bows.phantom_arrow": "Phantom Arrow",
+	"upgrade.itemupgrader.bows.phantom_arrow.description": "Allows usage of infinity without an arrow in your inventory.",
+	"upgrade.itemupgrader.bows.phantom_arrow.icon": "𐍊",
+	"tooltip.itemupgrader.phantom_arrow.pull": "Allow use",
+	
+	"upgrade.itemupgrader.bows.piercing_shot": "Piercing Shot",
+	"upgrade.itemupgrader.bows.piercing_shot.description": "Allows your arrow to pierce 1 enemy.",
+	"upgrade.itemupgrader.bows.piercing_shot.icon": "⚡",
+	
+	"upgrade.itemupgrader.bows.bullseye": "Bullseye",
+	"upgrade.itemupgrader.bows.bullseye.description": "Significantly increases the accuracy of your arrows.",
+	"upgrade.itemupgrader.bows.bullseye.icon": "◎",
+	
+	
+	
+	"upgrade.itemupgrader.crossbows.velocity": "Velocity",
+	"upgrade.itemupgrader.crossbows.velocity.description": "Increases your arrow speed.",
+	"upgrade.itemupgrader.crossbows.velocity.icon": "ᛨ",
+	
+	"upgrade.itemupgrader.crossbows.powerful": "Powerful",
+	"upgrade.itemupgrader.crossbows.powerful.description": "Increases your arrow damage.",
+	"upgrade.itemupgrader.crossbows.powerful.icon": "🏹",
+	
+	"upgrade.itemupgrader.crossbows.forceful": "Forceful",
+	"upgrade.itemupgrader.crossbows.forceful.description": "Increases your arrow knockback.",
+	"upgrade.itemupgrader.crossbows.forceful.icon": "🪓",
+	
+	
+	
 	"upgrade.itemupgrader.compass.recall": "Recall",
 	"upgrade.itemupgrader.compass.recall.description": "Teleports you back to your spawn point.",
 	"upgrade.itemupgrader.compass.recall.icon": "◆",

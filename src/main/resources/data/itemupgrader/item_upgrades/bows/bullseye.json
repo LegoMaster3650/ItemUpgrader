@@ -1,0 +1,25 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:bow"
+		}
+	],
+	"color": "#e35036",
+	"slots": [],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "arrow_inaccuracy",
+			"result": {
+				"type": "multiply_entry",
+				"entry": "arrow_inaccuracy",
+				"amount": -0.8,
+				"positive": false
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}

@@ -1,0 +1,27 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:bow"
+		}
+	],
+	"color": "#cb21ff",
+	"slots": [],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "bow_use",
+			"condition": {
+				"type": "has_enchantment",
+				"enchantment": "infinity"
+			},
+			"result": {
+				"type": "consume",
+				"tooltip_override": "tooltip.itemupgrader.phantom_arrow.pull"
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}

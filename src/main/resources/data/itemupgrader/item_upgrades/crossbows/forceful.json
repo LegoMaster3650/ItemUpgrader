@@ -1,0 +1,23 @@
+{
+	"base": [
+		{
+			"type": "itemupgrader:typed",
+			"group": "itemupgrader:crossbow"
+		}
+	],
+	"color": "#80e866",
+	"slots": [],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "crossbow_shoot",
+			"result": {
+				"type": "arrow_knockback",
+				"knockback": 1.5
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}
