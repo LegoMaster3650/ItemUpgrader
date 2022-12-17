@@ -126,9 +126,9 @@ dependencies {
 	
 	//Item Upgrader Core (Uncomment when all references have been safely contained)
 	//Compile against api
-	compileOnly fg.deobf("itemupgrader:itemupgrader-core:1.0.0:api")
+	compileOnly fg.deobf("itemupgrader:itemupgrader-core:1.0.1:api")
 	//Use full core for runtime
-	runtimeOnly fg.deobf('itemupgrader:itemupgrader-core:1.0.0')
+	runtimeOnly fg.deobf('itemupgrader:itemupgrader-core:1.0.1')
 	
 	//bring in appleskin because I need food value feedback
 	runtimeOnly fg.deobf("curse.maven:appleskin-248787:3872808")
