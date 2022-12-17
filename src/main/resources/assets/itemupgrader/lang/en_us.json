@@ -257,11 +257,6 @@
 	"tooltip.itemupgrader.echoing.use_charge": "%2$s%3$s charge",
 	
 	
-	"upgrade.itemupgrader.misc.my_reaction_to_that_information": "My Reaction To That Information",
-	"upgrade.itemupgrader.misc.my_reaction_to_that_information.description": "My Reaction To That Information",
-	"upgrade.itemupgrader.misc.my_reaction_to_that_information.icon": "ඞ",
-	
-	
 	
 	"predicate.itemupgrader.not_burning": "not burning",
 	"predicate.itemupgrader.high_light": "light level is above 10"
