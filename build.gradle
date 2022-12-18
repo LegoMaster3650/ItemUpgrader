@@ -20,7 +20,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
-version = '1.0.1'
+version = '1.0.2'
 group = 'io._3650.itemupgrader_content'
 archivesBaseName = 'itemupgrader'
 
