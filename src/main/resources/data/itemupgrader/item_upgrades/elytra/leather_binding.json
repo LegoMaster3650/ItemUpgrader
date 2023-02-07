@@ -1,0 +1,19 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:elytra"
+	},
+	"color": "#c65c35",
+	"slots": [],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "enchantment",
+			"enchantment": "minecraft:unbreaking",
+			"amount": 3
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}

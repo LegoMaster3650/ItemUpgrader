@@ -13,7 +13,7 @@
 			"action": "crossbow_shoot",
 			"result": {
 				"type": "arrow_knockback",
-				"knockback": 1.5
+				"knockback": 1
 			}
 		}
 	],

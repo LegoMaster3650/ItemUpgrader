@@ -1,20 +1,20 @@
 modLoader="javafml"
 loaderVersion="[43,)"
 license="MIT License"
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
+issueTrackerURL="https://github.com/LegoMaster3650/ItemUpgrader/issues"
 
 [[mods]]
 modId="itemupgrader_content"
 version="${file.jarVersion}"
 displayName="Item Upgrader"
 #updateJSONURL="https://change.me.example.invalid/updates.json"
-#displayURL="https://change.me.to.your.mods.homepage.example.invalid/"
-#logoFile="itemupgrader_content.png"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/itemupgrader"
+logoFile="itemupgrader_content.png"
 #credits="Joe Mama"
 authors="LegoMaster3650"
 displayTest="MATCH_VERSION"
 description='''
-Main Item Upgrader mod, containing the default upgrades and some slightly more invasive features
+Main Item Upgrader mod, containing the main line of upgrades and some slightly more invasive features
 '''
 
 [[dependencies.itemupgrader_content]]
@@ -31,5 +31,12 @@ Main Item Upgrader mod, containing the default upgrades and some slightly more i
 	ordering="NONE"
 	side="BOTH"
 
+[[dependencies.itemupgrader_content]]
+	modId="itemupgrader"
+	mandatory=true
+	versionRange="[1.0.0,)"
+	ordering="NONE"
+	side="BOTH"
+
 [modproperties.itemupgrader_content]
-	catalogueItemIcon="minecraft:smithing_table"
+	catalogueItemIcon="itemupgrader_content_small.png"

@@ -244,6 +244,16 @@
 	
 	
 	
+	"upgrade.itemupgrader.elytra.leather_binding": "Leather Binding",
+	"upgrade.itemupgrader.elytra.leather_binding.description": "Nearly unbreakable!",
+	"upgrade.itemupgrader.elytra.leather_binding.icon": "§l⌛",
+	
+	"upgrade.itemupgrader.elytra.unknown": "Name",
+	"upgrade.itemupgrader.elytra.unknown.description": "Description",
+	"upgrade.itemupgrader.elytra.unknown.icon": "§l?",
+	
+	
+	
 	"upgrade.itemupgrader.misc.magic_aura": "Magic Aura",
 	"upgrade.itemupgrader.misc.magic_aura.description": "Your item feels easier to enchant...",
 	"upgrade.itemupgrader.misc.magic_aura.icon": "♢",
@@ -259,11 +269,6 @@
 	"upgrade.itemupgrader.misc.echoing.icon": "∞",
 	"tooltip.itemupgrader.echoing.if_charges": "has charge",
 	"tooltip.itemupgrader.echoing.use_charge": "%2$s%3$s charge",
-	
-	
-	"upgrade.itemupgrader.misc.my_reaction_to_that_information": "My Reaction To That Information",
-	"upgrade.itemupgrader.misc.my_reaction_to_that_information.description": "My Reaction To That Information",
-	"upgrade.itemupgrader.misc.my_reaction_to_that_information.icon": "ඞ",
 	
 	
 	

@@ -1,7 +1,7 @@
 {
 	"base": {
 		"type": "itemupgrader:typed",
-		"group": "itemupgrader:enchantable"
+		"group": "itemupgrader:true"
 	},
 	"color": "#0c5259",
 	"slots": [],
