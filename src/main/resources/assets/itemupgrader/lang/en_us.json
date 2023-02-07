@@ -38,6 +38,10 @@
 	"upgrade.itemupgrader.helmets.head_shield.description": "Protect your head from kinetic impact!",
 	"upgrade.itemupgrader.helmets.head_shield.icon": "§l🛡",
 	
+	"upgrade.itemupgrader.helmets.pumpkin_head": "Pumpkin Head",
+	"upgrade.itemupgrader.helmets.pumpkin_head.description": "You can look at enderman just fine now!",
+	"upgrade.itemupgrader.helmets.pumpkin_head.icon": "⚃",
+	
 	
 	
 	"upgrade.itemupgrader.chestplates.heavy_armor": "Heavy Armor",

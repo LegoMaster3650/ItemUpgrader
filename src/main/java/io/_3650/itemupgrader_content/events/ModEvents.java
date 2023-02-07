@@ -7,10 +7,12 @@ import io._3650.itemupgrader_content.ItemUpgrader;
 import io._3650.itemupgrader_content.registry.ModUpgradeActions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.living.EnderManAngerEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -54,6 +56,13 @@ public class ModEvents {
 					player.drop(stack, true, false);
 				}
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onEndermanLook(EnderManAngerEvent event) {
+		if (ItemUpgraderApi.runActions(ModUpgradeActions.ENDERMAN_LOOK, new UpgradeEventData.Builder(event.getPlayer(), EquipmentSlot.HEAD).cancellable()).isCancelled()) {
+			event.setCanceled(true);
 		}
 	}
 	

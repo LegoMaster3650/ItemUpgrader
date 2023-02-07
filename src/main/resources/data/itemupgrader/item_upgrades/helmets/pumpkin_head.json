@@ -1,0 +1,20 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:helmet"
+	},
+	"color": "#fc8803",
+	"slots": ["head"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "itemupgrader_content:enderman_look",
+			"result": {
+				"type": "cancel"
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}
