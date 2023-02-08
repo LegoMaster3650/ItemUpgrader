@@ -1,0 +1,17 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:elytra"
+	},
+	"color": "#c65c35",
+	"slots": ["chest"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "itemupgrader_content:elytra_low_friction"
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}

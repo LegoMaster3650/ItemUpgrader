@@ -3,6 +3,9 @@
 	"upgradeAction.itemupgrader_content.death_drop": "On death: ",
 	"upgradeAction.itemupgrader_content.internal_soulbound_charges": "%s Charges Left",
 	"tooltip.itemupgrader.unlimited_soulbound": "Unlimited",
+	"upgradeAction.itemupgrader_content.enderman_look": "On look at enderman: ",
+	"upgradeAction.itemupgrader_content.elytra_low_friction": "Decrease elytra air friction",
+	
 	
 	"upgradeCondition.itemupgrader_content.internal_can_parry": "started blocking under %s seconds ago",
 	"upgradeCondition.itemupgrader_content.internal_can_rebound": "started blocking under %s seconds ago",
@@ -248,9 +251,9 @@
 	"upgrade.itemupgrader.elytra.leather_binding.description": "Nearly unbreakable!",
 	"upgrade.itemupgrader.elytra.leather_binding.icon": "§l⌛",
 	
-	"upgrade.itemupgrader.elytra.unknown": "Name",
-	"upgrade.itemupgrader.elytra.unknown.description": "Description",
-	"upgrade.itemupgrader.elytra.unknown.icon": "§l?",
+	"upgrade.itemupgrader.elytra.vector": "Vector",
+	"upgrade.itemupgrader.elytra.vector.description": "Direction and Magnitude!",
+	"upgrade.itemupgrader.elytra.vector.icon": "§l→",
 	
 	
 	
