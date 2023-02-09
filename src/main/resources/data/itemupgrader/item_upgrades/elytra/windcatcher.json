@@ -1,0 +1,33 @@
+{
+	"base": {
+		"type": "itemupgrader:typed",
+		"group": "itemupgrader:elytra"
+	},
+	"color": "#c65c35",
+	"slots": ["chest"],
+	"description": 1,
+	"upgrade": [
+		{
+			"action": "living_tick",
+			"condition": [
+				{
+					"type": "fall_flying"
+				},
+				{
+					"type": "position",
+					"y": {
+						"min": 1024
+					},
+					"tooltip_override": "tooltip.itemupgrader.windcatcher.position"
+				}
+			],
+			"result": {
+				"type": "accelerate",
+				"amount": 0.8
+			}
+		}
+	],
+	"conditions": [{
+		"type": "itemupgrader_content:base_pack_enabled"
+	}]
+}

@@ -255,6 +255,11 @@
 	"upgrade.itemupgrader.elytra.vector.description": "Direction and Magnitude!",
 	"upgrade.itemupgrader.elytra.vector.icon": "§l→",
 	
+	"upgrade.itemupgrader.elytra.windcatcher": "Wind Catcher",
+	"upgrade.itemupgrader.elytra.windcatcher.description": "Catch the breeze and glide to your destination.",
+	"upgrade.itemupgrader.elytra.windcatcher.icon": "☁",
+	"tooltip.itemupgrader.windcatcher.position": "above y=1024",
+	
 	
 	
 	"upgrade.itemupgrader.misc.magic_aura": "Magic Aura",
