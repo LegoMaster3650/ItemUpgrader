@@ -10,7 +10,7 @@ displayName="Item Upgrader"
 #updateJSONURL="https://change.me.example.invalid/updates.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/itemupgrader"
 logoFile="itemupgrader_content.png"
-#credits="Joe Mama"
+credits="UmbralSurvivor (Pumpkin Head Upgrade)"
 authors="LegoMaster3650"
 displayTest="MATCH_VERSION"
 description='''
@@ -34,7 +34,7 @@ Main Item Upgrader mod, containing the main line of upgrades and some slightly m
 [[dependencies.itemupgrader_content]]
 	modId="itemupgrader"
 	mandatory=true
-	versionRange="[1.0.0,)"
+	versionRange="[1.0.2,)"
 	ordering="NONE"
 	side="BOTH"
 

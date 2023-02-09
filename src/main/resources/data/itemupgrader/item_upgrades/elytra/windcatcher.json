@@ -3,7 +3,7 @@
 		"type": "itemupgrader:typed",
 		"group": "itemupgrader:elytra"
 	},
-	"color": "#c65c35",
+	"color": "#c7e3ed",
 	"slots": ["chest"],
 	"description": 1,
 	"upgrade": [
