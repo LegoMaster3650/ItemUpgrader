@@ -117,7 +117,7 @@ repositories {
 		url = "https://modmaven.dev"
 	}
 	flatDir {
-		dir 'modfiles'
+		dir '../Item Upgrader Core/build/libs'
 	}
 }
 
