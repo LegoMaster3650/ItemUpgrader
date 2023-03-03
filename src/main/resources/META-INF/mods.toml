@@ -34,7 +34,7 @@ Main Item Upgrader mod, containing the main line of upgrades and some slightly m
 [[dependencies.itemupgrader_content]]
 	modId="itemupgrader"
 	mandatory=true
-	versionRange="[1.0.3,)"
+	versionRange="[1.0.4,)"
 	ordering="NONE"
 	side="BOTH"
 
